@@ -37,7 +37,7 @@ export class AppComponent {
       data => {
         console.log('✅ 收到数据:', data);
         this.isloading = false;
-        this.users=data.items;
+        this.users=data.items;  
       });
   }
 }
