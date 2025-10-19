@@ -1,0 +1,226 @@
+.container{
+  display: flex;
+  height: 500px;
+  gap: 5px;
+  background-color: rgb(255, 255, 255);
+}
+
+
+.left-column{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.left-block{
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-weight: bold;
+}
+
+.lblock1{ 
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.lsub1{
+  flex:1;
+}
+
+.lsub2{
+  flex:5;
+}
+
+
+.lsub3{
+  flex:15;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.img{
+  padding-top: 5%;
+  padding-left: 5%;
+  display: flex;
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+}
+
+.lsub2time{
+  flex: 1;
+  font-size: 5px;
+  text-align: right; 
+  color: rgb(133, 131, 131);
+  padding-right: 10px;
+}
+
+.lsub2text{
+  flex:3;
+  text-align: left; 
+}
+
+
+.btn-area {
+  flex:3;
+  display: flex;
+  gap: 10px;            /* 按钮间距 */
+  justify-content: flex-start; /* 可改成 center 或 right */
+  align-items: center;
+
+}
+
+
+
+.button{
+  display: flex;
+  background-color: #164980;  
+  color: white;
+  height: 15px;
+  width: 55px;
+  border-radius: 5px; 
+  font-size: 5px;
+  cursor: pointer;
+  padding-left: 15px;
+}
+
+.btn:hover {
+  background-color: #0056b3;   /* 悬停时变深 */
+}
+
+.btn:active {
+  background-color: #004085;   /* 点击时更深 */
+}
+
+
+hr {       /* 去掉默认边框 */
+  border-top: 2px solid #8f8d8d; /* 改为上边框线 */
+  width: 80%;               /* 线的长度 */
+}
+
+.lblock2{ 
+  flex: 5;
+  display: flex;
+  background: #ffffff; /* 改为白色背景 */
+}
+
+.lblock3{ 
+  flex: 1;
+  background:lightyellow;
+}
+
+
+
+.right-column{
+  flex: 4;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.right-block{
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-weight: bold;
+}
+
+.rblock1{
+  display: flex;
+  align-items: stretch; /* ✅ 让线自动与按钮整体等高 */
+  flex: 1;
+  padding: 3px;
+}
+
+.rblock2{
+  flex: 13;
+  background-color: aquamarine;
+}
+
+/* 按钮整体布局（竖排） */
+.btn-vertical-group {
+  display: flex;
+  flex-direction: column; /* ✅ 竖排 */
+  align-items: flex-start; /* ✅ 左对齐 */
+  gap: 11px;               /* ✅ 按钮间距 */
+}
+
+/* 通用按钮样式 */
+.btn {
+  writing-mode: vertical-rl; /* ✅ 竖排文字 */
+  text-orientation: upright;
+  width: 25px;
+  height: 72px;
+  color: white;
+  font-size: 7px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+/* 各颜色定义 */
+.btn-aqua   {
+  border-radius: 0px;
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 85%);
+  background-color: #0eadd4; }
+.btn-green  { background-color: #2aa84f; }
+.btn-orange { background-color: #ff9f00; }
+.btn-blue   { background-color: #164980; }
+.btn-purple { background-color: #7b3ce9; }
+.btn-red    { background-color: #d93732; }
+
+.vertical-line {
+  width: 3px;
+  border-radius: 2px;
+  /* ❌ 删除 background-color: #030303; */
+}
+
+
+/* 悬停效果（颜色变深） */
+/* ✅ 当某个按钮获得焦点时（点击/选中），竖线变为该按钮颜色 */
+.btn-aqua:focus  { background-color: #0eadd4; }
+.btn-green:focus  { background-color: #2aa84f; }
+.btn-orange:focus  { background-color: #ff9f00; }
+.btn-blue:focus { background-color: #164980; }
+.btn-purple:focus { background-color: #7b3ce9; }
+.btn-red:focus { background-color: #d93732; }
+
+
+.btn:focus {
+  transform: scale(1.15);
+}
+
+
+
+.chart-container {
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🕸️ 雷达图尺寸 */
+.chart-container.radar {
+  width: 270px;
+  height: 270px;
+}
+
+/* 📈 折线图尺寸 */
+.chart-container.line {
+  width: 270px;
+  height: 100px;
+}
+
+

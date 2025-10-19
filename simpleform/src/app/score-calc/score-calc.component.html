@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="top">
+    <div class="left">
+      <div class="textarea">
+        <h1 class="textarea1">貴方の評価は</h1>
+        <h1 class="textarea2">B</h1>
+      </div>
+    </div>
+    <div class="right">
+      <div class="evaluation-comment">
+        <p>もう少しでA評価です。</p>
+        <p style="font-size: xx-small;color: rgb(134, 135, 136);">今の調子をキープしましょう！ 次の目標は安定した成果です。</p>
+      </div>
+
+    </div>
+  </div>
+  <div class="middle">
+  <div class="carousel-container">
+    <div class="carousel-slide" [style.transform]="'translateX(-' + currentIndex * 100 + '%)'">
+      <img *ngFor="let img of images" [src]="img" alt="slide">
+    </div>
+
+    <!-- ✅ 用 Unicode 符号的箭头 -->
+    <button class="arrow prev" (click)="prev()">&#9664;</button>
+    <button class="arrow next" (click)="next()">&#9654;</button>
+
+    <div class="dots">
+      <span *ngFor="let img of images; let i = index"
+            [class.active]="i === currentIndex"
+            (click)="goTo(i)"></span>
+    </div>
+  </div>
+</div>
+  <div class="bottom "></div>
+</div>

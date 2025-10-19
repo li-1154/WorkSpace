@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="left-column">
+    <div class="left-block lblock1">
+      <div class="lsub1"></div>
+      <div class="lsub2">
+        <img class="img" src="./assets/icon/employee.png">
+      </div>
+      <div class="lsub3">
+        <div class="lsub2time">現在時刻:20251011 24:00</div>
+        <div class="lsub2text">花子さんようこそ</div>
+        <div class="btn-area">
+          <button class="button">社員情報</button>
+          <button class="button">社員情報</button>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="left-block lblock2">
+      <div class="chart-container radar">
+        <canvas id="myRadarChart"></canvas>
+      </div>
+    </div>
+    <div class="left-block lblock3">
+      <div class="chart-container line">
+        <canvas id="myLineChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="right-column">
+    <div class="right-block rblock1">
+      <div class="btn-vertical-group">
+        <div class="right-block rblock1">
+          <div class="btn-with-line">
+            <!-- 按钮组 -->
+            <div class="btn-vertical-group">
+              <button class="btn btn-aqua" (click)="multiAction('calc')">点数計算</button>
+
+              <button class="btn btn-green" (click)="multiAction('status')">勤務状況</button>
+
+              <button class="btn btn-orange" (click)="multiAction('modify')">勤怠修正</button>
+
+              <button class="btn btn-blue" (click)="multiAction('shift')">シフト確認</button>
+
+              <button class="btn btn-purple" (click)="multiAction('salary')">給与明細</button>
+
+              <button class="btn btn-red" (click)="multiAction('logout')">ログアウト</button>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ 这就是竖线 -->
+      </div>
+      <div class="vertical-line" [ngStyle]="{'background-color': lineColor}">
+      </div>
+    </div>
+    <div class="right-block rblock2">
+      <app-score-calc *ngIf="currentView === 'calc'"></app-score-calc>
+      <app-work-status *ngIf="currentView === 'status'"></app-work-status>
+      <app-timecard-fix *ngIf="currentView === 'modify'"></app-timecard-fix>
+      <app-shift-view *ngIf="currentView === 'shift'"></app-shift-view>
+      <app-salary-detail *ngIf="currentView === 'salary'"></app-salary-detail>
+    </div>
+
+  </div>
+</div>

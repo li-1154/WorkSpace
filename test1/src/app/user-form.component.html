@@ -1,0 +1,55 @@
+<div class="container">
+    <h1>User From</h1>
+    <form (ngSubmit)="onSubmit()" #userFrom="ngForm">
+        <div class="form-group">
+            <label for="firstName">FirstName</label>
+            <input type="text" class="form-control" id="firstName" required [(ngModel)]="model.firstName"
+                name="firstName" #firstName="ngModel" minlength="3">
+            <div *ngIf="firstName.touched && firstName.errors">
+                <div class="alert alert-danger" *ngIf="firstName.errors?.['required']">
+                    FirstName is required!!!
+                </div>
+                <div class="alert alert-warning" *ngIf="firstName.errors?.['minlength']">
+                    FirstName is should be minimum of 3 charact!!!
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" required [(ngModel)]="model.email" name="email"
+                #email="ngModel">
+            <div *ngIf="email.touched">
+                <div class="alert alert-warning" *ngIf="!email.valid">
+                    Email is required!!!
+                </div>
+                <div class="alert alert-success" *ngIf="email.valid">
+                    Looks good!
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="country">Country</label>
+            <select class="form-control" id="country" required [(ngModel)]="model.country" name="country">
+                <option *ngFor="let c of countries" [value]="c">
+                    {{c}}
+                </option>
+            </select>
+                <button type="submit" class="btn btn-primary" 
+                    [disabled]="!userFrom.form.valid"
+            >
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+<div *ngIf="model.firstName!=''">
+    You Submit Information:
+    <br>
+    FirstName:{{model.firstName}}
+    <br>
+    Email:{{model.email}}
+    <br>
+    Country:{{model.country}}
+    <br>
+    information:{{information}}
+</div>

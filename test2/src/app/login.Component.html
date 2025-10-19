@@ -1,0 +1,35 @@
+<form [formGroup]="form" (ngSubmit)="login()">
+
+  <div class="form-group">
+    <label for="username">UserName</label>
+    <input id="username" type="text" class="form-control" formControlName="username">
+    <div *ngIf="form.get('username')?.touched && form.get('username')?.invalid"
+         class="alert alert-danger">
+      UserName is required.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">PassWord</label>
+    <input id="password" type="password" class="form-control" formControlName="password">
+    <div *ngIf="form.get('password')?.touched && form.get('password')?.errors">
+
+
+        <div *ngIf="form.get('password')?.errors?.['invalidLogin']" class="alert alert-warning">
+            password or username is error.
+        </div>
+
+
+      <div *ngIf="form.get('password')?.errors?.['required']" class="alert alert-danger">
+        PassWord is required.
+      </div>
+      <div *ngIf="form.get('password')?.errors?.['cannotContainSpace']" class="alert alert-warning">
+        Password cannot contain spaces.
+      </div>
+    </div>
+  </div>
+
+  <!-- <div>{{Message}}</div> -->
+  <button class="btn btn-primary mt-3" type="submit" [disabled]="form.invalid">Login</button>
+
+</form>
