@@ -1,67 +1,50 @@
 import { Component } from '@angular/core';
-import { GitHubService } from './github.service';
-import { GitHubUser } from './github.service';
-import { FormControl } from '@angular/forms';
-import { filter,debounceTime,distinctUntilChanged}   from 'rxjs/operators'
 
 
 @Component({
   selector: 'app-root',
-  template: `
-  <input class="form-control" type="search" [formControl] = "searchControl">
-  <h3>GitHub User</h3>
-        <div *ngIf="isloading">
-            <i class="fa-solid fa-spinner fa-spin fa-5xs " style="color: #000000ff;"></i>
+  template: ` 
 
-        </div>
-        <div *ngFor="let user of users" class="media">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a routerLink="">Home <span class="sr-only">(current)</span></a></li>
+        <li><a routerLink="github">GitHub</a></li>
+        <li><a routerLink="HTML">HTML</a></li>
+        <li><a routerLink="CSS">CSS</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+
+  <!-- <ul>
+    <li>
+      <a routerLink="">Home</a>
+    </li>
+    <li>
+      <a routerLink="github">GitHub</a>
+    </li>
+</ul> -->
           
-              <div class="media-left">
-                <a href="{{user.html_url}}">
-                  <img class="media-object img" src="{{user.avatar_url}}" alt="...">
-                </a>
-              </div>
-              <div class="media-body">
-                <h4 class="media-heading">{{user.login}}</h4>
-                score: {{user.score}}
-              </div>
-            </div>
+  <router-outlet></router-outlet>
+  
        `,
-styles: [`
-  .img {
-    position: relative;
-    float: left;
-    width: 100px;
-    height: 100px;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-`]
-
 })
 export class AppComponent {
-  isloading = false;
-  searchControl = new FormControl();
-  users: GitHubUser[] = [];
-
-  constructor(private _ghtHubService: GitHubService) {
-  }
-  ngOnInit() {
-   
-    this.searchControl.valueChanges.pipe(
-      filter(text =>text .length >=3),debounceTime(400),distinctUntilChanged())
-    .subscribe(value=>{
-      this.isloading = true;
-      this._ghtHubService.getGitHubData(value).subscribe(
-        data => {
-          console.log('✅ 收到数据:', data);
-          this.isloading= false;
-          this.users = data.items;
-        });
-    })
-
-
-
-  }
+  
 }
