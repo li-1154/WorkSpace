@@ -22,7 +22,7 @@ import { Component } from '@angular/core';
       <ul class="nav navbar-nav">
         <li class="active"><a routerLink="">Home <span class="sr-only">(current)</span></a></li>
         <li><a routerLink="github">GitHub</a></li>
-        <li><a routerLink="HTML">HTML</a></li>
+        <li><a routerLink="html">HTML</a></li>
         <li><a routerLink="CSS">CSS</a></li>
       </ul>
     </div>

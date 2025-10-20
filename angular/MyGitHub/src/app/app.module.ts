@@ -11,9 +11,10 @@ import { HomeComponent } from './home.component';
 import { NotFoundComponent } from './notfound.component';
 import { routing } from './app.routing';
 import { GitHubUserComponent } from './githubuser.component';
+import { HtmlComponentComponent } from './html-component/html-component.component';
 @NgModule({
   declarations: [
-    AppComponent,GitHubComponent,NotFoundComponent,HomeComponent,GitHubUserComponent
+    AppComponent,GitHubComponent,NotFoundComponent,HomeComponent,GitHubUserComponent, HtmlComponentComponent
   ],
   imports: [
     BrowserModule,HttpClientModule,ReactiveFormsModule,routing
