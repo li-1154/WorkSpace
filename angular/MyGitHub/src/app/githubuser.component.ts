@@ -26,7 +26,7 @@ export class GitHubUserComponent
     
 ngOnInit()
 {
-    this._route.params._subscribe(
+    this._route.params.subscribe(
         parms =>
         {
             this.login = parms["login"];

@@ -10,10 +10,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home.component';
 import { NotFoundComponent } from './notfound.component';
 import { routing } from './app.routing';
-
+import { GitHubUserComponent } from './githubuser.component';
 @NgModule({
   declarations: [
-    AppComponent,GitHubComponent,NotFoundComponent,HomeComponent
+    AppComponent,GitHubComponent,NotFoundComponent,HomeComponent,GitHubUserComponent
   ],
   imports: [
     BrowserModule,HttpClientModule,ReactiveFormsModule,routing
