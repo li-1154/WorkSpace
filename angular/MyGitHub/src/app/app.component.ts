@@ -23,7 +23,8 @@ import { AngularFireModule } from 'angularfire2';
         <li class="active"><a routerLink="">Home <span class="sr-only">(current)</span></a></li>
         <li><a routerLink="github">GitHub</a></li>
         <li><a routerLink="html">HTML</a></li>
-        <li><a routerLink="CSS">CSS</a></li>
+        <li><a routerLink="users">Users</a></li>
+        <li><a routerLink="my-crudapp">my-crudapp</a></li>
       </ul>
     </div>
   </div>
@@ -46,10 +47,8 @@ import { AngularFireModule } from 'angularfire2';
        `,
 })
 export class AppComponent {
-  constructor()
-  
-{
-  console.log('AppComponent loaded',AngularFireModule);
-}   
+  constructor() {
+    console.log('AppComponent loaded', AngularFireModule);
+  }
 }
-  
+
