@@ -19,10 +19,11 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 import { environment } from '../environments/environment';
 import { UsersComponent } from './users.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
-    AppComponent, GitHubComponent, NotFoundComponent, HomeComponent, GitHubUserComponent, HtmlComponentComponent, MyCRUDAppComponent,UsersComponent
+    AppComponent, GitHubComponent, NotFoundComponent, HomeComponent, GitHubUserComponent, HtmlComponentComponent, MyCRUDAppComponent,UsersComponent, EditUserComponent
   ],
   imports: [
     BrowserModule, 
