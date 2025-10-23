@@ -27,8 +27,60 @@
   /*四个方向的时候  上右 下左颜色*/
   border-color: blue green yellow red;
 }
+
 /*css样式文件跟 html文件是分离的*/
 h1 {
   border: 5px dashed purple;
   font-size: 10px;
+  width: 150px;
+  height: 50px;
+}
+
+p {
+  font-size: 10px;
+  width: 300px;
+  height: 100px;
+}
+
+li p {
+  color: brown;
+}
+
+.color {
+  color: red;
+}
+
+#title {
+  color: blue;
+}
+
+/* 第一个元素改变 */
+ul li:first-child {
+  color: green;
+}
+
+/* 最后一个元素改变 */
+ul li:last-child {
+  color: orange;
+}
+
+/* 第二个元素改变 */
+ul li:nth-child(2) {
+  color: purple;
+}
+
+.divclass1>p:first-child {
+  color: pink;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.divclass1>p:nth-child(2) {
+  font-size: 20px;
+  color: lime;
+}
+
+.divclass1>p:last-child {
+  font-size: 20px;
+  color: cyan;
 }
