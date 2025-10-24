@@ -54,6 +54,49 @@ li p {
   color: blue;
 }
 
+*{
+  margin: 0px auto;
+  padding: 0px;
+  list-style: none;
+  text-decoration: none;
+}
+.clear:after
+{
+  content: '';
+  display: block;
+  clear: both;
+}
+.daohang{
+  width: 800px;
+  border: 2px solid red;
+}
+.daohang .li1{
+  float: left;
+  width: 150px;
+  border: 1px solid blue;
+  position: relative;
+}
+
+.daohang .one
+{
+  display: none;
+}
+
+.li1:hover .one{
+  display: block;
+  position: absolute;
+}
+
+.banner{
+  width: 800px;
+  height: 400px;
+  background-color: deeppink;
+}
+
+
+
+
+
 /* 第一个元素改变 */
 ul li:first-child {
   color: green;
@@ -84,3 +127,46 @@ ul li:nth-child(2) {
   font-size: 20px;
   color: cyan;
 }
+
+/* 外边距 */
+.divclass3 {
+  width: 500px;
+  height: 500px;
+  background-color: antiquewhite;
+  /* 水平居中 */
+  margin: auto;
+
+}
+
+/* 内边距 */
+.divclass4 {
+  border: 1px solid #999;
+  background-color: azure;
+  width: 500px;
+  height: 500px;
+  padding: 50px;
+}
+
+
+.div1 {
+  width: 400px;
+  height: 200px;
+  background-color: red;
+  /* 浮动的话脱离层级 */
+  float: right;
+}
+
+.div2 {
+  width: 300px;
+  height: 100px;
+  background-color: orange;
+  float: left;
+}
+
+.div3 {
+  width: 800px;
+  height: 150px;
+  background-color: green;
+}
+
+
