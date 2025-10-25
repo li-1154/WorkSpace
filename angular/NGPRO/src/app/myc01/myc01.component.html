@@ -1,0 +1,87 @@
+<ul>
+    <li>
+        姓名: {{name}}
+    </li>
+    <li>
+        年龄: {{age}}
+    </li>
+    <li>
+        是否成年人: {{flag}}
+    </li>
+    <li>
+        爱好:
+        <ul>
+            <li *ngFor="let hobby of hobbies">
+                {{hobby}}
+            </li>
+        </ul>
+    </li>
+    <li>
+        老板信息:
+        <ul>
+            <!-- 对象直接输出的话 只是转成一个文本object 没有任何信息 -->
+            <li>名字 {{boss.name}}</li>
+            <li>年龄 {{boss.age}}</li>
+        </ul>
+        <!-- {{ }} 支持数学运算 -->
+        <h1> 数学运算</h1>
+        <ul>
+            <li>{{5+2}}</li>
+            <li>{{5/2}}</li>
+            <li>{{5%2}}</li>
+            <li>{{5-2}}</li>
+            <li>{{5*2}}</li>
+        </ul>
+        <!-- 支持比较运算 返回的是布尔值 -->
+        <h1> 比较运算</h1>
+        <ul>
+            <li>{{age>20}}</li>
+            <li>{{age<10}}< /li>
+            <li>{{age>=20}}</li>
+            <li>{{age<=20}}< /li>
+            <li>{{age!=20}}</li>
+            <li>{{age==20}}</li>
+        </ul>
+
+        <!-- 支持三元运算符 -->
+        <ul>
+            <li>{{age>30?'大于30':'小于30'}}</li>
+        </ul>
+
+        <!-- 逻辑运算符 -->
+        <h1>逻辑运算符<h1>
+                <ul>
+                    逻辑与 全真为真 其余为假<br>
+                    <li>{{true&&true}}</li>
+                    <li>{{true&&false}}</li>
+                    逻辑与 全假为假 其余为真<br>
+                    <li>{{true||false}}</li>
+                    <li>{{false||false}}</li>
+                    逻辑非 取反<br>
+                    <li>{{!true}}</li>
+                    <li>{{!false}}</li>
+                </ul>
+
+                <ul>
+                    <li>
+                        {{"hello".toUpperCase()}}
+                    </li>
+                    <li>
+                        {{"hello".toUpperCase()}}
+
+                    </li>
+                </ul>
+
+                <!-- 对象方法调用 -->
+                <ul>
+                    <li>
+                        {{showName()}}
+                    </li>
+                </ul>
+
+                <!-- 点击事件 -->
+                <button (click)="ShowClick()">点击事件</button>
+
+                <!-- 属性的绑定 -->
+                <h1 title="小心心老师">本阶段老师的姓名</h1>
+                <h1 [title]="name">本阶段老师的姓名</h1>

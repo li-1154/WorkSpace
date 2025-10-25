@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "NGPRO": {
+    "NoteApp": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/NGPRO",
+            "outputPath": "dist/NoteApp",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -62,19 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port":4300,
-            "browserTarget": "NGPRO:build"
+            "browserTarget": "NoteApp:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "NGPRO:build:production"
+              "browserTarget": "NoteApp:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "NGPRO:build"
+            "browserTarget": "NoteApp:build"
           }
         },
         "test": {
@@ -111,15 +110,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "NGPRO:serve"
+            "devServerTarget": "NoteApp:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "NGPRO:serve:production"
+              "devServerTarget": "NoteApp:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "NGPRO"
+  "defaultProject": "NoteApp"
 }
