@@ -1,24 +1,35 @@
 <h1>Users</h1>
-<button class="btn btn-primary" (click)="add()">Add</button>
 
+<!-- 搜索框区域 -->
+<div class="row mb-3">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <!-- 绑定到 searchControl，输入变化会触发 valueChanges -->
+      <input type="search" class="form-control" placeholder="Search for..." [formControl]="searchControl">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" (click)="add()">Add</button>
+      </span>
+    </div>
+  </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">User</th>
-            <th scope="col">Email</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let user of users | async">
-            <td>{{user.data.name}}</td>
-            <td>{{user.data.email}}</td>
-            <td><a><i class="glyphicon glyphicon-edit"></i></a></td>
-            <td><a><i (click)="delete(user.id,user.data.name)" class="glyphicon glyphicon-remove"></i></a></td>
-        </tr>  
-    </tbody>
+<!-- 用户表格 -->
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Email</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 遍历 filteredUsers（注意 | async 管道自动订阅 Observable） -->
+    <tr *ngFor="let user of filteredUsers | async">
+      <td>{{ user.data.name }}</td>
+      <td>{{ user.data.email }}</td>
+      <td><a [routerLink]="['/add', user.id]"><i class="glyphicon glyphicon-edit"></i></a></td>
+      <td><a (click)="delete(user.id, user.data.name)"><i class="glyphicon glyphicon-remove"></i></a></td>
+    </tr>
+  </tbody>
 </table>
-
-    

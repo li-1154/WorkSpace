@@ -16,6 +16,7 @@ export const routing = RouterModule.forRoot([
     { path: 'html', component: HtmlComponentComponent },
     { path: 'github/user/:login/:score', component: GitHubUserComponent },
     { path: 'add', component: EditUserComponent },
+    { path: 'add/:id', component: EditUserComponent },
     { path: 'my-crudapp', component: MyCRUDAppComponent },
     { path: 'users', component: UsersComponent },
     { path: '**', component: NotFoundComponent }

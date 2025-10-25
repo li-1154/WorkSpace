@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validator, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { User } from '../user';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -14,25 +15,56 @@ export class EditUserComponent implements OnInit {
   form: FormGroup;
   user = new User();
   title = '';
+  id: string = '';
 
-  constructor(fb: FormBuilder, private _router: Router, private afs: AngularFirestore) {
+  userDoc: AngularFirestoreDocument<User>;
+  singleUser: Observable<User>;
+
+  constructor(fb: FormBuilder, private _router: Router, private afs: AngularFirestore, private _route: ActivatedRoute) {
     this.form = fb.group({
-      name:['',Validators.required],
-      email:['',Validators.required]
-  });}
+      name: ['', Validators.required],
+      email: ['', Validators.required]
+    });
+  }
 
 
   ngOnInit(): void {
-    this.title = "New User";
+    this._route.params.subscribe(params => {
+      this.id = params['id'];
+      console.log('id', this.id);
+    });
+    if (!this.id) {
+
+      this.title = "New User";
+    }
+    else {
+      this.title = "Edit User";
+      this.userDoc = this.afs.doc('users/' + this.id);
+      this.singleUser = this.userDoc.valueChanges();
+      this.singleUser.subscribe(userdata => {
+        this.form.get('name').setValue(userdata.name);
+        this.form.get('email').setValue(userdata.email);
+      })
+    }
   }
-  sunmit(){
-    //链接到firestore添加用户
-    this.afs.collection('users').add({
-      name:this.user.name,
-      email:this.user.email
-    })
+
+
+  sunmit() {
+    if (this.id) {
+      this.afs.doc('users/' + this.id).update({
+        name: this.user.name,
+        email: this.user.email
+      })
+      alert("User updated successfully!");
+    }
+    else {
+      this.afs.collection('users').add({
+        name: this.user.name,
+        email: this.user.email
+      })
+      alert("User added successfully!");
+    }
     //导航到用户列表
-    alert("User added successfully!");
     this._router.navigate(['/users']);
   }
 }
