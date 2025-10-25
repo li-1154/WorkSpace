@@ -123,4 +123,13 @@ export class UsersComponent {
             this.afs.doc('users/' + id).delete();
         }
     }
+    // 单检索功能 检索名字为 Greg Lim 的用户 应该也可以检索到多个
+    Search() {
+        const userRef = this.afs.collection(
+            'users', ref => ref.where('name', '==', 'Greg Lim')
+        )
+        userRef.valueChanges().subscribe(res => {
+            console.log('Search Result:', res);
+        });
+    }
 }
