@@ -1,18 +1,20 @@
-
+<h1>用户注册</h1>
 <form>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1"  [(ngModel)]="email"  placeholder="Email">
+    <input type="email" class="form-control" id="exampleInputEmail1" name="email" [(ngModel)]="email"
+      placeholder="输入邮箱">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1"  [(ngModel)]="password" placeholder="Password">
+    <input type="password" class="form-control" id="exampleInputPassword1" name="password" [(ngModel)]="password"
+      placeholder="输入密码">
   </div>
   <div class="checkbox">
     <label>
-      <input type="checkbox"> Check me out
+      <input type="checkbox"> 用户须知
     </label>
   </div>
-  <button type="submit" class="btn btn-primary btn-sm" (click)="register()">Submit</button>
-  <p class="alert alert-success" role="alert" *ngIf="errorMsg"> {{errorMsg}}</p> 
+  <button type="submit" class="btn btn-primary btn-sm" (click)="register()">注册</button>
+  <p class="alert alert-warning" role="alert" *ngIf="errorMsg"> {{errorMsg}}</p>
 </form>

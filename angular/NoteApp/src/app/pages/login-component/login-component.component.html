@@ -1,1 +1,13 @@
-<p>login-component works!</p>
+<h1>用户登陆</h1>
+<form action="">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email"  class="form-control"[(ngModel)]="email" placeholder="输入邮箱" name="email">
+    </div>
+    <div class="form-group">
+        <label for="password">password:</label>
+        <input type="password" class="form-control" [(ngModel)]="password" placeholder="输入密码" name="password">
+    </div>
+    <button  type="submit" (click)="login()" class="btn btn-primary btn-sm">登陆</button>
+     <p class="alert alert-warning" role="alert" *ngIf="errorMsg"> {{errorMsg}}</p>
+</form>
