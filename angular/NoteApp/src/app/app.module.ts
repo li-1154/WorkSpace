@@ -1,5 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home-component/home-component.component';
@@ -12,6 +18,8 @@ import { FooterComponent } from './components/footer-component/footer-component.
 import { NoteItemComponent } from './components/note-item-component/note-item-component.component';
 import { NoteFormComponent } from './components/note-form-component/note-form-component.component';
 import { AppRoutingModule } from './app-routing.module';
+
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -28,7 +36,13 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
+
+    AngularFireAuthModule,
+    FormsModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

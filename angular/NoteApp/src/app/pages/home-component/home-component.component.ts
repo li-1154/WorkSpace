@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+
 
 @Component({
   selector: 'app-home-component',
@@ -7,7 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private firestore:AngularFirestore) { 
+    
+    // //firebase链接测试 
+    // if(this.firestore)
+    // {
+    //   console.log("firebase connected successfully");
+    // }
+    // else
+    // {
+    //   console.log("firebase connection failed!!")
+    // }
+
+  }
 
   ngOnInit(): void {
   }
