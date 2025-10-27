@@ -1,23 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule,Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home-component/home-component.component';
 import { LoginComponent } from './pages/login-component/login-component.component';
 import { RegisterComponent } from './pages/register-component/register-component.component';
 import { NotesListComponent } from './pages/notes-list-component/notes-list-component.component';
-import { NoteEditComponent } from './pages/note-edit-component/note-edit-component.component';
-
 import { AuthGuard } from './guards/auth.guard';
+import { NoteFormComponent } from './components/note-form-component/note-form-component.component';
+
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent},
 
-  {path: 'notes', component: NotesListComponent,canActivate:[AuthGuard] /*, canActivate: [AuthGuard]*/},
-  {path: 'notes/:id', component: NoteEditComponent, canActivate: [AuthGuard]},
-
-  {path: '**', redirectTo: ''}
+  //登陆模块
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  //笔记模块
+  { path: 'notes', component: NotesListComponent, canActivate: [AuthGuard] /*, canActivate: [AuthGuard]*/ },
+  { path: 'notes/new', component: NoteFormComponent, canActivate: [AuthGuard] },
+  { path: 'notes/edit/:id', component: NoteFormComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '' }
 
 ];
 @NgModule({

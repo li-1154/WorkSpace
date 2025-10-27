@@ -12,7 +12,6 @@ import { HomeComponent } from './pages/home-component/home-component.component';
 import { LoginComponent } from './pages/login-component/login-component.component';
 import { RegisterComponent } from './pages/register-component/register-component.component';
 import { NotesListComponent } from './pages/notes-list-component/notes-list-component.component';
-import { NoteEditComponent } from './pages/note-edit-component/note-edit-component.component';
 import { HeaderComponent } from './components/header-component/header-component.component';
 import { FooterComponent } from './components/footer-component/footer-component.component';
 import { NoteItemComponent } from './components/note-item-component/note-item-component.component';
@@ -28,7 +27,6 @@ import { environment } from '../environments/environment';
     LoginComponent,
     RegisterComponent,
     NotesListComponent,
-    NoteEditComponent,
     HeaderComponent,
     FooterComponent,
     NoteItemComponent,

@@ -30,10 +30,10 @@ export class RegisterComponent implements OnInit {
       this.router.navigate(['/login']);
     }
     catch (error) {
-      console.log('❌ Firebase Error:', error);
-      this.errorMsg = error.message; // 临时先显示英文
-      // this.errorMsg = this.errorMessages[error.code]||'注册失败，请稍后再试。';
-      // console.error('register,failed', error);
+      // console.log('❌ Firebase Error:', error);
+      // this.errorMsg = error.message; // 临时先显示英文
+      this.errorMsg = this.errorMessages[error.code]||'注册失败，请稍后再试。';
+      console.error('register,failed', error);
     }
   }
   ngOnInit(): void {
