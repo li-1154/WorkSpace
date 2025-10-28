@@ -1,1 +1,19 @@
-<p>notes-list-component works!</p>
+<div class="containner mt-4">
+    <h2>📘 我的笔记</h2>
+    <button class="btn btn-primary mb-3" (click)="addNote()">+ 新增笔记</button>
+
+    <div *ngIf="notes.length === 0">还没有任何笔记。</div>
+
+    <ul class="list-group">
+        <li *ngFor="let note of notes" class="list-group-item">
+            <h5>{{note.title}}</h5>
+            <p>{{note.content}}</p>
+            <small>{{note.createdAt.toDate()|date:'yyyy/mm/dd HH:mm'}}</small>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-outline-secondary" (click)="editNote(note.id!)">编辑</button>
+                <button class="btn btn-sm btn-outline-danger" (click)="deleteNote(note.id!)">删除</button>
+
+            </div>
+        </li>
+    </ul>
+</div>
