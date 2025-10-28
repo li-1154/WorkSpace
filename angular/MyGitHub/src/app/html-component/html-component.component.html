@@ -1,75 +1,151 @@
-<p>html-component works!</p>
-<div class="divclass2">
-    div-Day01
-</div>
+<div *ngIf="disable01">
+    <p>html-component works!</p>
+    <div class="divclass2">
+        div-Day01
+    </div>
 
 
-<hr>
-<div> div-Day2
-    <!-- 内联样式  直接作用在标签上 只能对一个标签起作用 不利于样式与代码的分离-->
-    <h1 style="color: bisque;">样式测试</h1>
-    <h2 style="width: 200px;height: 100px;
+    <hr>
+    <div> div-Day2
+        <!-- 内联样式  直接作用在标签上 只能对一个标签起作用 不利于样式与代码的分离-->
+        <h1 style="color: bisque;">样式测试</h1>
+        <h2 style="width: 200px;height: 100px;
     font-size: 15px;
     background-color:
     aquamarine;">样式测试</h2>
-</div>
+    </div>
 
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>1111</h1>
-<h1>
-    css 行内样式高于内部样式高于外部样式
-</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>1111</h1>
+    <h1>
+        css 行内样式高于内部样式高于外部样式
+    </h1>
 
-<p>
-    段落
-</p>
+    <p>
+        段落
+    </p>
 
-<p class="color"> 段落</p>
+    <p class="color"> 段落</p>
 
-<p id="title"> 段落</p>
-<p id="title"> 段落</p>
-<p id="title"> 段落</p>
-<p id="title"> 段落</p>
-<p id="title"> 段落</p>
-<p id="title"> 段落</p>
-<p id="title"> 段落</p>
+    <p id="title"> 段落</p>
+    <p id="title"> 段落</p>
+    <p id="title"> 段落</p>
+    <p id="title"> 段落</p>
+    <p id="title"> 段落</p>
+    <p id="title"> 段落</p>
+    <p id="title"> 段落</p>
 
-<p class="color"> 段落</p>
-<p>列表项1</p>
-<p>列表项2</p>
-<p>列表项3</p>
-<ul>
-    <li>
-        <p>列表项1</p>
-    </li>
-    <li>
-        <p>列表项2</p>
-    </li>
-    <li>
-        <p>列表项2</p>
-    </li>
-    <li>
-        <p>列表项3</p>
-    </li>
-</ul>
+    <p class="color"> 段落</p>
+    <p>列表项1</p>
+    <p>列表项2</p>
+    <p>列表项3</p>
+    <ul>
+        <li>
+            <p>列表项1</p>
+        </li>
+        <li>
+            <p>列表项2</p>
+        </li>
+        <li>
+            <p>列表项2</p>
+        </li>
+        <li>
+            <p>列表项3</p>
+        </li>
+    </ul>
 
 
-<div class="divclass1">
-    <p>p1</p>
-    <p>p1</p>
-    <p>p1</p>
-    <p>p1</p>
-    <p>p100</p>
-</div>
+    <div class="divclass1">
+        <p>p1</p>
+        <p>p1</p>
+        <p>p1</p>
+        <p>p1</p>
+        <p>p100</p>
+    </div>
     <ul>
         <li>p1</li>
         <li>p1</li>
         <li>p1</li>
         <li>p1</li>
     </ul>
+</div>
+
+<!-- 02 -->
+<div *ngIf="disable02">
+    <div class="divclass3">
+        div-1
+    </div>
+    <div class="divclass4">
+        div-2
+    </div>
+</div>
+
+<!-- 03 -->
+
+<div *ngIf="disable03">
+    <div class="div1"></div>
+    <div class="div2"></div>
+    <div class="div3"></div>
+</div>
+<!-- 04 -->
+<!-- 下拉列表 ul>li.li1*5>a+div.one -->
+<ul class="daohang clear"> 
+    <li class="li1">
+        <a href="">我的聚划算</a>
+        <div class="one">
+            <ul>
+                <li>购买到的宝贝</li>
+                <li>我的购物</li>
+                <li>天猫</li>
+            </ul>
+        </div>
+    </li>
+    <li class="li1">
+        <a href="">购物车</a>
+        <div class="one">
+            <ul>
+                <li>购买到的宝贝</li>
+                <li>我的购物</li>
+                <li>天猫</li>
+            </ul>
+        </div>
+    </li>
+    <li class="li1">
+        <a href="">我的淘宝</a>
+        <div class="one">
+            <ul>
+                <li>购买到的宝贝</li>
+                <li>我的购物</li>
+                <li>天猫</li>
+            </ul>
+        </div>
+    </li>
+    <li class="li1">
+        <a href="">商务中心</a>
+        <div class="one">
+            <ul>
+                <li>购买到的宝贝</li>
+                <li>我的购物</li>
+                <li>天猫</li>
+            </ul>
+        </div>
+    </li>
+    <li class="li1">
+        <a href="">帮助</a>
+        <div class="one">
+            <ul>
+                <li>购买到的宝贝</li>
+                <li>我的购物</li>
+                <li>天猫</li>
+            </ul>
+        </div>
+    </li>
+</ul>
+
+<div class="banner"></div>
