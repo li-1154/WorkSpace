@@ -8,24 +8,33 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-component.component.css']
 })
 export class LoginComponent implements OnInit {
-  email:string='';
-  password:string= '';
-  errorMsg:string = '';
+  email: string = '';
+  password: string = '';
+  errorMsg: string = '';
 
-  constructor(private afs:AngularFireAuth,private router:Router) { }
+  constructor(private afs: AngularFireAuth, private router: Router) { }
 
+  private authSub: any;
   ngOnInit(): void {
-  }
-  async login() { 
-     try{
-        await this.afs.signInWithEmailAndPassword(this.email,this.password)
-        console.log('✅ Login success!');
-        this.router.navigate(['/notes']);
+    this.authSub = this.afs.authState.subscribe(user =>
+    {
+      if(user)
+      {
+        alert('请先登出');
+        return;
+      }
     }
-    catch(error){
+  }
+  async login() {
+    try {
+      await this.afs.signInWithEmailAndPassword(this.email, this.password)
+      console.log('✅ Login success!');
+      this.router.navigate(['/notes']);
+    }
+    catch (error) {
       this.errorMsg = error.message;
       console.error('❌ Login failed:', error);
     }
   }
-  
+
 }

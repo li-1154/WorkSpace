@@ -74,7 +74,7 @@ export class NotesService {
 
   //删除日志
   deleteNote(id:string){
-    return this.afs.doc(`notes/${id}`).delete();
+    return this.afs.doc<Note>(`notes/${id}`).delete();
   }
 
   //取得的日志

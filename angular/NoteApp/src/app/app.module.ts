@@ -15,7 +15,7 @@ import { NotesListComponent } from './pages/notes-list-component/notes-list-comp
 import { HeaderComponent } from './components/header-component/header-component.component';
 import { FooterComponent } from './components/footer-component/footer-component.component';
 import { NoteItemComponent } from './components/note-item-component/note-item-component.component';
-import { NoteFormComponent } from './components/note-form-component/note-form-component.component';
+import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { environment } from '../environments/environment';
@@ -37,7 +37,6 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-
     AngularFireAuthModule,
     FormsModule
 

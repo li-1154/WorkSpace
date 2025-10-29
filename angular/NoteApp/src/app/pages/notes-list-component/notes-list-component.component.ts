@@ -30,7 +30,7 @@ export class NotesListComponent implements OnInit {
   {
     if(confirm('确定要删除这条笔记吗?'))
     {
-      this.noteService,this.deleteNote(id);
+      this.noteService.deleteNote(id);
     }
   }
 

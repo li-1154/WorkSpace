@@ -1,1 +1,15 @@
-<p>note-form works!</p>
+<div class="container mt-4">
+    <h2>{{ noteId ? '✏️ 编辑笔记' : '🆕 新建笔记' }}</h2>
+    <form (ngSubmit)="saveNote()">
+        <div class="mb-3">
+            <label>标题：</label>
+            <input type="text" class="form-control" [(ngModel)]="title" name="title" required="">
+        </div>
+        <div class="mb-3">
+            <label>内容:</label>
+            <textarea type="text" row="5" [(ngModel)]="content" name="title" required=""></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="router.navigate(['/notes'])">返回</button>
+    </form>
+</div>
