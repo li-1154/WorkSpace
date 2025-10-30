@@ -11,20 +11,29 @@ export class LoginComponent implements OnInit {
   email: string = '';
   password: string = '';
   errorMsg: string = '';
+  title:string = '用户登陆';
 
   constructor(private afs: AngularFireAuth, private router: Router) { }
 
   private authSub: any;
+  user: any = null;
+  userFormdisble:boolean=false;
   ngOnInit(): void {
-    this.authSub = this.afs.authState.subscribe(user =>
-    {
-      if(user)
-      {
-        alert('请先登出');
-        return;
-      }
+ 
+  this.authSub = this.afs.authState.subscribe(user => {
+    if (user) {
+      this.user = user;
+      this.userFormdisble = false;
+      this.title='用户信息';
+      console.log('✅ 已登录用户:', this.user);
+    } else {
+      this.user = null;
+      console.log('🚫 未登录');
+       this.userFormdisble = true;
     }
-  }
+  });
+}
+
   async login() {
     try {
       await this.afs.signInWithEmailAndPassword(this.email, this.password)
@@ -37,4 +46,10 @@ export class LoginComponent implements OnInit {
     }
   }
 
+
+   logout()
+  {
+    this.afs.signOut();
+    this.router.navigate(['/login']);
+  }
 }

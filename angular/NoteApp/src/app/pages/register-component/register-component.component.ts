@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   email: string;
   password: string;
   errorMsg: string;
+  title='用户注册';
 
   constructor(private afs: AngularFireAuth, private router: Router) { }
 
@@ -32,12 +33,27 @@ export class RegisterComponent implements OnInit {
     catch (error) {
       // console.log('❌ Firebase Error:', error);
       // this.errorMsg = error.message; // 临时先显示英文
-      this.errorMsg = this.errorMessages[error.code]||'注册失败，请稍后再试。';
+      this.errorMsg = this.errorMessages[error.code] || '注册失败，请稍后再试。';
       console.error('register,failed', error);
     }
   }
+
+  private authSub: any;
+  user: any = null;
+  userFormdisble: boolean = false;
   ngOnInit(): void {
-    console.log('测试', this.afs);
+    this.authSub = this.afs.authState.subscribe(user => {
+      if (user) {
+        this.user = user;
+        this.userFormdisble = false;
+        this.title = '请先登出再注册新用户！！！';
+        console.log('✅ 已登录用户:', this.user);
+      } else {
+        this.user = null;
+        console.log('🚫 未登录');
+        this.userFormdisble = true;
+      }
+    });
   }
 
 }
