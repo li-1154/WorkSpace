@@ -20,6 +20,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { environment } from '../environments/environment';
 import { AboutComponent } from './pages/about/about.component';
+import { AttendanceComponent } from './pages/attendance/attendance.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AboutComponent } from './pages/about/about.component';
     FooterComponent,
     NoteItemComponent,
     NoteFormComponent,
-    AboutComponent
+    AboutComponent,
+    AttendanceComponent
   ],
   imports: [
     BrowserModule,

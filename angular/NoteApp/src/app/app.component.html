@@ -20,7 +20,11 @@
 
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/notes" routerLinkActive="active-link">我的笔记</a>
+          <a class="nav-link" routerLink="/notes"  *ngIf="isLoggedIn"  routerLinkActive="active-link">我的笔记</a>
+        </li>
+
+         <li class="nav-item" >
+          <a class="nav-link" routerLink="/Attendance" *ngIf="isLoggedIn"  routerLinkActive="active-link">出勤管理</a>
         </li>
         
         <li class="nav-item">

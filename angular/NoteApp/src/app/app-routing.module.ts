@@ -8,28 +8,32 @@ import { NotesListComponent } from './pages/notes-list-component/notes-list-comp
 import { AuthGuard } from './guards/auth.guard';
 import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AboutComponent } from './pages/about/about.component';
-
+import { AttendanceComponent } from './pages/attendance/attendance.component';
 
 const routes: Routes = [
-
   //登陆模块
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'progress', component: AboutComponent },
+  { path: 'Attendance', component: AttendanceComponent },
   //笔记模块
-  { path: 'notes', component: NotesListComponent, canActivate: [AuthGuard] /*, canActivate: [AuthGuard]*/ },
+  {
+    path: 'notes',
+    component: NotesListComponent,
+    canActivate: [AuthGuard] /*, canActivate: [AuthGuard]*/,
+  },
   { path: 'note/new', component: NoteFormComponent, canActivate: [AuthGuard] },
-  { path: 'note.edit/:id', component: NoteFormComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '' }
-
+  {
+    path: 'note.edit/:id',
+    component: NoteFormComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: '**', redirectTo: '' },
 ];
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    RouterModule.forRoot(routes)
-  ],
-  exports: [RouterModule]
+  imports: [CommonModule, RouterModule.forRoot(routes)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

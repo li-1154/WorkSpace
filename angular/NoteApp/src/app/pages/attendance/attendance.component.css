@@ -1,0 +1,55 @@
+.attendance-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #fff;
+  font-family: 'Arial', sans-serif;
+}
+
+.date {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.date.datecolor {
+  color: #d9534f; /* 红色 */
+  font-weight: bold;
+}
+
+.time {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 120px);
+  grid-gap: 10px;
+}
+
+.btn {
+  height: 70px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn.gray {
+  background-color: #dcdcdc;
+  color: #333;
+}
+
+.btn.blue {
+  background-color: #1e90ff;
+  color: white;
+}
+
+.btn:active {
+  opacity: 0.7;
+}
