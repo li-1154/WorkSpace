@@ -3,23 +3,23 @@ import { Component, OnInit } from '@angular/core';
 
 // 使用 @Component 装饰器定义组件
 @Component({
-  selector: 'app-attendance',              // 组件选择器（HTML 标签名）
+  selector: 'app-attendance', // 组件选择器（HTML 标签名）
   templateUrl: './attendance.component.html', // 模板路径
   styleUrls: ['./attendance.component.css'], // 样式路径
 })
 export class AttendanceComponent implements OnInit {
-
   // ==============================
   // ✅ 成员变量定义
   // ==============================
 
-  currentDate = '';   // 当前日期字符串（例：11月1日(水)）
-  currentTime = '';   // 当前时间字符串（例：14:35:10）
-  timer: any;         // 用于保存 setInterval 的定时器 ID
-  isHoliday = false;  // 是否为祝日（true 表示是节假日）
-  holidayName = '';   // 祝日名称（例：文化の日）
-  datecolor = false;  // 是否让日期显示为红色（周末或祝日时 true）
-
+  currentDate = ''; // 当前日期字符串（例：11月1日(水)）
+  currentTime = ''; // 当前时间字符串（例：14:35:10）
+  timer: any; // 用于保存 setInterval 的定时器 ID
+  isHoliday = false; // 是否为祝日（true 表示是节假日）
+  holidayName = ''; // 祝日名称（例：文化の日）
+  datecolor = false; // 是否让日期显示为红色（周末或祝日时 true）
+  //周末是否出勤做的验证
+  datecolorweekcheck = false; 
   constructor() {}
 
   // ==============================
@@ -46,7 +46,9 @@ export class AttendanceComponent implements OnInit {
     const now = new Date(); // 获取当前时间对象
     const days = ['日', '月', '火', '水', '木', '金', '土']; // 日本星期缩写
     // 组合日期格式示例：11月1日(水)
-    const dateStr = `${now.getMonth() + 1}月${now.getDate()}日(${days[now.getDay()]})`;
+    const dateStr = `${now.getMonth() + 1}月${now.getDate()}日(${
+      days[now.getDay()]
+    })`;
     // 获取本地时间（日本时区、24小时制）
     const timeStr = now.toLocaleString('ja-JP', { hour12: false });
 
@@ -78,11 +80,11 @@ export class AttendanceComponent implements OnInit {
 
       // 如果当前日期存在于返回数据中 → 表示是祝日
       if (data[dateStr]) {
-        this.isHoliday = true;           // 祝日标志 true
-        this.datecolor = true;           // 日期标红
+        this.isHoliday = true; // 祝日标志 true
+        this.datecolor = true; // 日期标红
         this.holidayName = data[dateStr]; // 保存祝日名称（例：文化の日）
       } else {
-        this.isHoliday = false;          // 非祝日
+        this.isHoliday = false; // 非祝日
       }
     } catch (err) {
       // 捕获网络或 API 错误
@@ -101,5 +103,9 @@ export class AttendanceComponent implements OnInit {
     if (day === 0 || day === 6) {
       this.datecolor = true;
     }
+  }
+
+  weekendWork() {
+   this.datecolorweekcheck = !this.datecolorweekcheck;
   }
 }

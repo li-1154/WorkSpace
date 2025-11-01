@@ -1,14 +1,51 @@
 <div class="attendance-container">
-    <div class="date" [ngClass]="{'datecolor':datecolor}">{{currentDate}}</div>
-    <span *ngIf="isHoliday" style="color: #d9534f;">
-        🎉 祝日：{{ holidayName }}
-    </span>
-    <div class="time">{{currentTime}}</div>
+  <!-- 日期 -->
+  <div class="date" [ngClass]="{ 'datecolor': datecolor }">
+    {{ currentDate }}
+  </div>
 
-    <div class="buttons">
-        <button class="btn blue">出勤</button>
-        <button class="btn blue">中途退勤</button>
-        <button class="btn blue">中途出勤</button>
-        <button class="btn blue">退勤</button>
-    </div>
+  <!-- 祝日提示 -->
+  <span *ngIf="isHoliday" style="color: #d9534f;">
+    🎉 祝日：{{ holidayName }}
+  </span>
+
+  <!-- 时间 -->
+  <div class="time">{{ currentTime }}</div>
+
+  <!-- 周末出勤勾选 -->
+  <label *ngIf="datecolor && !isHoliday" class="weekend-check">
+    <input type="checkbox" (click)="weekendWork()" name="weekendWork" />
+    休息日出勤
+  </label>
+
+  <!-- 出勤按钮区 -->
+  <div class="buttons">
+    <button
+      [ngClass]="datecolorweekcheck || isHoliday ?'btn blue' : 'btn gray'"
+      [disabled]="!datecolorweekcheck && !isHoliday"
+    >
+      出勤
+    </button>
+
+    <button
+      [ngClass]="datecolorweekcheck || isHoliday ? 'btn blue' : 'btn gray'"
+      [disabled]="!datecolorweekcheck && !isHoliday"
+    >
+      中途退勤
+    </button>
+
+    <button
+      [ngClass]="datecolorweekcheck || isHoliday ? 'btn blue' : 'btn gray'"
+      [disabled]="!datecolorweekcheck && !isHoliday"
+    >
+      中途出勤
+    </button>
+
+    <button
+      [ngClass]="datecolorweekcheck || isHoliday ? 'btn blue' : 'btn gray'"
+      [disabled]="!datecolorweekcheck && !isHoliday"
+    >
+      退勤
+    </button>
+  </div>
 </div>
