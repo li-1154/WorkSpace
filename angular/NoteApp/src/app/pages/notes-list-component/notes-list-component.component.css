@@ -1,0 +1,48 @@
+.page-container {
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+}
+
+.page-card {
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease-in-out;
+}
+
+.page-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.note-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+}
+
+.note-card h5 {
+  color: #0d6efd;
+}
+
+.note-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.btn {
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}

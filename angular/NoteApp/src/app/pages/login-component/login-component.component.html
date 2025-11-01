@@ -1,20 +1,79 @@
-<h1>{{title}}</h1>
-<!-- 登录页面 未登录 -->
-<form action="" *ngIf="userFormdisble">
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" [(ngModel)]="email" placeholder="输入邮箱" name="email">
+<div class="auth-container d-flex justify-content-center align-items-center min-vh-100 bg-light">
+  <div class="auth-card shadow-lg p-4 rounded-4 text-center">
+
+    <!-- 标题 -->
+    <h1 class="mb-4 text-primary fw-bold">{{ title }}</h1>
+
+    <!-- 未登录显示：登录表单 -->
+    <form *ngIf="userFormdisble" class="text-start" (ngSubmit)="login()">
+
+      <!-- 邮箱 -->
+      <div class="form-group mb-3">
+        <label for="email" class="form-label fw-semibold">邮箱地址</label>
+        <input
+          type="email"
+          class="form-control form-control-lg"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="请输入邮箱"
+          required
+        />
+      </div>
+
+      <!-- 密码 -->
+      <div class="form-group mb-4">
+        <label for="password" class="form-label fw-semibold">密码</label>
+        <div class="position-relative">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control form-control-lg"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="请输入密码"
+            required
+          />
+
+          <!-- ✅ 显示密码复选框 -->
+          <div class="form-check mt-2 d-flex align-items-center">
+            <input
+              type="checkbox"
+              class="form-check-input me-2"
+              id="showPwd"
+              (click)="showPassword = !showPassword"
+            />
+            <label for="showPwd" class="form-check-label text-muted small">
+              显示密码
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ 登录 & 注册按钮并排 -->
+      <div class="d-flex justify-content-between gap-3">
+        <button type="submit" class="btn btn-primary flex-fill py-2">登录</button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary flex-fill py-2"
+          routerLink="/register"
+        >
+          注册
+        </button>
+      </div>
+
+      <!-- 错误提示 -->
+      <p *ngIf="errorMsg" class="alert alert-warning mt-3 text-center">
+        {{ errorMsg }}
+      </p>
+    </form>
+
+    <!-- ✅ 已登录显示：欢迎界面 -->
+    <div *ngIf="!userFormdisble" class="welcome-card mt-4">
+      <h3 class="text-secondary mb-2">👋 欢迎回来！</h3>
+      <h2 class="text-primary fw-bold mb-4">
+        {{ user.displayName || (user.email.split('@')[0]) }}
+      </h2>
+      <button (click)="logout()" class="btn btn-outline-danger px-4">登出</button>
     </div>
-    <div class="form-group">
-        <label for="password">password:</label>
-        <input type="password" class="form-control" [(ngModel)]="password" placeholder="输入密码" name="password">
-    </div>
-    <button type="submit" (click)="login()" class="btn btn-primary btn-sm">登陆</button>
-    <p class="alert alert-warning" role="alert" *ngIf="errorMsg"> {{errorMsg}}</p>
-</form>
-<!-- 登录页面 已登录 -->
-<div *ngIf="!userFormdisble">
-    <h3>欢迎回来</h3>
-    <h2>{{ user.displayName || user.email }}！</h2>
-    <button (click)="logout()" class="btn btn-primary btn-sm">登出</button>
+
+  </div>
 </div>

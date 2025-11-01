@@ -1,0 +1,68 @@
+.about-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* 卡片整体 */
+.about-card {
+  max-width: 720px;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.about-card:hover {
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* 渐变标题 */
+.text-gradient {
+  background: linear-gradient(90deg, #0d6efd, #6610f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 每个版本块 */
+.phase-block {
+  padding: 1rem 1rem 0.5rem;
+  background-color: #fdfdfd;
+  border-radius: 10px;
+  border: 1px solid #f1f3f5;
+  transition: background-color 0.3s ease;
+}
+
+.phase-block:hover {
+  background-color: #f8f9fa;
+}
+
+/* 进度项 */
+.phase-item {
+  color: #495057;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.phase-item:hover {
+  color: #0d6efd;
+  transform: translateX(4px);
+}
+
+/* 信息说明块 */
+.phase-message {
+  font-size: 0.95rem;
+  color: #6c757d;
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+/* 响应式 */
+@media (max-width: 576px) {
+  .about-card {
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+}

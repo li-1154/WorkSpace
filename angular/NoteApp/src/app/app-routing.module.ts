@@ -7,6 +7,7 @@ import { RegisterComponent } from './pages/register-component/register-component
 import { NotesListComponent } from './pages/notes-list-component/notes-list-component.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NoteFormComponent } from './pages/note-form/note-form.component';
+import { AboutComponent } from './pages/about/about.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'progress', component: AboutComponent },
   //笔记模块
   { path: 'notes', component: NotesListComponent, canActivate: [AuthGuard] /*, canActivate: [AuthGuard]*/ },
   { path: 'note/new', component: NoteFormComponent, canActivate: [AuthGuard] },

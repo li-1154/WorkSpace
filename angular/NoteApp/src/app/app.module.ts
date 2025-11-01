@@ -19,6 +19,7 @@ import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { environment } from '../environments/environment';
+import { AboutComponent } from './pages/about/about.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { environment } from '../environments/environment';
     HeaderComponent,
     FooterComponent,
     NoteItemComponent,
-    NoteFormComponent
+    NoteFormComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

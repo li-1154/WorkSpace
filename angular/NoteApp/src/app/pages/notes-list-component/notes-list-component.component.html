@@ -1,19 +1,33 @@
-<div class="containner mt-4">
-    <h2>📘 我的笔记</h2>
-    <button class="btn btn-primary mb-3" (click)="addNote()">+ 新增笔记</button>
+<div class="page-container d-flex justify-content-center align-items-start min-vh-100 bg-light py-5">
+  <div class="page-card shadow-lg p-4 rounded-4 w-100" style="max-width: 800px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-primary fw-bold">📘 我的笔记</h2>
+      <button class="btn btn-primary px-3" (click)="addNote()">+ 新增笔记</button>
+    </div>
 
-    <div *ngIf="notes.length === 0">还没有任何笔记。</div>
+    <div *ngIf="notes.length === 0" class="text-center text-muted py-5">
+      🗒️ 还没有任何笔记，快来添加一条吧！
+    </div>
 
-    <ul class="list-group">
-        <li *ngFor="let note of notes" class="list-group-item">
-            <h5>{{note.title}}</h5>
-            <p>{{note.content}}</p>
-            <small>{{note.createdAt.toDate()|date:'yyyy/mm/dd HH:mm'}}</small>
-            <div class="mt-2">
-                <button class="btn btn-sm btn-outline-secondary" (click)="editNote(note.id!)">编辑</button>
-                <button class="btn btn-sm btn-outline-danger" (click)="deleteNote(note.id!)">删除</button>
+    <div class="note-list">
+      <div
+        *ngFor="let note of notes"
+        class="note-card p-3 mb-3 rounded-3 shadow-sm bg-white"
+      >
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="text-dark fw-semibold mb-0">{{ note.title }}</h5>
+          <small class="text-muted">{{ note.createdAt.toDate() | date: 'yyyy/MM/dd HH:mm' }}</small>
+        </div>
 
-            </div>
-        </li>
-    </ul>
+        <p class="text-secondary mb-3" style="white-space: pre-line;">{{ note.content }}</p>
+
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-sm btn-outline-secondary px-3" (click)="editNote(note.id!)">✏️ 编辑</button>
+          <button class="btn btn-sm btn-outline-danger px-3" (click)="deleteNote(note.id!)">🗑 删除</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

@@ -1,0 +1,50 @@
+/* ✅ 整体导航栏风格 */
+.custom-navbar {
+  background: linear-gradient(135deg, #e3f2fd, #ffffff);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* ✅ 品牌 logo 样式 */
+.navbar-brand {
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+}
+
+/* ✅ 链接样式 */
+.nav-link {
+  color: #495057;
+  font-weight: 500;
+  margin: 0 10px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #0d6efd;
+  transform: translateY(-1px);
+}
+
+/* ✅ 当前路由激活状态 */
+.active-link {
+  color: #0d6efd !important;
+  font-weight: 600;
+  border-bottom: 2px solid #0d6efd;
+  padding-bottom: 2px;
+}
+
+/* ✅ 登出按钮特化 */
+.logout-link {
+  color: blueviolet !important;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-link:hover {
+  color: #6610f2 !important;
+  text-decoration: underline;
+}
+
+/* ✅ 阴影效果 */
+.shadow-sm {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}

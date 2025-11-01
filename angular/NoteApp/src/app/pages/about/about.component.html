@@ -1,0 +1,30 @@
+<div class="about-page d-flex justify-content-center align-items-center py-5 bg-light">
+  <div class="about-card shadow-lg p-4 rounded-4 bg-white">
+    <!-- 标题 -->
+    <h2 class="text-center text-gradient fw-bold mb-4">📘 开发进度记录</h2>
+
+    <!-- 版本循环 -->
+    <div *ngFor="let phase of phases" class="phase-block mb-5">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="fw-bold text-primary mb-0">{{ phase.version }}</h5>
+        <span class="text-muted small">{{ phase.date }}</span>
+      </div>
+
+      <ul class="list-unstyled ps-3 mb-3">
+        <li *ngFor="let item of phase.items" class="phase-item">• {{ item }}</li>
+      </ul>
+
+      <div class="phase-message border-start border-3 ps-3">
+        <p class="text-muted mb-0">{{ phase.message }}</p>
+      </div>
+
+      <hr *ngIf="phase !== phases[phases.length - 1]" class="my-4" />
+    </div>
+
+    <!-- 学习说明 -->
+    <div class="text-center mt-4">
+      <h5 class="fw-bold text-secondary mb-2">💬 说明</h5>
+      <p class="text-muted">{{ contact }}</p>
+    </div>
+  </div>
+</div>
