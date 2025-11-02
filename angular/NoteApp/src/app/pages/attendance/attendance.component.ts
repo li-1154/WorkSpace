@@ -1,6 +1,7 @@
 // 导入 Angular 核心模块
 import { Component, OnInit } from '@angular/core';
-
+import { AttendanceService } from 'src/app/services/attendance.service';
+import { AttendanceRecord } from 'src/app/models/attendance.model';
 // 使用 @Component 装饰器定义组件
 @Component({
   selector: 'app-attendance', // 组件选择器（HTML 标签名）
@@ -19,8 +20,8 @@ export class AttendanceComponent implements OnInit {
   holidayName = ''; // 祝日名称（例：文化の日）
   datecolor = false; // 是否让日期显示为红色（周末或祝日时 true）
   //周末是否出勤做的验证
-  datecolorweekcheck = false; 
-  constructor() {}
+  datecolorweekcheck = false;
+  constructor(private attendanceService: AttendanceService) {}
 
   // ==============================
   // ✅ 生命周期钩子
@@ -37,6 +38,8 @@ export class AttendanceComponent implements OnInit {
 
     // 检查是否为周六或周日
     this.checkHolidayOrWeekend();
+
+    this.loadTodayRecord();
   }
 
   // ==============================
@@ -106,6 +109,65 @@ export class AttendanceComponent implements OnInit {
   }
 
   weekendWork() {
-   this.datecolorweekcheck = !this.datecolorweekcheck;
+    this.datecolorweekcheck = !this.datecolorweekcheck;
+  }
+
+  todayRecord: AttendanceRecord | null = null;
+  isSubmitting = false;
+
+  async onAttend(type: string) {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
+    const result = await this.attendanceService.logAttendance(type);
+    if (result?.success) {
+      await this.loadTodayRecord();
+    } else {
+      alert('❌ 打卡失败，请重试');
+    }
+    this.isSubmitting = false;
+  }
+
+  async loadTodayRecord() {
+    this.todayRecord = await this.attendanceService.getTodayRecord();
+    console.log(this.todayRecord);
+  }
+
+  isDisabled(type: string): boolean {
+    const r = this.todayRecord;
+    if (!r) return false;
+    switch (type) {
+      case '出勤':
+        return !!r.checkIn;
+      case '中途退勤':
+        return !!r.breakOut;
+      case '中途出勤':
+        return !!r.checkIn;
+      case '退勤':
+        return !!r.checkOut;
+      default:
+        return false;
+    }
+  }
+
+  getWorkDuration(): string | null {
+    if (!this.todayRecord?.checkIn || !this.todayRecord?.checkOut) return null;
+
+    const [inH, inM, inS] = this.todayRecord.checkIn.split(':').map(Number);
+    const [outH, outM, outS] = this.todayRecord.checkOut.split(':').map(Number);
+
+    const checkIn = new Date();
+    checkIn.setHours(inH, inM, inS, 0);
+
+    const checkOut = new Date();
+    checkOut.setHours(outH, outM, outS, 0);
+
+    const diffMs = checkOut.getTime() - checkIn.getTime();
+    if (diffMs <= 0) return null;
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${hours}小时 ${minutes}分`;
   }
 }

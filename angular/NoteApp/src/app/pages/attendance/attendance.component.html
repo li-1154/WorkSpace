@@ -4,48 +4,55 @@
     {{ currentDate }}
   </div>
 
-  <!-- 祝日提示 -->
-  <span *ngIf="isHoliday" style="color: #d9534f;">
-    🎉 祝日：{{ holidayName }}
-  </span>
-
   <!-- 时间 -->
   <div class="time">{{ currentTime }}</div>
 
+  <!-- 祝日提示 -->
+  <span *ngIf="isHoliday" class="holiday-text">🎉 祝日：{{ holidayName }}</span>
+
   <!-- 周末出勤勾选 -->
   <label *ngIf="datecolor && !isHoliday" class="weekend-check">
-    <input type="checkbox" (click)="weekendWork()" name="weekendWork" />
-    休息日出勤
+    <input type="checkbox" (click)="weekendWork()" /> 休息日出勤
   </label>
 
   <!-- 出勤按钮区 -->
   <div class="buttons">
-    <button
-      [ngClass]="datecolorweekcheck || isHoliday ?'btn blue' : 'btn gray'"
-      [disabled]="!datecolorweekcheck && !isHoliday"
-    >
+    <button class="btn" [class.active]="!isDisabled('出勤')"
+      [disabled]="isDisabled('出勤') || (!datecolorweekcheck && !isHoliday)" (click)="onAttend('出勤')">
       出勤
     </button>
 
-    <button
-      [ngClass]="datecolorweekcheck || isHoliday ? 'btn blue' : 'btn gray'"
-      [disabled]="!datecolorweekcheck && !isHoliday"
-    >
+    <button class="btn" [class.active]="!isDisabled('中途退勤')"
+      [disabled]="isDisabled('中途退勤') || (!datecolorweekcheck && !isHoliday)" (click)="onAttend('中途退勤')">
       中途退勤
     </button>
 
-    <button
-      [ngClass]="datecolorweekcheck || isHoliday ? 'btn blue' : 'btn gray'"
-      [disabled]="!datecolorweekcheck && !isHoliday"
-    >
+    <button class="btn" [class.active]="!isDisabled('中途出勤')"
+      [disabled]="isDisabled('中途出勤') || (!datecolorweekcheck && !isHoliday)" (click)="onAttend('中途出勤')">
       中途出勤
     </button>
 
-    <button
-      [ngClass]="datecolorweekcheck || isHoliday ? 'btn blue' : 'btn gray'"
-      [disabled]="!datecolorweekcheck && !isHoliday"
-    >
+    <button class="btn" [class.active]="!isDisabled('退勤')"
+      [disabled]="isDisabled('退勤') || (!datecolorweekcheck && !isHoliday)" (click)="onAttend('退勤')">
       退勤
     </button>
   </div>
+
+  <!-- ✅ 出勤记录显示 -->
+  <div class="attendance-list" *ngIf="todayRecord">
+    <h4>今日出勤记录</h4>
+    <ul class="simple-list">
+      <li *ngIf="todayRecord.checkIn">✅ 出勤：<span>{{ todayRecord.checkIn }}</span></li>
+      <li *ngIf="todayRecord.breakOut">⏸ 中途退勤：<span>{{ todayRecord.breakOut }}</span></li>
+      <li *ngIf="todayRecord.breakIn">▶️ 中途出勤：<span>{{ todayRecord.breakIn }}</span></li>
+      <li *ngIf="todayRecord.checkOut">🏁 退勤：<span>{{ todayRecord.checkOut }}</span></li>
+    </ul>
+  </div>
+
+  <!-- ✅ 今日上班总时间 -->
+  <div class="worktime" *ngIf="getWorkDuration()">
+    ⏰ 今日上班总时间：<strong>{{ getWorkDuration() }}</strong>
+  </div>
+
+  <div *ngIf="!todayRecord" class="no-record">今日暂无出勤记录。</div>
 </div>
