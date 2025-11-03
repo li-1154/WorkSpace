@@ -95,4 +95,19 @@ export class AttendanceService {
         return 'checkIn';
     }
   }
+  async getUserInfo()
+  {
+    const user = await this.afAuth.currentUser;
+    if(!user) return null;
+
+    const uid = user.uid;
+    const userRef = this.afs.collection('users').doc(uid);
+    const userSnap =await userRef.get().toPromise();
+    return (userSnap?.data() as any) || null;
+
+  }
+  
+
+
+
 }

@@ -1,62 +1,73 @@
-<div class="page-container d-flex justify-content-center align-items-center min-vh-100 bg-light">
-  <div class="page-card shadow-lg p-4 rounded-4 text-start">
+<div class="auth-container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="auth-card shadow p-4 rounded-4">
 
-    <h1 class="text-primary fw-bold text-center mb-4">{{ title }}</h1>
+    <h3 class="text-center mb-3 text-primary w-bold">{{ title }}</h3>
+    <form (ngSubmit)="register()" *ngIf="!userFormDisable">
 
-    <form *ngIf="userFormdisble" (ngSubmit)="register()">
-      <!-- 邮箱 -->
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label fw-semibold">邮箱地址</label>
+        <label for="name" class="form-label">姓名</label>
         <input
+          id="name"
+          type="text"
+          class="form-control"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="请输入姓名"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="group" class="form-label">组别</label>
+        <input
+          id="group"
+          type="text"
+          class="form-control"
+          [(ngModel)]="group"
+          name="group"
+          placeholder="请输入所属组别"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">邮箱</label>
+        <input
+          id="email"
           type="email"
-          class="form-control form-control-lg"
-          id="exampleInputEmail1"
-          name="email"
+          class="form-control"
           [(ngModel)]="email"
+          name="email"
           placeholder="请输入邮箱"
           required
         />
       </div>
 
-      <!-- 密码 -->
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label fw-semibold">密码</label>
+        <label for="password" class="form-label">密码</label>
         <input
+          id="password"
           type="password"
-          class="form-control form-control-lg"
-          id="exampleInputPassword1"
-          name="password"
+          class="form-control"
           [(ngModel)]="password"
+          name="password"
           placeholder="请输入密码（至少6位）"
           required
         />
       </div>
 
-      <!-- 用户须知（暂未启用） -->
-      <div class="form-check mb-4" *ngIf="false">
-        <input type="checkbox" class="form-check-input" id="termsCheck" required />
-        <label class="form-check-label" for="termsCheck">
-          我已阅读并同意 <a href="#">用户须知</a>
-        </label>
-      </div>
-
-      <!-- ✅ 两个按钮并排 -->
-      <div class="d-flex justify-content-between gap-3">
-        <button type="submit" class="btn btn-primary flex-fill py-2">注册</button>
-        <button
-          type="button"
-          class="btn btn-outline-secondary flex-fill py-2"
-          routerLink="/login"
-        >
-          已有用户
+      <div class="d-grid gap-2 mt-4">
+        <button type="submit" class="btn btn-primary py-2">注册</button>
+        <button type="button" class="btn btn-outline-secondary py-2" routerLink="/login">
+          返回登录
         </button>
       </div>
     </form>
 
-    <!-- 错误提示 -->
-    <p *ngIf="errorMsg" class="alert alert-warning mt-3 text-center">
-      {{ errorMsg }}
-    </p>
+    <div *ngIf="userFormDisable" class="alert alert-warning mt-4 text-center">
+      ⚠️ {{ title }}
+    </div>
 
+    <p *ngIf="errorMsg" class="text-danger text-center mt-3">{{ errorMsg }}</p>
   </div>
 </div>

@@ -1,59 +1,62 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { AngularFireAuth } from '@angular/fire/auth';
+
 @Component({
   selector: 'app-register-component',
   templateUrl: './register-component.component.html',
   styleUrls: ['./register-component.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
-  errorMessages: { [key: string]: string } = {
-    'auth/email-already-in-use': '该邮箱已被注册，请直接登录。',
-    'auth/invalid-email': '邮箱格式不正确。',
-    'auth/weak-password': '密码太弱,请设置至少6位密码。',
-    'auth/missing-password': '请输入密码。',
-  };
+  title = '用户注册';
+  email = '';
+  password = '';
+  name = '';
+  group = '';
+  errorMsg = '';
+  userFormDisable = false;  // ✅ 控制表单显示
+  private authSub: any;
 
-
-
-  email: string;
-  password: string;
-  errorMsg: string;
-  title='用户注册';
-
-  constructor(private afs: AngularFireAuth, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private afAuth: AngularFireAuth,
+    private router: Router
+  ) {}
 
   async register() {
-    try {
-      await this.afs.createUserWithEmailAndPassword(this.email, this.password)
-      console.log('register,success!');
-      this.router.navigate(['/login']);
+    this.errorMsg = '';
+
+    if (!this.email || !this.password || !this.name || !this.group) {
+      this.errorMsg = '请完整填写所有字段。';
+      return;
     }
-    catch (error) {
-      // console.log('❌ Firebase Error:', error);
-      // this.errorMsg = error.message; // 临时先显示英文
-      this.errorMsg = this.errorMessages[error.code] || '注册失败，请稍后再试。';
-      console.error('register,failed', error);
+
+    const result = await this.authService.register(this.email, this.password, this.name, this.group);
+
+    if (result.success) {
+      alert('注册成功，请使用新账号登录！');
+      this.router.navigate(['/login']);
+    } else {
+      this.errorMsg = result.message || '注册失败，请稍后再试。';
     }
   }
 
-  private authSub: any;
-  user: any = null;
-  userFormdisble: boolean = false;
   ngOnInit(): void {
-    this.authSub = this.afs.authState.subscribe(user => {
+    // ✅ 监听是否有用户登录
+    this.authSub = this.afAuth.authState.subscribe(user => {
       if (user) {
-        this.user = user;
-        this.userFormdisble = false;
-        this.title = '请先登出再注册新用户！！！';
-        console.log('✅ 已登录用户:', this.user);
+        this.userFormDisable = true;
+        this.title = '您已登录，无需注册';
       } else {
-        this.user = null;
-        console.log('🚫 未登录');
-        this.userFormdisble = true;
+        this.userFormDisable = false;
+        this.title = '用户注册';
       }
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.authSub) this.authSub.unsubscribe();
+  }
 }

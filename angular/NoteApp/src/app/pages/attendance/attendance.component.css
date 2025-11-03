@@ -132,3 +132,132 @@
   margin-top: 10px;
   font-size: 0.95rem;
 }
+
+
+/* === 顶部切换标签 === */
+.tab-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #f8f9fa;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.03);
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  background: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  transition: all 0.25s ease;
+}
+
+.tab:last-child {
+  border-right: none;
+}
+
+.tab:hover {
+  background-color: #e2e6ea;
+}
+
+.tab.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* === 组员区域（保持轻量） === */
+.group-section {
+  border-top: 1px solid #eee;
+  margin-top: 16px;
+  padding-top: 16px;
+  text-align: center;
+}
+
+.group-section h4 {
+  color: #333;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.group-section p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+
+/* === 顶部切换标签 === */
+.tab-header {
+  display: flex;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: #f8f9fa;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  background: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  transition: all 0.25s ease;
+}
+
+.tab:last-child {
+  border-right: none;
+}
+
+.tab:hover {
+  background-color: #e2e6ea;
+}
+
+.tab.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* === 未设置资料提示 === */
+.profile-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+/* === 组员区域 === */
+.group-section {
+  border-top: 1px solid #eee;
+  margin-top: 16px;
+  padding-top: 16px;
+  text-align: center;
+}
+
+
+.profile-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 0.95rem;
+  text-align: left;
+}

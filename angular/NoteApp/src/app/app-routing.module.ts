@@ -14,9 +14,9 @@ const routes: Routes = [
   //登陆模块
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'register', component: RegisterComponent , canActivate: [AuthGuard] },
   { path: 'progress', component: AboutComponent },
-  { path: 'Attendance', component: AttendanceComponent },
+  { path: 'Attendance', component: AttendanceComponent, canActivate: [AuthGuard]  },
   //笔记模块
   {
     path: 'notes',

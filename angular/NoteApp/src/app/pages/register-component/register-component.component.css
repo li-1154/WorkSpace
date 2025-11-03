@@ -1,16 +1,18 @@
-.page-container {
+.auth-container {
   background: linear-gradient(135deg, #e3f2fd, #ffffff);
+  min-height: 100vh;
 }
 
-.page-card {
+.auth-card {
   width: 100%;
   max-width: 420px;
   background-color: #fff;
   border: 1px solid #e9ecef;
+  border-radius: 20px;
   transition: all 0.3s ease-in-out;
 }
 
-.page-card:hover {
+.auth-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
 }
@@ -23,6 +25,7 @@
 .form-control {
   border-radius: 10px;
   padding: 10px 14px;
+  transition: all 0.2s ease-in-out;
 }
 
 .form-control:focus {
@@ -35,11 +38,6 @@
   border-radius: 50px;
   font-weight: 600;
   transition: all 0.2s ease-in-out;
-}
-
-.btn-primary {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
 }
 
 .btn-primary:hover {
@@ -58,9 +56,26 @@
   transform: translateY(-1px);
 }
 
-/* 错误提示 */
+/* ⚠️ 错误提示 */
+.text-danger {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* ⚠️ 警告提示 */
 .alert-warning {
   border-radius: 10px;
   font-weight: 500;
   font-size: 0.95rem;
+}
+
+/* 标题样式优化 */
+h2 {
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+h3 {
+  font-weight: 500;
+  color: #6c757d;
 }
