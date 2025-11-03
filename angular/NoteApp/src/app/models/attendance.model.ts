@@ -7,6 +7,7 @@ export interface AttendanceRecord {
   breakOut?: string;  // 中途退勤时间
   breakIn?: string;   // 中途出勤时间
   checkOut?: string;  // 退勤时间
+  status:number;//✅ 新增字段：出勤状态 0~4
   createdAt: any;     // 创建时间（Firestore Timestamp）
   updatedAt?: any;    // 更新时间
 }

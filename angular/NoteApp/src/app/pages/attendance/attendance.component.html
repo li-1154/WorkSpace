@@ -1,19 +1,26 @@
 <div class="attendance-container">
   <!-- 顶部切换标签 -->
   <div class="tab-header">
-    <div class="tab" [class.active]="currentTab === 'personal'" (click)="currentTab = 'personal'">👤 个人</div>
-    <div class="tab" [class.active]="currentTab === 'group'" (click)="currentTab = 'group'">👥 组员</div>
+    <div class="tab" [class.active]="currentTab === 'personal'" (click)="currentTab = 'personal'">
+      👤 个人
+    </div>
+    <div class="tab" [class.active]="currentTab === 'group'" (click)="currentTab = 'group'; loadGroupMembers()">
+      👥 组员
+    </div>
   </div>
 
-  <!-- 👤 个人页（始终可用） -->
+  <!-- 👤 个人页 -->
   <div *ngIf="currentTab === 'personal'">
-    <div class="date" [ngClass]="{ 'datecolor': datecolor }">{{ currentDate }}</div>
+    <div class="date" [ngClass]="{ datecolor: datecolor }">{{ currentDate }}</div>
     <div class="time">{{ currentTime }}</div>
+
     <span *ngIf="isHoliday" class="holiday-text">🎉 祝日：{{ holidayName }}</span>
+
     <label *ngIf="datecolor && !isHoliday" class="weekend-check">
       <input type="checkbox" (click)="weekendWork()" /> 休息日出勤
     </label>
 
+    <!-- 出勤按钮区 -->
     <div class="buttons">
       <button class="btn" [disabled]="isLoadingRecord || isDisabled('出勤')" (click)="onAttend('出勤')">出勤</button>
       <button class="btn" [disabled]="isLoadingRecord || isDisabled('中途退勤')" (click)="onAttend('中途退勤')">中途退勤</button>
@@ -21,6 +28,7 @@
       <button class="btn" [disabled]="isLoadingRecord || isDisabled('退勤')" (click)="onAttend('退勤')">退勤</button>
     </div>
 
+    <!-- ✅ 出勤记录 -->
     <div class="attendance-list" *ngIf="todayRecord">
       <h4>今日出勤记录</h4>
       <ul class="simple-list">
@@ -31,42 +39,36 @@
       </ul>
     </div>
 
+    <!-- ✅ 上班总时间 -->
     <div class="worktime" *ngIf="getWorkDuration()">
       ⏰ 今日上班总时间：<strong>{{ getWorkDuration() }}</strong>
     </div>
+
+    <div *ngIf="!todayRecord" class="no-record">今日暂无出勤记录。</div>
   </div>
 
-  <!-- 👥 组员页（只有 name & group 存在时显示） -->
- <div *ngIf="currentTab === 'group' && !groupAccessDenied" class="group-section">
-  <h4>组员出勤状况</h4>
+  <!-- 👥 组员页 -->
+  <div *ngIf="currentTab === 'group'">
+    <!-- 🚫 未设置姓名或组别时提示 -->
+    <div *ngIf="groupAccessDenied" class="profile-warning">
+      ⚠️ 您的个人资料未完整，请先在个人信息中填写
+      <strong>姓名</strong> 和 <strong>所属组别</strong> 才能查看组员出勤。
+    </div>
 
-  <p *ngIf="isLoadingGroup" class="text-muted mt-2">加载中…</p>
+    <!-- ✅ 已设置资料则显示组员出勤 -->
+    <div *ngIf="!groupAccessDenied">
+      <h4>组员出勤状况（组别：{{ userGroup }}）</h4>
 
-  <ul class="list-group mt-3" *ngIf="!isLoadingGroup">
-    <li class="list-group-item d-flex justify-content-between align-items-center"
-        *ngFor="let m of groupMembers">
-      <div>
-        <strong>{{ m.name }}</strong>
-        <small class="ms-2" *ngIf="m.checkIn">（{{ m.checkIn }} 打卡）</small>
-        <small class="ms-2" *ngIf="m.checkOut">（{{ m.checkOut }} 退勤）</small>
-      </div>
-      <span [ngClass]="{
-        'text-success': m.status === '出勤中',
-        'text-secondary': m.status === '已退勤'
-      }">
-        {{ m.status }}
-      </span>
-    </li>
-  </ul>
+      <ul class="simple-list" *ngIf="groupMembers.length > 0; else noGroupRecord">
+        <li *ngFor="let m of groupMembers">
+          <strong>{{ m.name }}</strong>
+          <span>{{ m.status }}：{{ m.time }}</span>
+        </li>
+      </ul>
 
-  <p *ngIf="!isLoadingGroup && groupMembers.length === 0" class="text-muted mt-3">
-    今日暂无组员打卡记录。
-  </p>
-</div>
-
-
-  <!-- 🚫 没有 name 或 group 的情况 -->
-  <div *ngIf="currentTab === 'group' && groupAccessDenied" class="profile-warning">
-    ⚠️ 您的个人资料未完整，请先在个人信息中填写 <strong>姓名</strong> 和 <strong>所属组别</strong> 才能查看组员出勤。
+      <ng-template #noGroupRecord>
+        <p class="text-muted mt-3">今日暂无组员出勤记录。</p>
+      </ng-template>
+    </div>
   </div>
 </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { AttendanceRecord } from 'src/app/models/attendance.model';
-import { promise } from 'protractor';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
@@ -32,7 +31,7 @@ export class AttendanceComponent implements OnInit {
   userGroup: string | null = null;
   groupAccessDenied = false; // 控制组员页显示
 
-  constructor(private attendanceService: AttendanceService, private afs: AngularFirestore) { }
+  constructor(private attendanceService: AttendanceService) { }
 
   async ngOnInit(): Promise<void> {
     // 1️⃣ 日期时间
@@ -46,10 +45,15 @@ export class AttendanceComponent implements OnInit {
     await this.checkHoliday();
     await this.checkHolidayOrWeekend();
     await this.loadTodayRecord();
-
+    await this.checkGroupAccess();
     if (!this.groupAccessDenied) {
-      await this.loadGroupAttendance();
+      await this.loadGroupMembers();
     }
+
+    if (!this.groupAccessDenied && this.userGroup) {
+      await this.loadGroupMembers();
+    }
+
   }
 
   // ==============================
@@ -150,16 +154,25 @@ export class AttendanceComponent implements OnInit {
   }
 
   isDisabled(type: string): boolean {
-    const r = this.todayRecord;
-    if (!r) return false;
-    switch (type) {
-      case '出勤': return !!r.checkIn;
-      case '中途退勤': return !!r.breakOut;
-      case '中途出勤': return !!r.breakIn;
-      case '退勤': return !!r.checkOut;
-      default: return false;
-    }
+    const status = this.todayRecord?.status ?? 0;
+
+    // 先定义哪些状态下可以点击
+    const canClick = {
+      '出勤': [0],             // 未出勤时可以出勤
+      '中途退勤': [1, 3],      // 出勤中、中途出勤中可中途退勤
+      '中途出勤': [2],         // 休息中可中途出勤
+      '退勤': [1, 3],          // 出勤中、中途出勤中可退勤
+    };
+
+    // 再判断当前状态是否在允许的范围里
+    const allow = canClick[type]?.includes(status) ?? false;
+
+    // [disabled] 需要“否定”结果
+    //当 allow = true → 按钮可点 → disabled = false
+    //当 allow = false → 按钮禁用 → disabled = true
+    return !allow;
   }
+
 
   getWorkDuration(): string | null {
     if (!this.todayRecord?.checkIn || !this.todayRecord?.checkOut) return null;
@@ -174,36 +187,17 @@ export class AttendanceComponent implements OnInit {
     return `${h}小时 ${m}分`;
   }
 
-  groupMembers: { name: string; status: '出勤中' | '已退勤' | '未出勤'; checkIn?: string; checkOut?: string }[] = [];
-  isLoadingGroup = false;
+  groupMembers: { name: string; status: string; time: string }[] = [];
 
-
-  async loadGroupAttendance() {
-    if (!this.userGroup) return;
-    this.isLoadingGroup = true;
-    
-    
-    const today = new Date();
-    const todayStr =
-      `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-    const snap = await this.afs.collection('attendancd', ref => ref.where('group', '==', this.userGroup).where('date', '==', todayStr)).get().toPromise();
-
-    this.groupMembers = snap.docs.map(d => {
-      const a: any = d.data();
-      let status: '出勤中' | '已退勤' = '出勤中';
-      if (a.checkOut) status = '已退勤';
-      return {
-        name: a.name,
-        status: status,
-        checkIn: a.checkIn ?? null,
-        checkOut: a.checkOut ?? null
-      };
-    });
-    this.isLoadingGroup = false;
+  async loadGroupMembers() {
+    if (!this.userGroup) {
+      console.warn('⛔ 未设置用户 group，跳过加载');
+      return;
+    }
+    this.groupMembers = await this.attendanceService.getGroupAttendance(this.userGroup);
+    console.log('打印信息', this.groupMembers);
   }
 
- 
 }
 
 
