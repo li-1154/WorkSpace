@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +10,17 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
+  user$: Observable<any | null>;
+
+
   title = 'NoteApp';
-  isLoggedIn: boolean = false;   // 是否禁用（无登录用户时）
   private authSub: any;       // 保存订阅对象，用于销毁时清理
 
   // ✅ 只需要注入一个 AngularFireAuth（你原本写了两次）
-  constructor(private afAuth: AngularFireAuth, private router: Router) {}
+  constructor(private afAuth: AngularFireAuth, private router: Router) {
+    this.user$ = this.afAuth.authState;
+   }
+  @ViewChild('navbar') navbar: ElementRef;
 
   // ===========================
   // 🔹 登出处理
@@ -29,16 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
   // 🔹 初始化
   // ===========================
   ngOnInit(): void {
-    // 监听用户认证状态变化
-    this.authSub = this.afAuth.authState.subscribe(user => {
-      if (!user) {
-        // 用户未登录 → 禁用操作、跳转登录
-        this.isLoggedIn = false;
-      } else {
-        // 用户已登录
-        this.isLoggedIn = true;
-      }
-    });
+
   }
 
   // ===========================
@@ -49,4 +46,18 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authSub.unsubscribe();
     }
   }
+
+  //修复导航不能回弹
+  closemenu() {
+    if (window.innerWidth < 992) {
+      const el = this.navbar?.nativeElement;
+      if (el && el.classList.contains('show'))
+      {
+        el.classList.remove('show');
+      }
+    }
+  }
+
+
+
 }

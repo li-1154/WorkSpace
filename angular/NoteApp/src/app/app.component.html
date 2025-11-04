@@ -5,33 +5,34 @@
     <a class="navbar-brand fw-bold text-primary" routerLink="/">📝 NoteApp</a>
 
     <!-- 折叠按钮（手机端显示） -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- 菜单 -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" #navbar>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
 
         <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active-link">登录</a>
+          <a class="nav-link" routerLink="/login" routerLinkActive="active-link" (click)="closemenu()">登录</a>
         </li>
 
-
+        <ng-container *ngIf="user$ | async as user">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/notes"  *ngIf="isLoggedIn"  routerLinkActive="active-link">我的笔记</a>
+          <a class="nav-link" routerLink="/notes"  routerLinkActive="active-link" (click)="closemenu()">我的笔记</a>
         </li>
 
          <li class="nav-item" >
-          <a class="nav-link" routerLink="/Attendance" *ngIf="isLoggedIn"  routerLinkActive="active-link">出勤管理</a>
+          <a class="nav-link" routerLink="/Attendance"  routerLinkActive="active-link" (click)="closemenu()">出勤管理</a>
         </li>
         
         <li class="nav-item">
-          <a class="nav-link logout-link"   *ngIf="isLoggedIn"(click)="logout()">登出</a>
+          <a class="nav-link logout-link"  (click)="logout()" (click)="closemenu()">登出</a>
         </li>
+        </ng-container>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/progress" routerLinkActive="active-link">about</a>
+          <a class="nav-link" routerLink="/progress" routerLinkActive="active-link" (click)="closemenu()">about</a>
         </li>
 
 

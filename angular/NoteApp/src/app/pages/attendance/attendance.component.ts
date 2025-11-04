@@ -40,9 +40,9 @@ export class AttendanceComponent implements OnInit {
 
 
     // 3️⃣ 检查假日 + 出勤记录（仅个人页）
+    await this.loadTodayRecord();
     await this.checkHoliday();
     await this.checkHolidayOrWeekend();
-    await this.loadTodayRecord();
     await this.checkGroupAccess();
     if (!this.groupAccessDenied && this.userGroup) {
       await this.loadGroupMembers();
