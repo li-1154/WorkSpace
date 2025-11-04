@@ -9,6 +9,17 @@ import { AttendanceRecord } from '../models/attendance.model';
 export class AttendanceService {
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) { }
 
+  private getLocalDateStr():string
+  {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    const dd = String(now.getDate()).padStart(2,'0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+
+
   async logAttendance(type: string) {
     const user = await this.afAuth.currentUser;
     if (!user) {
@@ -18,7 +29,7 @@ export class AttendanceService {
 
     const uid = user.uid;
     const now = new Date();
-    const dateStr = now.toISOString().split('T')[0];
+    const dateStr = this.getLocalDateStr();
     const timeStr = now.toTimeString().split(' ')[0];
 
     const userRef = this.afs.collection('users').doc(uid);
@@ -28,7 +39,7 @@ export class AttendanceService {
     const group = userData?.group || '未設定';
 
     const recordRef = this.afs
-      .collection('attendancd')
+      .collection('attendance')
       .doc(uid)
       .collection('records')
       .doc(dateStr);
@@ -78,10 +89,10 @@ export class AttendanceService {
     if (!user) return null;
 
     const uid = user.uid;
-    const dateStr = new Date().toISOString().split('T')[0];
+    const dateStr = this.getLocalDateStr();
 
     const docSnap = await this.afs
-      .collection('attendancd')
+      .collection('attendance')
       .doc(uid)
       .collection('records')
       .doc(dateStr)
@@ -123,7 +134,6 @@ export class AttendanceService {
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   console.log('🔥 当前 group:', group, typeof group, '日期:', todayStr);
-
   try {
     const snapshot = await this.afs.collectionGroup('records', ref =>
       ref.where('group', '==', String(group)).where('date', '==', todayStr)
@@ -138,6 +148,7 @@ export class AttendanceService {
 
     const members = snapshot?.docs.map(doc => {
       const data = doc.data() as any;
+      console.log('✅ 映射到成员:', data.name, data.status, data.date); // << 新增日志
 
       let status = '未出勤';
       let time = '';

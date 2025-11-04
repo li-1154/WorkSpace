@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AttendanceService } from 'src/app/services/attendance.service';
 import { AttendanceRecord } from 'src/app/models/attendance.model';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-attendance',
@@ -31,28 +31,23 @@ export class AttendanceComponent implements OnInit {
   userGroup: string | null = null;
   groupAccessDenied = false; // 控制组员页显示
 
-  constructor(private attendanceService: AttendanceService) { }
+  constructor(private attendanceService: AttendanceService,private cdr: ChangeDetectorRef) { }
 
   async ngOnInit(): Promise<void> {
     // 1️⃣ 日期时间
     this.updateDateTime();
     this.timer = setInterval(() => this.updateDateTime(), 1000);
 
-    // 2️⃣ 检查组员访问权限（决定是否能进组员页）
-    await this.checkGroupAccess();
 
     // 3️⃣ 检查假日 + 出勤记录（仅个人页）
     await this.checkHoliday();
     await this.checkHolidayOrWeekend();
     await this.loadTodayRecord();
     await this.checkGroupAccess();
-    if (!this.groupAccessDenied) {
-      await this.loadGroupMembers();
-    }
-
     if (!this.groupAccessDenied && this.userGroup) {
       await this.loadGroupMembers();
     }
+    console.log('🧩 checkGroupAccess 结果:', this.userGroup, this.userName);
 
   }
 
@@ -194,8 +189,11 @@ export class AttendanceComponent implements OnInit {
       console.warn('⛔ 未设置用户 group，跳过加载');
       return;
     }
+    console.log('🚀 开始加载组成员，当前 group:', this.userGroup);
     this.groupMembers = await this.attendanceService.getGroupAttendance(this.userGroup);
-    console.log('打印信息', this.groupMembers);
+    console.log('✅ 加载完成，成员数量:', this.groupMembers.length);
+    console.log('👥 组员列表:', this.groupMembers);
+    this.cdr.detectChanges(); // 👈 强制刷新模板
   }
 
 }
