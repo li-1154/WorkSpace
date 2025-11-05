@@ -220,26 +220,28 @@ export class AttendanceComponent implements OnInit {
     // ====== 基本状态检查 ======
     const canClick = {
       出勤: [0],
-      中途退勤: [1, 3],
-      中途出勤: [2],
-      退勤: [1, 3],
+      中途退勤: [1],
+      中途出勤: [3],
+      退勤: [1,2,3],
     };
     let allow = canClick[type]?.includes(s) ?? false;
 
-    // ====== 附加逻辑（防止重复） ======
-    switch (type) {
-      case '出勤':
-        if (r.checkIn) allow = false; // 已有出勤记录就禁用
-        break;
-      case '中途退勤':
-        if (r.breakOut && !r.breakIn) allow = false; // 已中途退勤未再出勤，不能连点
-        break;
-      case '中途出勤':
-        if (r.breakIn && (!r.breakOut || r.breakIn > r.breakOut)) allow = false; // 已中途出勤过
-        break;
-      case '退勤':
-        if (r.checkOut) allow = false; // 已退勤过
-        break;
+     // === 附加防重复逻辑 ===
+  switch (type) {
+    case '出勤':
+      if (r.checkIn) allow = false;
+      break;
+    case '中途退勤':
+      // 已中途退勤、未中途出勤的情况，不再允许再次点击
+      if (r.breakOut) allow = false;
+      break;
+    case '中途出勤':
+      // 已中途出勤过，禁用
+      if (r.breakIn) allow = false;
+      break;
+    case '退勤':
+      if (r.checkOut) allow = false;
+      break;
     }
 
     return !allow;
@@ -249,24 +251,26 @@ export class AttendanceComponent implements OnInit {
   // ⏱️ 计算工作时长
   // ==============================
   getWorkDuration(): string | null {
-    if (!this.todayRecord?.checkIn || !this.todayRecord?.checkOut) return null;
+  const record = this.todayRecord;
+  if (!record?.checkIn || !record?.checkOut) return null;
 
-    // 解析时间字符串为数字
-    const [inH, inM, inS] = this.todayRecord.checkIn.split(':').map(Number);
-    const [outH, outM, outS] = this.todayRecord.checkOut.split(':').map(Number);
+  const toMs = (t: string) => {
+    const [h, m, s] = t.split(':').map(Number);
+    return h * 3600000 + m * 60000 + (s || 0) * 1000;
+  };
 
-    const checkIn = new Date();
-    checkIn.setHours(inH, inM, inS, 0);
-    const checkOut = new Date();
-    checkOut.setHours(outH, outM, outS, 0);
+  let totalMs = toMs(record.checkOut) - toMs(record.checkIn);
 
-    const diff = checkOut.getTime() - checkIn.getTime();
-    if (diff <= 0) return null;
-
-    const h = Math.floor(diff / (1000 * 60 * 60));
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return `${h}小时 ${m}分`;
+  if (record.breakOut && record.breakIn) {
+    totalMs -= toMs(record.breakIn) - toMs(record.breakOut);
   }
+
+  if (totalMs <= 0) return null;
+
+  const h = Math.floor(totalMs / 3600000);
+  const m = Math.floor((totalMs % 3600000) / 60000);
+  return `${h}小时 ${m}分`;
+}
 
   // ==============================
   // 👥 加载组员出勤信息
