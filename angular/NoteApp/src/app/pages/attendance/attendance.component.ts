@@ -222,7 +222,7 @@ export class AttendanceComponent implements OnInit {
       出勤: [0],
       中途退勤: [1],
       中途出勤: [3],
-      退勤: [1,2,3],
+      退勤: [1,2],
     };
     let allow = canClick[type]?.includes(s) ?? false;
 
