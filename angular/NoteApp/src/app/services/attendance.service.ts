@@ -127,56 +127,25 @@ export class AttendanceService {
 
   }
 
-  async getGroupAttendance(group: string): Promise<{ name: string; status: string; time: string }[]> {
+  async getGroupAttendance(group: string): Promise<{ 
+  name: string; 
+  checkIn?: string; 
+  breakOut?: string; 
+  breakIn?: string; 
+  checkOut?: string; 
+}[]> {
   if (!group) return [];
 
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  console.log('🔥 当前 group:', group, typeof group, '日期:', todayStr);
-  try {
-    const snapshot = await this.afs.collectionGroup('records', ref =>
-      ref.where('group', '==', String(group)).where('date', '==', todayStr)
-    ).get().toPromise();
+  const snapshot = await this.afs.collectionGroup('records', ref =>
+    ref.where('group', '==', String(group)).where('date', '==', todayStr)
+  ).get().toPromise();
 
-    console.log('📦 查询结果数量:', snapshot?.size);
-
-    snapshot?.docs.forEach(doc => {
-      console.log('➡️ 文档路径:', doc.ref.path);
-      console.log('➡️ 数据:', doc.data());
-    });
-
-    const members = snapshot?.docs.map(doc => {
-      const data = doc.data() as any;
-      console.log('✅ 映射到成员:', data.name, data.status, data.date); // << 新增日志
-
-      let status = '未出勤';
-      let time = '';
-
-      if (data.checkOut) {
-        status = '退勤';
-        time = data.checkOut;
-      } else if (data.breakOut) {
-        status = '中途退勤';
-        time = data.breakOut;
-      } else if (data.breakIn) {
-        status = '中途出勤';
-        time = data.breakIn;
-      } else if (data.checkIn) {
-        status = '出勤';
-        time = data.checkIn;
-      }
-
-      return { name: data.name || '未設定', status, time: time || '-' };
-    }) || [];
-
-    console.log('📋 成员数据:', members);
-    return members;
-  } catch (err) {
-    console.error('❌ 获取组员出勤失败:', err);
-    return [];
-  }
+  return snapshot?.docs.map(doc => doc.data() as any) || [];
 }
+
 
 
 

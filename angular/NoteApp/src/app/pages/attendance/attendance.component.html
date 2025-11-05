@@ -62,9 +62,16 @@
       <ul class="simple-list" *ngIf="groupMembers.length > 0; else noGroupRecord">
         <li *ngFor="let m of groupMembers">
           <strong>{{ m.name }}</strong>
-          <span>{{ m.status }}：{{ m.time }}</span>
+          <ul>
+            <li *ngIf="m.checkIn">出勤：{{ m.checkIn }}</li>
+            <li *ngIf="m.breakOut">中途退勤：{{ m.breakOut }}</li>
+            <li *ngIf="m.breakIn">中途出勤：{{ m.breakIn }}</li>
+            <li *ngIf="m.checkOut">退勤：{{ m.checkOut }}</li>
+          </ul>
         </li>
       </ul>
+
+
 
       <ng-template #noGroupRecord>
         <p class="text-muted mt-3">今日暂无组员出勤记录。</p>
