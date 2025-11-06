@@ -21,6 +21,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
+import { TaskComponent } from './pages/task/task/task.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { AttendanceComponent } from './pages/attendance/attendance.component';
     NoteItemComponent,
     NoteFormComponent,
     AboutComponent,
-    AttendanceComponent
+    AttendanceComponent,
+    TaskComponent
   ],
   imports: [
     BrowserModule,

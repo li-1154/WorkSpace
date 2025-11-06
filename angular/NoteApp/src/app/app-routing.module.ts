@@ -9,14 +9,19 @@ import { AuthGuard } from './guards/auth.guard';
 import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
+import { TaskComponent } from './pages/task/task/task.component';
 
 const routes: Routes = [
   //登陆模块
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent , canActivate: [AuthGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard] },
   { path: 'progress', component: AboutComponent },
-  { path: 'Attendance', component: AttendanceComponent, canActivate: [AuthGuard]  },
+  {
+    path: 'Attendance',
+    component: AttendanceComponent,
+    canActivate: [AuthGuard],
+  },
   //笔记模块
   {
     path: 'notes',
@@ -29,6 +34,13 @@ const routes: Routes = [
     component: NoteFormComponent,
     canActivate: [AuthGuard],
   },
+  //Task 模块
+  {
+    path: 'Task',
+    component: TaskComponent,
+    canActivate: [AuthGuard],
+  },
+  //其他模块
   { path: '**', redirectTo: '' },
 ];
 @NgModule({
