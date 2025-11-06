@@ -1,18 +1,10 @@
 <div class="attendance-container">
   <!-- 🔹 顶部标签 -->
   <div class="tab-header">
-    <div
-      class="tab"
-      [class.active]="currentTab === 'personal'"
-      (click)="currentTab = 'personal'"
-    >
+    <div class="tab" [class.active]="currentTab === 'personal'" (click)="currentTab = 'personal'">
       👤 个人
     </div>
-    <div
-      class="tab"
-      [class.active]="currentTab === 'group'"
-      (click)="currentTab = 'group'"
-    >
+    <div class="tab" [class.active]="currentTab === 'group'" (click)="currentTab = 'group'">
       👥 组员
     </div>
   </div>
@@ -21,19 +13,26 @@
   <div *ngIf="currentTab === 'personal'">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="date fw-bold">{{ todayStr }}</div>
-      <button class="btn btn-primary btn-sm" (click)="toggleAddTask()">
-        <i [ngClass]="showAddTask ? 'fas fa-times' : 'fas fa-plus'"></i>
+      <button (click)="toggleAddTask()" class="btn btn-light rounded-circle p-1">
+        <img src="assets/icon/add.svg" width="20" height="20" alt="add" />
       </button>
     </div>
 
     <!-- ➕ 新增任务表单 -->
     <div *ngIf="showAddTask" class="add-task fade-in mb-3 border rounded-3 p-3 bg-light">
       <div class="row g-2 align-items-center">
-        <div class="col-md-5">
-          <input type="text" class="form-control" placeholder="事项名称" [(ngModel)]="newTask.name" />
-        </div>
         <div class="col-md-4">
-          <input type="datetime-local" class="form-control" [(ngModel)]="newTask.date" />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="事项名称"
+            [(ngModel)]="newTask.name"
+          />
+        </div>
+        <div class="col-md-5 d-flex align-items-center gap-2">
+          <input type="time" class="form-control" [(ngModel)]="newTask.startTime" />
+          <span>～</span>
+          <input type="time" class="form-control" [(ngModel)]="newTask.endTime" />
         </div>
         <div class="col-md-3">
           <select class="form-select" [(ngModel)]="newTask.priority">
@@ -47,10 +46,10 @@
 
       <div class="mt-3 text-end">
         <button class="btn btn-primary btn-sm me-2" (click)="addTask()">
-          <i class="fas fa-check"></i>
+          <img src="assets/icon/check-line.svg" width="20" height="20" alt="ok" />
         </button>
         <button class="btn btn-outline-secondary btn-sm" (click)="toggleAddTask()">
-          <i class="fas fa-times"></i>
+          <img src="assets/icon/close-large-line.svg" width="20" height="20" alt="cancel" />
         </button>
       </div>
     </div>
@@ -63,22 +62,30 @@
       </div>
 
       <div *ngIf="!collapsed.today" class="task-list">
-        <div *ngFor="let t of todayTasks()" class="task-card" (click)="selectTask(t)">
+        <div
+          *ngFor="let t of todayTasks()"
+          class="task-card"
+          (click)="selectTask(t)"
+        >
           <div class="left">
-            <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
+            <div
+              class="radio-circle"
+              [class.active]="t.done"
+              (click)="toggleDone(t, $event)"
+            ></div>
             <div>
               <div class="task-name">{{ t.name }}</div>
-              <div class="task-date">{{ formatDate(t.date) }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
             </div>
           </div>
 
           <div class="right">
             <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
             <button *ngIf="t.showActions" class="icon-btn" (click)="editTask(t, $event)">
-              <i class="fas fa-edit"></i>
+              <img src="assets/icon/pencil-ai-2-fill.svg" width="20" height="20" alt="edit" />
             </button>
             <button *ngIf="t.showActions" class="icon-btn delete" (click)="deleteTask(t, $event)">
-              <i class="fas fa-trash"></i>
+              <img src="assets/icon/delete-bin-fill.svg" width="20" height="20" alt="delete" />
             </button>
           </div>
         </div>
@@ -93,15 +100,27 @@
       </div>
 
       <div *ngIf="!collapsed.overdue" class="task-list">
-        <div *ngFor="let t of overdueTasks()" class="task-card bg-light">
+        <div
+          *ngFor="let t of overdueTasks()"
+          class="task-card bg-light"
+          (click)="selectTask(t)"
+        >
           <div class="left">
             <div class="radio-circle" (click)="toggleDone(t, $event)"></div>
             <div>
               <div class="task-name">{{ t.name }}</div>
-              <div class="task-date">{{ formatDate(t.date) }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
             </div>
           </div>
-          <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+          <div class="right">
+            <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+            <button *ngIf="t.showActions" class="icon-btn" (click)="editTask(t, $event)">
+              <img src="assets/icon/pencil-ai-2-fill.svg" width="20" height="20" alt="edit" />
+            </button>
+            <button *ngIf="t.showActions" class="icon-btn delete" (click)="deleteTask(t, $event)">
+              <img src="assets/icon/delete-bin-fill.svg" width="20" height="20" alt="delete" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -119,7 +138,7 @@
             <div class="radio-circle active"></div>
             <div>
               <div class="task-name text-decoration-line-through">{{ t.name }}</div>
-              <div class="task-date">{{ formatDate(t.date) }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
             </div>
           </div>
           <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
