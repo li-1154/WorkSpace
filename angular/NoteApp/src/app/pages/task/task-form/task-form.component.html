@@ -1,0 +1,29 @@
+<div class="add-task fade-in mb-3 border rounded-3 p-3 bg-light">
+  <div class="row g-2 align-items-center">
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="事项名称" [(ngModel)]="task.name" />
+    </div>
+    <div class="col-md-5 d-flex align-items-center gap-2">
+      <input type="time" class="form-control" [(ngModel)]="task.startTime" />
+      <span>～</span>
+      <input type="time" class="form-control" [(ngModel)]="task.endTime" />
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="task.priority">
+        <option value="" disabled>重要度</option>
+        <option value="重要">重要</option>
+        <option value="紧急">紧急</option>
+        <option value="不重要・不紧急">不重要・不紧急</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-3 text-end">
+    <button class="btn btn-primary btn-sm me-2" (click)="addTask()">
+      <img src="assets/icon/check-line.svg" width="20" height="20" alt="ok" />
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="cancel.emit()">
+      <img src="assets/icon/close-large-line.svg" width="20" height="20" alt="cancel" />
+    </button>
+  </div>
+</div>

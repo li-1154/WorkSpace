@@ -9,7 +9,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
-import { TaskComponent } from './pages/task/task/task.component';
+import { TaskListComponent } from './pages/task/task-list/task-list.component';
+import { TaskComponent } from './pages/task/task.component';
 
 const routes: Routes = [
   //登陆模块
@@ -37,6 +38,11 @@ const routes: Routes = [
   //Task 模块
   {
     path: 'Task',
+    component: TaskListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'TaskTEST',
     component: TaskComponent,
     canActivate: [AuthGuard],
   },

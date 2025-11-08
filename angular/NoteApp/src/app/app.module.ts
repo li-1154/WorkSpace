@@ -21,7 +21,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
-import { TaskComponent } from './pages/task/task/task.component';
+import { TaskComponent } from './pages/task/task.component';
+import { TaskListComponent } from './pages/task/task-list/task-list.component';
+import { TaskFormComponent } from './pages/task/task-form/task-form.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { TaskComponent } from './pages/task/task/task.component';
     NoteFormComponent,
     AboutComponent,
     AttendanceComponent,
-    TaskComponent
+    TaskComponent,
+    TaskListComponent,
+    TaskFormComponent
   ],
   imports: [
     BrowserModule,
