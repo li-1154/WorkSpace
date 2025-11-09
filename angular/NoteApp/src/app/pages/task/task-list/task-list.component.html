@@ -22,35 +22,36 @@
       (cancel)="toggleAddTask()">
     </app-task-form>
 
-    <!-- 📅 今日事项 -->
-    <div class="task-section">
-      <div class="section-header" (click)="toggleCollapse('today')">
-        <h5 class="mb-0">📅 今日事项</h5>
-        <i [ngClass]="collapsed.today ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
-      </div>
+  <!-- 📅 今日事项 -->
+<div class="task-section">
+  <div class="section-header" (click)="toggleCollapse('today')">
+    <h5 class="mb-0">📅 今日事项</h5>
+    <i [ngClass]="collapsed.today ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+  </div>
 
-      <div *ngIf="!collapsed.today" class="task-list">
-        <div *ngFor="let t of todayTasks()" class="task-card" (click)="selectTask(t)">
-          <div class="left">
-            <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
-            <div>
-              <div class="task-name">{{ t.name }}</div>
-              <div class="task-date">{{ formatDate(t) }}</div>
-            </div>
-          </div>
-
-          <div class="right">
-            <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
-            <button *ngIf="t.showActions" class="icon-btn" (click)="editTask(t, $event)">
-              <img src="assets/icon/pencil-ai-2-fill.svg" width="20" height="20" alt="edit" />
-            </button>
-            <button *ngIf="t.showActions" class="icon-btn delete" (click)="deleteTask(t, $event)">
-              <img src="assets/icon/delete-bin-fill.svg" width="20" height="20" alt="delete" />
-            </button>
-          </div>
+  <div *ngIf="!collapsed.today" class="task-list">
+    <!-- 注意这里用 async 管道 -->
+    <div *ngFor="let t of todayTasks$ | async" class="task-card" (click)="selectTask(t)">
+      <div class="left">
+        <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
+        <div>
+          <div class="task-name">{{ t.name }}</div>
+          <div class="task-date">{{ formatDate(t) }}</div>
         </div>
       </div>
+
+      <div class="right">
+        <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+        <button *ngIf="t.showActions" class="icon-btn" (click)="editTask(t, $event)">
+          <img src="assets/icon/pencil-ai-2-fill.svg" width="20" height="20" alt="edit" />
+        </button>
+        <button *ngIf="t.showActions" class="icon-btn delete" (click)="deleteTask(t, $event)">
+          <img src="assets/icon/delete-bin-fill.svg" width="20" height="20" alt="delete" />
+        </button>
+      </div>
     </div>
+  </div>
+</div>
 
     <!-- 🚧 未完成任务 -->
     <div class="task-section">

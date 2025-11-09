@@ -7,6 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 export class AuthService {
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {}
 
+  user$ = this.afAuth.authState;
 
   /**
    * ✅ 注册新用户 + 同步写入 Firestore 的 users 集合
@@ -14,7 +15,10 @@ export class AuthService {
   async register(email: string, password: string, name: string, group: string) {
     try {
       // 1️⃣ 创建 Auth 账号
-      const cred = await this.afAuth.createUserWithEmailAndPassword(email, password);
+      const cred = await this.afAuth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
       const uid = cred.user?.uid;
 
       // 2️⃣ 写入 Firestore users 集合

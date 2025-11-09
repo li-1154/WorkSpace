@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { Task } from 'src/app/models/task.model';
+import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-list',
@@ -17,15 +20,32 @@ export class TaskListComponent {
     weekday: 'short',
   });
 
-  constructor(private taskService: TaskService) { }
-  ngOnInit() {
+  constructor(private taskService: TaskService,private auth: AuthService,) { }
+   ngOnInit() {
     //添加时间显示
     this.currentTime = new Date().toLocaleTimeString('ja-JP', { hour12: false });
     this.timer = setInterval(() => {
       this.currentTime = new Date().toLocaleTimeString('ja-JP', { hour12: false });
     }, 1000);
+  
+    this.todayTasks$ =  this.auth.user$.pipe(
+      switchMap(async user =>
+      {
+        if(!user)
+          return[];
+        return await this.taskService.getTodayTasks();
+
+      }
+      ),
+      switchMap(obs=>obs)
+    );
+    console.log(this.todayTasks$);
+
+
   }
   showAddTask = false;
+
+  todayTasks$!: Observable<Task[]>;  // 用 $ 结尾表示是 Observable
 
   collapsed = { today: false, overdue: true, done: true };
 

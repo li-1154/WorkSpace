@@ -4,7 +4,7 @@ export interface Task {
     name: string;
     startTime: string;
     endTime: string;
-    data: string;
+    date: string;
     priority: '重要' | '紧急' | '不重要・不紧急';
     done: boolean;
     type: 'personal' | 'team'; // 类型（个人 / 团队）
