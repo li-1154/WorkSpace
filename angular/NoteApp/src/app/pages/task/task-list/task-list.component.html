@@ -88,11 +88,10 @@
         <h5 class="mb-0">✅ 已完成任务</h5>
         <i [ngClass]="collapsed.done ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
       </div>
-
       <div *ngIf="!collapsed.done" class="task-list">
-        <div *ngFor="let t of doneTasks()" class="task-card bg-light text-muted">
+        <div *ngFor="let t of doneTasks$ | async" class="task-card bg-light text-muted">
           <div class="left">
-            <div class="radio-circle active"></div>
+              <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
             <div>
               <div class="task-name text-decoration-line-through">{{ t.name }}</div>
               <div class="task-date">{{ formatDate(t) }}</div>

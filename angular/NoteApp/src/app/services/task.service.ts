@@ -17,7 +17,7 @@ export class TaskService {
     if (!user) throw new Error('用户未登录！');
     return user;
   }
-
+//新建列表
   async addtask(task: Task): Promise<void> {
     const user = await this.getUserOrThrow();
     const id = this.afs.createId();
@@ -39,7 +39,7 @@ export class TaskService {
     };
     return this.afs.collection('tasks').doc(id).set(newTask);
   }
-
+//获取当天新建信息
   async getTodayTasks(): Promise<Observable<Task[]>> {
     const user = await this.getUserOrThrow();
     const today = new Date().toISOString().slice(0, 10);
@@ -50,4 +50,42 @@ export class TaskService {
     ).valueChanges();
     return snapshot;
   }
+//完成切换 done 设置为 true
+async updateTaskDone(id:string,done:boolean):Promise<void>
+{
+  const user = await this.getUserOrThrow();
+  return this.afs.collection('tasks')
+  .doc(id).update(
+    {
+      done,
+      updatedAt: new Date(),
+      uid:user.uid
+    }
+  );
+}
+
+//获取已经完成信息
+  async getTasksDone(): Promise<Observable<Task[]>> {
+    const user = await this.getUserOrThrow();
+    const snapshot = this.afs.collection<Task>(
+      'tasks',
+      (ref) => ref.where('uid', '==', user.uid).where('done','==',true)
+      .orderBy('date','asc')
+    ).valueChanges();
+    return snapshot;
+  }
+
+//获取未完成信息
+  async getTaskNoDone(): Promise<Observable<Task[]>> {
+    const user = await this.getUserOrThrow();
+    const today = new Date().toISOString().slice(0, 10);
+    const snapshot = this.afs.collection<Task>(
+      'tasks',
+      (ref) => ref.where('uid', '==', user.uid).where('date','!=',today).where('done','==',false)
+      .orderBy('date','asc')
+    ).valueChanges();
+    return snapshot;
+  }
+
+ 
 }
