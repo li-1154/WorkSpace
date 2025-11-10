@@ -109,3 +109,39 @@
 .icon-btn.delete:hover {
   color: #dc2626;
 }
+
+/* 顶部日期时间行 */
+.header-bar {
+  padding: 6px 10px;
+}
+
+.datetime {
+  display: flex;
+  align-items: baseline;
+  gap: 8px; /* 日期与时间之间间距 */
+}
+
+.datetime .date {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.datetime .time {
+  font-size: 0.9rem;
+  color: #6b7280;
+  letter-spacing: 0.5px;
+}
+
+/* 加号按钮稍微小一点更协调 */
+.btn.rounded-circle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn.rounded-circle img {
+  width: 18px;
+  height: 18px;
+}

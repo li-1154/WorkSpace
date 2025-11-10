@@ -15,7 +15,7 @@ export class TaskFormComponent {
     name: '',
     startTime: '',
     endTime: '',
-    date: new Date().toISOString().slice(0, 10),
+    date: new Date(Date.now()+9*60*60*1000).toISOString().split('T')[0],
     priority: '重要',
     done: false,
     type: 'personal',

@@ -10,7 +10,11 @@ export interface Task {
     type: 'personal' | 'team'; // 类型（个人 / 团队）
     createdAt?: any;         // Firestore Timestamp
     updatedAt?: any;
-    isShared?:boolean;
+    isShared?: boolean;
     teamMembers?: string[];  // 共享任务时的成员UID数组
     showActions?: boolean;   // UI用字段
+    // ✅ 下面这两个是前端专用的临时属性，不会存到数据库
+    editing?: boolean;
+    backup?: Partial<Task>;
+
 }
