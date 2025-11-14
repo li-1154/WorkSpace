@@ -14,91 +14,96 @@ export class TaskListComponent {
   currentTab: 'personal' | 'group' = 'personal';
   timer: any;
   currentTime: any;
+
   todayStr = new Date().toLocaleDateString('ja-JP', {
     month: 'long',
     day: 'numeric',
     weekday: 'short',
   });
 
-  constructor(private taskService: TaskService, private auth: AuthService) {}
-  ngOnInit() {
-    //添加时间显示
-    this.currentTime = new Date().toLocaleTimeString('ja-JP', {
-      hour12: false,
-    });
-    this.timer = setInterval(() => {
-      this.currentTime = new Date().toLocaleTimeString('ja-JP', {
-        hour12: false,
-      });
-    }, 1000);
-    //今日
-    this.todayTasks$ = this.auth.user$.pipe(
-      switchMap(async (user) => {
-        if (!user) return [];
-        return await this.taskService.getTodayTasks();
-      }),
-      switchMap((obs) => obs)
-    );
-    //已完成
-    this.doneTasks$ = this.auth.user$.pipe(
-      switchMap(async (user) => {
-        if (!user) return [];
-        return await this.taskService.getTasksDone();
-      }),
-      switchMap((obs) => obs)
-    );
-    console.log(this.doneTasks$);
-    //未完成
-    this.noDoneTasks$ = this.auth.user$.pipe(
-      switchMap(async (user) => {
-        if (!user) return [];
-        return await this.taskService.getTaskNoDone();
-      }),
-      switchMap((obs) => obs)
-    );
-    console.log('今天事项',this.noDoneTasks$);
-  }
+  // ----------------------------
+  // 各任务流
+  // ----------------------------
+  todayTasks$!: Observable<Task[]>;
+  doneTasks$!: Observable<Task[]>;
+  noDoneTasks$!: Observable<Task[]>;
 
-
+  // 共享任务
+  teamTodayTasks$!: Observable<Task[]>;
+  teamDoneTasks$!: Observable<Task[]>;
+  teamNoDoneTasks$!: Observable<Task[]>;
 
   showAddTask = false;
 
-  todayTasks$!: Observable<Task[]>; // 用 $ 结尾表示是 Observable
+  collapsed = {
+    today: false,
+    overdue: true,
+    done: true,
 
-  collapsed = { today: false, overdue: true, done: true };
+    teamToday: false,
+    teamNoDone: true,
+    teamDone: true,
+  };
 
-  doneTasks$!: Observable<Task[]>;
+  constructor(
+    private taskService: TaskService,
+    private auth: AuthService
+  ) {}
 
-  noDoneTasks$!: Observable<Task[]>;
+  ngOnInit() {
+    // 时间显示
+    this.currentTime = new Date().toLocaleTimeString('ja-JP', { hour12: false });
+    this.timer = setInterval(() => {
+      this.currentTime = new Date().toLocaleTimeString('ja-JP', { hour12: false });
+    }, 1000);
+
+    // 加载个人任务
+    this.todayTasks$ = this.auth.user$.pipe(
+      switchMap(async (user) => user ? await this.taskService.getTodayTasks() : []),
+      switchMap((obs) => obs)
+    );
+
+    this.doneTasks$ = this.auth.user$.pipe(
+      switchMap(async (user) => user ? await this.taskService.getTasksDone() : []),
+      switchMap((obs) => obs)
+    );
+
+    this.noDoneTasks$ = this.auth.user$.pipe(
+      switchMap(async (user) => user ? await this.taskService.getTaskNoDone() : []),
+      switchMap((obs) => obs)
+    );
+
+    // 加载共享任务
+    this.teamTodayTasks$ = this.auth.user$.pipe(
+      switchMap(async (user) => user ? await this.taskService.getTodayTeamTasks() : []),
+      switchMap((obs) => obs)
+    );
+
+    this.teamDoneTasks$ = this.auth.user$.pipe(
+      switchMap(async (user) => user ? await this.taskService.getTeamTasksDone() : []),
+      switchMap((obs) => obs)
+    );
+
+    this.teamNoDoneTasks$ = this.auth.user$.pipe(
+      switchMap(async (user) => user ? await this.taskService.getTeamTaskNoDone() : []),
+      switchMap((obs) => obs)
+    );
+  }
 
   toggleAddTask() {
     this.showAddTask = !this.showAddTask;
   }
 
-  addTask(event: any) {
-    console.log('🟢 父组件 addTask() 被调用了');
-    console.log('🟡 收到 event:', event);
+  addTask(event: Task) {
     this.loadTasks();
     this.toggleAddTask();
   }
 
-  toggleDone(t: Task, event: Event) {
-    event.stopPropagation();
-    t.done = !t.done;
-    this.taskService.updateTaskDone(t.id, t.done);
-  }
+  loadTasks() {}
 
-  loadTasks() {
-    this.todayTasks();
-  }
-
-  todayTasks() {}
-
-  overdueTasks() {}
-
-  toggleCollapse(section: 'today' | 'overdue' | 'done') {
-    this.collapsed[section] = !this.collapsed[section];
-  }
+toggleCollapse(section: 'today' | 'overdue' | 'done' | 'teamToday' | 'teamNoDone' | 'teamDone') {
+  this.collapsed[section] = !this.collapsed[section];
+}
 
   priorityClass(priority: string) {
     switch (priority) {
@@ -115,47 +120,45 @@ export class TaskListComponent {
     task.showActions = !task.showActions;
   }
 
+  toggleDone(task: Task, e: Event) {
+    e.stopPropagation();
+    task.done = !task.done;
+    this.taskService.updateTaskDone(task.id!, task.done);
+  }
+
   deleteTask(task: Task, e: Event) {
     e.stopPropagation();
-    if(confirm(`「${task.name}」を削除しますか？`))
-    {
-      this.taskService.deleteTask(task.id)
-      .then(()=>console.log('删除成功',task.name))
-      .catch(err=>console.error('删除失败',err));
-      }
+    if (confirm(`「${task.name}」を削除しますか？`)) {
+      this.taskService.deleteTask(task.id!);
+    }
   }
 
-formatDate(t: Task) {
-  const date = t.date?.replace(/-/g, '/'); // → 2025/11/08
-  return `${date}　${t.startTime}〜${t.endTime}`;
-}
-
-
-startEdit(task: Task, e: Event) {
-  e.stopPropagation();
-  task.backup = { ...task }; // 备份旧值
-  task.editing = true;
-}
-
-saveEdit(task: Task, e: Event) {
-  e.stopPropagation();
-  task.editing = false;
-  this.taskService.updateTask(task.id, {
-    name: task.name,
-    startTime: task.startTime,
-    endTime: task.endTime,
-    priority: task.priority,
-  });
-  console.log('✅ 保存任务:', task);
-}
-
-cancelEdit(task: Task, e: Event) {
-  e.stopPropagation();
-  if (task.backup) {
-    Object.assign(task, task.backup); // 恢复旧值
+  formatDate(t: Task) {
+    const date = t.date?.replace(/-/g, '/');
+    return `${date} ${t.startTime}〜${t.endTime}`;
   }
-  task.editing = false;
-}
 
+  startEdit(task: Task, e: Event) {
+    e.stopPropagation();
+    task.backup = { ...task };
+    task.editing = true;
+  }
 
+  saveEdit(task: Task, e: Event) {
+    e.stopPropagation();
+    task.editing = false;
+
+    this.taskService.updateTask(task.id!, {
+      name: task.name,
+      startTime: task.startTime,
+      endTime: task.endTime,
+      priority: task.priority,
+    });
+  }
+
+  cancelEdit(task: Task, e: Event) {
+    e.stopPropagation();
+    if (task.backup) Object.assign(task, task.backup);
+    task.editing = false;
+  }
 }

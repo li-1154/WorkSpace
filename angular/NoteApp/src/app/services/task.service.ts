@@ -43,7 +43,7 @@ export class TaskService {
   async getTodayTasks(): Promise<Observable<Task[]>> {
     const user = await this.getUserOrThrow();
     const today = this.gettoday();
-  
+
     console.log('today is ', today);
     const snapshot = this.afs.collection<Task>(
       'tasks',
@@ -52,7 +52,7 @@ export class TaskService {
     ).valueChanges();
     return snapshot;
   }
-  
+
   //完成切换 done 设置为 true
   async updateTaskDone(id: string, done: boolean): Promise<void> {
     const user = await this.getUserOrThrow();
@@ -79,7 +79,7 @@ export class TaskService {
 
   //获取未完成信息
   async getTaskNoDone(): Promise<Observable<Task[]>> {
-   const user = await this.getUserOrThrow();
+    const user = await this.getUserOrThrow();
     const snapshot = this.afs.collection<Task>(
       'tasks',
       (ref) => ref.where('uid', '==', user.uid).where('done', '==', false)
@@ -89,18 +89,17 @@ export class TaskService {
   }
 
   //获取今天日期
-  gettoday()
-  {
-   return new Date().toLocaleDateString('ja-JP', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).replace(/\//g, '-'); // "2025-11-10"
-    
+  gettoday() {
+    return new Date().toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).replace(/\//g, '-'); // "2025-11-10"
+
   }
 
-  
-   async updateTask(id: string, data:{name:string,startTime:string,endTime:string,priority:string}): Promise<void> {
+
+  async updateTask(id: string, data: { name: string, startTime: string, endTime: string, priority: string }): Promise<void> {
     const user = await this.getUserOrThrow();
     return this.afs.collection('tasks')
       .doc(id).update(
@@ -112,13 +111,51 @@ export class TaskService {
       );
   }
 
-async deleteTask(id:string):Promise<void>
-{
-  const user = await this.getUserOrThrow();
-  return this.afs.collection('tasks').doc(id).delete();
-}
+  async deleteTask(id: string): Promise<void> {
+    const user = await this.getUserOrThrow();
+    return this.afs.collection('tasks').doc(id).delete();
+  }
 
+  // 团队当天task
+  async getTodayTeamTasks(): Promise<Observable<Task[]>> {
+    const user = await this.getUserOrThrow();
+    const today = this.gettoday();
+    console.log('today is', today);
 
+    return this.afs.collection<Task>
+      (
+        'tasks', (ref) =>
+        ref.where('teamMembers', 'array-contains', user.uid)
+          .where('date', '==', today)
+          .where('done', '==', false)
+          .orderBy('date', 'asc')
+      ).valueChanges();
+  }
 
+  //团队已完成任务
+  async getTeamTasksDone(): Promise<Observable<Task[]>> {
+    const user = await this.getUserOrThrow();
 
+    return this.afs.collection<Task>(
+      'tasks',
+      (ref) =>
+        ref
+          .where('teamMembers', 'array-contains', user.uid)
+          .where('done', '==', true)
+          .orderBy('date', 'asc')
+    ).valueChanges();
+  }
+
+  // 团队未完成任务
+  async getTeamTaskNoDone(): Promise<Observable<Task[]>> {
+    const user = await this.getUserOrThrow();
+    return this.afs.collection<Task>
+      (
+        'tasks',
+        (ref) =>
+          ref.where('teamMembers', 'array-contains', user.uid)
+            .where('done', '==', false)
+            .orderBy('date', 'asc')
+      ).valueChanges();
+  }
 }

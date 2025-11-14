@@ -1,11 +1,14 @@
 <div class="attendance-container">
+
   <!-- 🔹 顶部标签 -->
   <div class="tab-header">
     <div class="tab" [class.active]="currentTab === 'personal'" (click)="currentTab = 'personal'">👤 个人</div>
     <div class="tab" [class.active]="currentTab === 'group'" (click)="currentTab = 'group'">👥 组员</div>
   </div>
 
-  <!-- 👤 个人页 -->
+  <!-- ===========================================================
+        👤 个人页
+  ============================================================ -->
   <div *ngIf="currentTab === 'personal'">
     <div class="header-bar d-flex align-items-center justify-content-between mb-3">
       <div class="datetime d-flex align-items-center gap-2">
@@ -17,11 +20,9 @@
       </button>
     </div>
 
-    <!-- ✅ 用子组件代替原表单 -->
-    <app-task-form *ngIf="showAddTask" (save)="addTask($event)" (cancel)="toggleAddTask()">
-    </app-task-form>
+    <!-- 新增任务弹窗 -->
+    <app-task-form *ngIf="showAddTask" (save)="addTask($event)" (cancel)="toggleAddTask()"></app-task-form>
 
-    
 
     <!-- 📅 今日事项 -->
     <div class="task-section">
@@ -31,162 +32,231 @@
       </div>
 
       <div *ngIf="!collapsed.today" class="task-list">
-  <div *ngFor="let t of todayTasks$ | async" class="task-card" (click)="selectTask(t)">
-    <div class="left">
-      <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
+        <div *ngFor="let t of todayTasks$ | async" class="task-card" (click)="selectTask(t)">
+          <div class="left">
+            <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
 
-      <!-- ✅ 普通模式 -->
-      <div *ngIf="!t.editing">
-        <div class="task-name">{{ t.name }}</div>
-        <div class="task-date">{{ formatDate(t) }}</div>
-      </div>
+            <!-- 显示模式 -->
+            <div *ngIf="!t.editing">
+              <div class="task-name">{{ t.name }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
+            </div>
 
-      <!-- ✅ 编辑模式 -->
-      <div *ngIf="t.editing" class="edit-fields">
-        <input type="text" [(ngModel)]="t.name" class="form-control mb-1" />
-        <input type="time" [(ngModel)]="t.startTime" class="form-control mb-1" />
-        <input type="time" [(ngModel)]="t.endTime" class="form-control mb-1" />
-        <select class="form-select mb-1" [(ngModel)]="t.priority">
-          <option value="" disabled>重要度</option>
-          <option value="重要">重要</option>
-          <option value="紧急">紧急</option>
-          <option value="不重要・不紧急">不重要・不紧急</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="right">
-      <!-- 优先级标签 -->
-      <span *ngIf="!t.editing" class="badge" [ngClass]="priorityClass(t.priority)">
-        {{ t.priority }}
-      </span>
-
-      <!-- 编辑按钮 -->
-      <button *ngIf="!t.editing" class="icon-btn" (click)="startEdit(t, $event)">
-        <img src="assets/icon/pencil-ai-2-fill.svg" width="20" height="20" alt="edit" />
-      </button>
-
-      <!-- 保存/取消 -->
-      <div *ngIf="t.editing" class="btn-group">
-        <button class="icon-btn" (click)="saveEdit(t, $event)">
-          <img src="assets/icon/check-line.svg" width="20" height="20" alt="save" />
-        </button>
-        <button class="icon-btn delete" (click)="cancelEdit(t, $event)">
-          <img src="assets/icon/close-large-line.svg" width="20" height="20" alt="cancel" />
-        </button>
-      </div>
-
-      <!-- 删除按钮 -->
-      <button *ngIf="!t.editing" class="icon-btn delete" (click)="deleteTask(t, $event)">
-        <img src="assets/icon/delete-bin-fill.svg" width="20" height="20" alt="delete" />
-      </button>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-  <!-- 🚧 未完成任务 -->
-<div class="task-section">
-  <div class="section-header" (click)="toggleCollapse('overdue')">
-    <h5 class="mb-0">⏰ 未完成任务</h5>
-    <i [ngClass]="collapsed.overdue ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
-  </div>
-
-  <div *ngIf="!collapsed.overdue" class="task-list">
-    <div *ngFor="let t of noDoneTasks$ | async" class="task-card bg-light" (click)="selectTask(t)">
-      <div class="left">
-        <div class="radio-circle" (click)="toggleDone(t, $event)"></div>
-
-        <!-- ✅ 普通显示模式 -->
-        <div *ngIf="!t.editing">
-          <div class="task-name">{{ t.name }}</div>
-          <div class="task-date">{{ formatDate(t) }}</div>
-        </div>
-
-        <!-- ✅ 编辑模式 -->
-        <div *ngIf="t.editing" class="edit-fields">
-          <input type="text" [(ngModel)]="t.name" class="form-control mb-1" />
-          <input type="time" [(ngModel)]="t.startTime" class="form-control mb-1" />
-          <input type="time" [(ngModel)]="t.endTime" class="form-control mb-1" />
-          <select class="form-select mb-1" [(ngModel)]="t.priority">
-            <option value="" disabled>重要度</option>
-            <option value="重要">重要</option>
-            <option value="紧急">紧急</option>
-            <option value="不重要・不紧急">不重要・不紧急</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="right">
-        <!-- 优先级标签 -->
-        <span *ngIf="!t.editing" class="badge" [ngClass]="priorityClass(t.priority)">
-          {{ t.priority }}
-        </span>
-
-        <!-- 编辑按钮 -->
-        <button *ngIf="!t.editing" class="icon-btn" (click)="startEdit(t, $event)">
-          <img src="assets/icon/pencil-ai-2-fill.svg" width="20" height="20" alt="edit" />
-        </button>
-
-        <!-- 保存/取消 -->
-        <div *ngIf="t.editing" class="btn-group">
-          <button class="icon-btn" (click)="saveEdit(t, $event)">
-            <img src="assets/icon/check-line.svg" width="20" height="20" alt="save" />
-          </button>
-          <button class="icon-btn delete" (click)="cancelEdit(t, $event)">
-            <img src="assets/icon/close-large-line.svg" width="20" height="20" alt="cancel" />
-          </button>
-        </div>
-
-        <!-- 删除按钮 -->
-        <button *ngIf="!t.editing" class="icon-btn delete" (click)="deleteTask(t, $event)">
-          <img src="assets/icon/delete-bin-fill.svg" width="20" height="20" alt="delete" />
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- ✅ 已完成任务 -->
-        <div class="task-section">
-          <div class="section-header" (click)="toggleCollapse('done')">
-            <h5 class="mb-0">✅ 已完成任务</h5>
-            <i [ngClass]="collapsed.done ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
-          </div>
-          <div *ngIf="!collapsed.done" class="task-list">
-            <div *ngFor="let t of doneTasks$ | async" class="task-card bg-light text-muted">
-              <div class="left">
-                <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
-                <div>
-                  <div class="task-name text-decoration-line-through">{{ t.name }}</div>
-                  <div class="task-date">{{ formatDate(t) }}</div>
-                </div>
-              </div>
-              <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+            <!-- 编辑模式 -->
+            <div *ngIf="t.editing" class="edit-fields">
+              <input type="text" [(ngModel)]="t.name" class="form-control mb-1" />
+              <input type="time" [(ngModel)]="t.startTime" class="form-control mb-1" />
+              <input type="time" [(ngModel)]="t.endTime" class="form-control mb-1" />
+              <select class="form-select mb-1" [(ngModel)]="t.priority">
+                <option value="重要">重要</option>
+                <option value="紧急">紧急</option>
+                <option value="不重要・不紧急">不重要・不紧急</option>
+              </select>
             </div>
           </div>
+
+          <div class="right">
+            <span *ngIf="!t.editing" class="badge" [ngClass]="priorityClass(t.priority)">
+              {{ t.priority }}
+            </span>
+
+            <!-- 编辑按钮 -->
+            <button *ngIf="!t.editing && t.showActions" class="icon-btn" (click)="startEdit(t, $event)">
+              <img src="assets/icon/pencil-ai-2-fill.svg" width="20" />
+            </button>
+
+            <!-- 保存 / 取消 -->
+            <div *ngIf="t.editing" class="btn-group">
+              <button class="icon-btn" (click)="saveEdit(t, $event)">
+                <img src="assets/icon/check-line.svg" width="20" />
+              </button>
+              <button class="icon-btn delete" (click)="cancelEdit(t, $event)">
+                <img src="assets/icon/close-large-line.svg" width="20" />
+              </button>
+            </div>
+
+            <!-- 删除按钮 -->
+            <button *ngIf="!t.editing && t.showActions" class="icon-btn delete" (click)="deleteTask(t, $event)">
+              <img src="assets/icon/delete-bin-fill.svg" width="20" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
+
+
+    <!-- ⏰ 未完成任务 -->
+    <div class="task-section">
+      <div class="section-header" (click)="toggleCollapse('overdue')">
+        <h5 class="mb-0">⏰ 未完成任务</h5>
+        <i [ngClass]="collapsed.overdue ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+      </div>
+
+      <div *ngIf="!collapsed.overdue" class="task-list">
+        <div *ngFor="let t of noDoneTasks$ | async" class="task-card bg-light" (click)="selectTask(t)">
+          <div class="left">
+            <div class="radio-circle" (click)="toggleDone(t, $event)"></div>
+
+            <div *ngIf="!t.editing">
+              <div class="task-name">{{ t.name }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
+            </div>
+
+            <div *ngIf="t.editing" class="edit-fields">
+              <input type="text" [(ngModel)]="t.name" class="form-control mb-1" />
+              <input type="time" [(ngModel)]="t.startTime" />
+              <input type="time" [(ngModel)]="t.endTime" />
+              <select class="form-select" [(ngModel)]="t.priority">
+                <option value="重要">重要</option>
+                <option value="紧急">紧急</option>
+                <option value="不重要・不紧急">不重要・不紧急</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="right">
+            <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+
+            <button *ngIf="!t.editing && t.showActions" class="icon-btn" (click)="startEdit(t, $event)">
+              <img src="assets/icon/pencil-ai-2-fill.svg" width="20" />
+            </button>
+
+            <div *ngIf="t.editing" class="btn-group">
+              <button class="icon-btn" (click)="saveEdit(t, $event)">
+                <img src="assets/icon/check-line.svg" width="20" />
+              </button>
+              <button class="icon-btn delete" (click)="cancelEdit(t, $event)">
+                <img src="assets/icon/close-large-line.svg" width="20" />
+              </button>
+            </div>
+
+            <button *ngIf="!t.editing && t.showActions" class="icon-btn delete" (click)="deleteTask(t, $event)">
+              <img src="assets/icon/delete-bin-fill.svg" width="20" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- ✅ 已完成任务 -->
+    <div class="task-section">
+      <div class="section-header" (click)="toggleCollapse('done')">
+        <h5 class="mb-0">✅ 已完成任务</h5>
+        <i [ngClass]="collapsed.done ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+      </div>
+
+      <div *ngIf="!collapsed.done" class="task-list">
+        <div *ngFor="let t of doneTasks$ | async" class="task-card bg-light text-muted">
+          <div class="left">
+            <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
+            <div>
+              <div class="task-name text-decoration-line-through">{{ t.name }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
+            </div>
+          </div>
+          <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ===========================================================
+        👥 组员页（共享任务）
+  ============================================================ -->
+  <div *ngIf="currentTab === 'group'">
+
+    <div class="header-bar d-flex align-items-center justify-content-between mb-3">
+      <div class="datetime d-flex align-items-center gap-2">
+        <div class="date fw-bold">{{ todayStr }}</div>
+        <div class="time text-muted small">{{ currentTime }}</div>
+      </div>
+    </div>
+
+    <!-- 📅 今日共享任务 -->
+    <div class="task-section">
+      <div class="section-header" (click)="toggleCollapse('teamToday')">
+        <h5 class="mb-0">📅 今日共享任务</h5>
+        <i [ngClass]="collapsed.teamToday ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+      </div>
+
+      <div *ngIf="!collapsed.teamToday" class="task-list">
+        <div *ngFor="let t of teamTodayTasks$ | async" class="task-card">
+
+          <div class="left">
+            <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
+
+            <div>
+              <div class="task-name">{{ t.name }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
+            </div>
+          </div>
+
+          <div class="right">
+            <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ⏰ 未完成共享任务 -->
+    <div class="task-section">
+      <div class="section-header" (click)="toggleCollapse('teamNoDone')">
+        <h5 class="mb-0">⏰ 未完成（共享）</h5>
+        <i [ngClass]="collapsed.teamNoDone ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+      </div>
+
+      <div *ngIf="!collapsed.teamNoDone" class="task-list">
+        <div *ngFor="let t of teamNoDoneTasks$ | async" class="task-card bg-light">
+
+          <div class="left">
+            <div class="radio-circle" [class.active]="t.done" (click)="toggleDone(t, $event)"></div>
+
+            <div>
+              <div class="task-name">{{ t.name }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
+            </div>
+          </div>
+
+          <div class="right">
+            <span class="badge" [ngClass]="priorityClass(t.priority)">{{ t.priority }}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 已完成共享任务 -->
+    <div class="task-section">
+      <div class="section-header" (click)="toggleCollapse('teamDone')">
+        <h5 class="mb-0">✅ 已完成（共享）</h5>
+        <i [ngClass]="collapsed.teamDone ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i>
+      </div>
+
+      <div *ngIf="!collapsed.teamDone" class="task-list">
+        <div *ngFor="let t of teamDoneTasks$ | async" class="task-card bg-light text-muted">
+
+          <div class="left">
+            <div class="radio-circle" [class.active]="t.done"></div>
+            <div>
+              <div class="task-name text-decoration-line-through">{{ t.name }}</div>
+              <div class="task-date">{{ formatDate(t) }}</div>
+            </div>
+          </div>
+
+          <span class="badge" [ngClass]="priorityClass(t.priority)"
+            >{{ t.priority }}</span
+          >
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
