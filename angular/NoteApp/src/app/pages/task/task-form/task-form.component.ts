@@ -7,7 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 @Component({
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
-  styleUrls: ['./task-form.component.css']
+  styleUrls: ['./task-form.component.css'],
 })
 export class TaskFormComponent {
   @Output() save = new EventEmitter<any>();
@@ -15,19 +15,19 @@ export class TaskFormComponent {
 
   currentUid: string | null = null;
 
-  members: any[] = [];    // 全部用户列表
-  selectedMembers: string[] = [];  // 选中的UID列表
+  members: any[] = []; // 全部用户列表
+  selectedMembers: string[] = []; // 选中的UID列表
 
   task: Task = {
     name: '',
     startTime: '',
     endTime: '',
-    date: new Date(Date.now()+9*60*60*1000).toISOString().split('T')[0],
+    date: new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0],
     priority: '重要',
     done: false,
     type: 'personal',
     isShared: false,
-    teamMembers: []
+    teamMembers: [],
   };
 
   constructor(
@@ -48,8 +48,10 @@ export class TaskFormComponent {
     this.task.teamMembers = [this.currentUid];
 
     // 加载 users 集合里的全体成员
-    this.afs.collection('users').valueChanges({ idField: 'uid' })
-      .subscribe(users => {
+    this.afs
+      .collection('users')
+      .valueChanges({ idField: 'uid' })
+      .subscribe((users) => {
         this.members = users;
       });
   }
@@ -59,7 +61,7 @@ export class TaskFormComponent {
     if (uid === this.currentUid) return; // 自己不可取消
 
     if (this.selectedMembers.includes(uid)) {
-      this.selectedMembers = this.selectedMembers.filter(x => x !== uid);
+      this.selectedMembers = this.selectedMembers.filter((x) => x !== uid);
     } else {
       this.selectedMembers.push(uid);
     }
@@ -73,14 +75,15 @@ export class TaskFormComponent {
       if (this.task.isShared && this.selectedMembers.length === 0) {
         this.selectedMembers = [this.currentUid!];
       }
-
+      if (this.selectedMembers.length > 1) {
+        this.task.isShared = true;
+      }
       this.task.teamMembers = [...this.selectedMembers];
 
       await this.taskService.addtask(this.task);
       this.save.emit();
       this.resetForm();
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err);
     }
   }

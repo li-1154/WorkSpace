@@ -127,6 +127,7 @@ export class TaskService {
         'tasks', (ref) =>
         ref.where('teamMembers', 'array-contains', user.uid)
           .where('date', '==', today)
+          .where('isShared','==',true)
           .where('done', '==', false)
           .orderBy('date', 'asc')
       ).valueChanges();
@@ -141,6 +142,7 @@ export class TaskService {
       (ref) =>
         ref
           .where('teamMembers', 'array-contains', user.uid)
+          .where('isShared','==',true)
           .where('done', '==', true)
           .orderBy('date', 'asc')
     ).valueChanges();
@@ -154,6 +156,7 @@ export class TaskService {
         'tasks',
         (ref) =>
           ref.where('teamMembers', 'array-contains', user.uid)
+            .where('isShared','==',true)
             .where('done', '==', false)
             .orderBy('date', 'asc')
       ).valueChanges();

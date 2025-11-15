@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { Task } from 'src/app/models/task.model';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { switchMap } from 'rxjs/operators';
-
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
 })
-export class TaskListComponent {
+export class TaskListComponent implements OnInit{
   currentTab: 'personal' | 'group' = 'personal';
   timer: any;
   currentTime: any;
@@ -20,6 +20,10 @@ export class TaskListComponent {
     day: 'numeric',
     weekday: 'short',
   });
+
+
+  quote:string  = "今日事，今日毕！";
+
 
   // ----------------------------
   // 各任务流
@@ -47,7 +51,8 @@ export class TaskListComponent {
 
   constructor(
     private taskService: TaskService,
-    private auth: AuthService
+    private auth: AuthService,
+    private http:HttpClient 
   ) {}
 
   ngOnInit() {
@@ -57,6 +62,12 @@ export class TaskListComponent {
       this.currentTime = new Date().toLocaleTimeString('ja-JP', { hour12: false });
     }, 1000);
 
+       this.http.get<any>('https://v1.hitokoto.cn/?c=k')
+      .subscribe(res=>
+      {
+        this.quote = res.hitokoto;
+      }
+      );
     // 加载个人任务
     this.todayTasks$ = this.auth.user$.pipe(
       switchMap(async (user) => user ? await this.taskService.getTodayTasks() : []),
@@ -106,15 +117,16 @@ toggleCollapse(section: 'today' | 'overdue' | 'done' | 'teamToday' | 'teamNoDone
 }
 
   priorityClass(priority: string) {
-    switch (priority) {
-      case '重要':
-        return 'bg-primary text-white';
-      case '紧急':
-        return 'bg-danger text-white';
-      default:
-        return 'bg-secondary text-white';
-    }
+  switch (priority) {
+    case '重要':
+      return 'priority-high';
+    case '紧急':
+      return 'priority-medium';
+    default:
+      return 'priority-low';
   }
+}
+
 
   selectTask(task: Task) {
     task.showActions = !task.showActions;

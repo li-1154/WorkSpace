@@ -21,9 +21,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
-import { TaskComponent } from './pages/task/task.component';
 import { TaskListComponent } from './pages/task/task-list/task-list.component';
 import { TaskFormComponent } from './pages/task/task-form/task-form.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,6 @@ import { TaskFormComponent } from './pages/task/task-form/task-form.component';
     NoteFormComponent,
     AboutComponent,
     AttendanceComponent,
-    TaskComponent,
     TaskListComponent,
     TaskFormComponent
   ],
@@ -48,7 +47,8 @@ import { TaskFormComponent } from './pages/task/task-form/task-form.component';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
 
   ],
   providers: [],
