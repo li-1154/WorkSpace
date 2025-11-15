@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -24,6 +24,8 @@ import { AttendanceComponent } from './pages/attendance/attendance.component';
 import { TaskListComponent } from './pages/task/task-list/task-list.component';
 import { TaskFormComponent } from './pages/task/task-form/task-form.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ProductListComponent } from './pages/products/product-list/product-list.component';
+import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { HttpClientModule } from '@angular/common/http';
     AboutComponent,
     AttendanceComponent,
     TaskListComponent,
-    TaskFormComponent
+    TaskFormComponent,
+    ProductListComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +52,7 @@ import { HttpClientModule } from '@angular/common/http';
     AngularFirestoreModule,
     AngularFireAuthModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule
 
   ],

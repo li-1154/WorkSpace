@@ -1,0 +1,55 @@
+<div class="container py-3">
+    <h4>商品登记</h4>
+    <hr>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- 商品编号 -->
+        <div class="mb-3">
+            <label class="form-label">商品编号 *</label>
+            <input class="form-control" formControlName="code" placeholder="保存时自动生成" disabled>
+        </div>
+        <!-- 商品名称  -->
+        <div class="mb-3">
+            <label class="form-label">商品名称 *</label>
+            <input class="form-control" formControlName="name">
+        </div>
+        <!-- 分类   -->
+        <div class="mb-3">
+            <label class="form-label">分类 *</label>
+            <input class="form-control" formControlName="category">
+        </div>
+
+        <!-- 上传方式：相册选择 -->
+        <input #filePicker type="file" accept="image/*" class="form-control" (change)="onFileSelected($event)"
+            style="display:none" />
+
+        <!-- 上传方式：拍照（手机打开相机） -->
+        <input #cameraInput type="file" accept="image/*" capture="environment" class="form-control"
+            (change)="onFileSelected($event)" style="display:none" />
+
+        <div class="mb-3">
+            <label class="form-label">商品图片</label>
+
+            <div class="d-flex gap-2">
+                <!-- 挑选文件 -->
+                <button type="button" class="btn btn-outline-secondary btn-sm" (click)="openPicker()">📁 从相册选择</button>
+
+                <!-- 拍照 -->
+                <button type="button" class="btn btn-outline-primary btn-sm" (click)="openCamera()">📷 拍照</button>
+            </div>
+
+            <!-- 预览 -->
+            <div *ngIf="previewUrl" class="mt-2">
+                <img [src]="previewUrl" style="width: 120px; height: auto; border-radius: 4px;">
+            </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+            保存
+        </button>
+        <button type="button" class="btn btn-secondary ms-2" routerLink="/products">
+            取消
+        </button>
+    </form>
+</div>

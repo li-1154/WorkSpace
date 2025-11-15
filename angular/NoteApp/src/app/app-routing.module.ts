@@ -10,6 +10,8 @@ import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
 import { TaskListComponent } from './pages/task/task-list/task-list.component';
+import { ProductListComponent } from './pages/products/product-list/product-list.component';
+import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 
 const routes: Routes = [
   //登陆模块
@@ -40,6 +42,10 @@ const routes: Routes = [
     component: TaskListComponent,
     canActivate: [AuthGuard],
   },
+  //在库模块
+  { path: 'products', component: ProductListComponent },
+  { path: 'products/new', component: ProductFormComponent },
+  { path: 'products/:id', component: ProductFormComponent },
   //其他模块
   { path: '**', redirectTo: '' },
 ];
@@ -48,4 +54,4 @@ const routes: Routes = [
   imports: [CommonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

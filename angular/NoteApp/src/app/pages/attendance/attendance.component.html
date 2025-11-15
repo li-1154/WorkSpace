@@ -67,6 +67,7 @@
             <li *ngIf="m.breakOut">中途退勤：{{ m.breakOut }}</li>
             <li *ngIf="m.breakIn">中途出勤：{{ m.breakIn }}</li>
             <li *ngIf="m.checkOut">退勤：{{ m.checkOut }}</li>
+            <li *ngIf="getWorkDuration()">⏰ 今日上班总时间：{{ getWorkDuration() }}</li>
           </ul>
         </li>
       </ul>
