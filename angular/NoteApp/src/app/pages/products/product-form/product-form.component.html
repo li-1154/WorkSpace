@@ -39,8 +39,12 @@
             </div>
 
             <!-- 预览 -->
-            <div *ngIf="previewUrl" class="mt-2">
-                <img [src]="previewUrl" style="width: 120px; height: auto; border-radius: 4px;">
+            <!-- 已选择图片 → 显示预览 + 右上角叉 -->
+            <div *ngIf="previewUrl" class="preview-container mt-2">
+                <img [src]="previewUrl" class="preview-img">
+
+                <!-- 删除按钮（右上角悬浮） -->
+                <button type="button" class="remove-btn" (click)="clearImage()">❌</button>
             </div>
         </div>
 

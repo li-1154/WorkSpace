@@ -1,0 +1,25 @@
+.preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-img {
+  width: 120px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.remove-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: white;
+  border: 1px solid #d00;
+  color: #d00;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 18px;
+}

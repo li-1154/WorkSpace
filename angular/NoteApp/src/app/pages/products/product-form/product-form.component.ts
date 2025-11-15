@@ -47,19 +47,25 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.form.invalid) {
       return;
     }
+     const raw = this.form.getRawValue();
+    let imageUrl = raw.imageUrl || null;
+      if (this.selectedFile) {
+    imageUrl = await this.productService.uploadProductImage(this.selectedFile);
+  }
 
     const data: Product =
     {
       id: '',
-      code: this.form.getRawValue().code,
+      code:  raw.code,
       name: this.form.value.name,
       category: this.form.value.category,
       description: this.form.value.description || '',
       hasVariants: this.form.value.hasVariants,
+      imageUrl: imageUrl,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -103,6 +109,11 @@ export class ProductFormComponent implements OnInit {
   // 相片拍照功能
   openCamera() {
     this.cameraInput.nativeElement.click();
+  }
+
+  clearImage() {
+    this.selectedFile = null;
+    this.previewUrl = null;
   }
 
   onFileSelected(e: any) {
