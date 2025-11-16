@@ -29,8 +29,7 @@ export class ProductListComponent implements OnInit {
     const keyword = event.target.value.toLowerCase();
     this.filteredProducts = this.products.filter(p =>
       p.name.toLowerCase().includes(keyword) ||
-      p.code.toLowerCase().includes(keyword) ||
-      p.category.toLowerCase().includes(keyword)
+      p.code.toLowerCase().includes(keyword) 
     );
   }
 
@@ -48,4 +47,7 @@ editProduct(id: string) {
   this.router.navigate(['/products/edit', id]);
 
 }
+delete(id: string)
+{}
+
 }

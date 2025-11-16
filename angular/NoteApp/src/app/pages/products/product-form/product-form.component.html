@@ -13,6 +13,17 @@
             <label class="form-label">商品名称 *</label>
             <input class="form-control" formControlName="name">
         </div>
+
+        <div class="form-group mb-3">
+            <label> 颜色</label>
+            <select class="form-control" formControlName="colorId">
+                <option value="">请选择颜色</option>
+                <option *ngFor="let c of colors" [value]="c.id">
+                    {{c.name}}
+                </option>
+            </select>
+        </div>
+
         <!-- 分类   -->
         <div class="mb-3">
             <label class="form-label">分类 *</label>

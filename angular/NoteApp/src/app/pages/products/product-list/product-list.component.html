@@ -1,100 +1,83 @@
 <div class="inventory-page">
 
   <!-- 🔹 Tabs -->
-<div class="inventory-tabs">
-    <div class="tab" [class.active]="currentTab === 'products'" (click)="currentTab = 'products'">📦 商品管理</div>
-    <div class="tab" [class.active]="currentTab === 'stock'" (click)="currentTab = 'stock'">📚 在库</div>
+  <div class="inventory-tabs">
+    <div class="tab" [class.active]="currentTab === 'products'" (click)="currentTab = 'products'">📦 商品信息</div>
+    <div class="tab" [class.active]="currentTab === 'stock'" (click)="currentTab = 'stock'">📚 在库信息</div>
     <div class="tab" [class.active]="currentTab === 'sales'" (click)="currentTab = 'sales'">📊 贩卖分析</div>
   </div>
 
-  <!-- 🔹 Content Area -->
-  <div class="content-area">
 
-    <!-- ✅ 商品管理：这里是你原来的内容，按钮还在 -->
-    <div *ngIf="currentTab === 'products'">
+  <div *ngIf="currentTab === 'products'">
 
-      <div class="container py-3 product-page">
 
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4>商品管理</h4>
-          <button class="btn btn-primary" routerLink="/products/new">＋ 新建商品</button>
+    <!-- 🔹 Content Area -->
+    <div class="content-area">
+
+      <!-- 🔍 搜索 + 新建 -->
+      <div class="toolbar">
+        <div class="search-wrapper">
+          <input type="text" class="search-input" placeholder="搜索商品名称、编号..." (input)="applyFilter($event)" />
         </div>
 
-        <!-- Search -->
-        <input 
-          type="text" 
-          class="form-control w-100 mb-3"
-          placeholder="搜索商品名称、编号..."
-          (input)="applyFilter($event)"
-        />
+        <button class="add-btn" (click)="addProduct()">＋</button>
+      </div>
 
-        <!-- Table -->
-        <div class="table-wrapper">
-          <table class="table table-bordered table-hover product-table">
-            <thead>
-              <tr>
-                <th style="width:90px;">编号</th>
-                <th style="width:70px;">图片</th>
-                <th style="width:180px;">名称</th>
-                <th style="width:120px;">分类</th>
-                <th style="width:80px;">分支</th>
-                <th style="width:100px;">操作</th>
-              </tr>
-            </thead>
+      <!-- 🔹 商品卡片 -->
+      <div class="product-card" *ngFor="let item of filteredProducts">
 
-            <tbody>
-              <tr *ngFor="let item of filteredProducts">
-                <td>{{ item.code }}</td>
+        <!-- 🔹 编号 -->
+        <span class="code">{{ item.code }}</span>
 
-                <td>
-                  <img 
-                    *ngIf="item.imageUrl; else noImg"
-                    [src]="item.imageUrl"
-                    style="width:80px;height:80px;object-fit:cover;display:block;margin:auto;border-radius:6px;" 
-                  />
-                  <ng-template #noImg>
-                    <div
-                      style="width:80px;height:80px;background:#eee;display:flex;justify-content:center;align-items:center;border-radius:6px;">
-                      无图
-                    </div>
-                  </ng-template>
-                </td>
+        <!-- 🔹 主体左右布局 -->
+        <div class="main">
 
-                <td>{{ item.name }}</td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.hasVariants ? '多个' : '单一' }}</td>
+          <div class="left">
+            <img *ngIf="item.imageUrl; else noImg" [src]="getThumbUrl(item.imageUrl)" class="thumb" />
+            <ng-template #noImg>
+              <div class="thumb no-img">无图</div>
+            </ng-template>
+          </div>
 
-                <td>
-                  <button 
-                    class="btn btn-sm btn-outline-secondary"
-                    [routerLink]="['/products', item.id]">
-                    编辑
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="right">
+            <div class="field"><strong>名称：</strong>{{ item.name }}</div>
+            <div class="field"><strong>分类：</strong>{{ item.categoryName }}</div>
+            <div class="field"><strong>变体：</strong>{{ item.hasVariants ? '多个' : '单一' }}</div>
+          </div>
+
+        </div>
+
+        <!-- 🔹 操作按钮 -->
+        <div class="actions">
+          <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
+          <button class="btn-delete" (click)="delete(item)">🗑 删除</button>
         </div>
 
       </div>
 
-    </div>
-
-    <!-- 📚 在库管理 -->
-    <div *ngIf="currentTab === 'stock'">
-      <div class="container py-3">
-        <h4>📚 在库管理（开发中）</h4>
-      </div>
-    </div>
-
-    <!-- 📊 贩卖数据 -->
-    <div *ngIf="currentTab === 'sales'">
-      <div class="container py-3">
-        <h4>📊 贩卖数据（开发中）</h4>
-      </div>
     </div>
 
   </div>
+
+
+
+
+
+
+  <!-- 📚 在库管理 -->
+  <div *ngIf="currentTab === 'stock'">
+    <div class="container py-3">
+      <h4>📚 在库管理（开发中）</h4>
+    </div>
+  </div>
+
+  <!-- 📊 贩卖数据 -->
+  <div *ngIf="currentTab === 'sales'">
+    <div class="container py-3">
+      <h4>📊 贩卖数据（开发中）</h4>
+    </div>
+  </div>
+
+
 
 </div>
