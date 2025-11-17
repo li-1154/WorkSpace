@@ -3,7 +3,10 @@ export interface Product {
     code: string;               // P00001 格式
 
     name: string;               // 商品名称
-    description?: string;       // 描述（可选）
+    description?: string;  
+    
+    janId:string;
+    // 描述（可选）
 
     // -----------------------------
     // 🔥 分类引用（未来 SKU / 分析会用到）
@@ -15,7 +18,12 @@ export interface Product {
     // 🔥 颜色引用（多选）
     // -----------------------------
     colorId: string;         // colors 集合的 ID 列表
-    colorName?: string;      // 缓存展示文本（可选）
+    colorName?: string;  
+    
+    
+    costPrice?:number;
+    salePrice?:number;
+    // 缓存展示文本（可选）
 
     // -----------------------------
     // 🔥 SKU 结构支持（未来扩展库存 / 销售）

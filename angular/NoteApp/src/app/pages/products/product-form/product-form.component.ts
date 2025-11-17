@@ -4,6 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/services/product.service';
 import { Color, ColorService } from 'src/app/services/color.service';
+import {
+  Categorie,
+  CategorieService,
+} from 'src/app/services/categorie.service';
 
 @Component({
   selector: 'app-product-form',
@@ -19,7 +23,8 @@ export class ProductFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private categorieService: CategorieService
   ) {}
   form: FormGroup; // 用来存整个表单的数据
   productId: string | null = null;
@@ -27,6 +32,7 @@ export class ProductFormComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   colors: Color[] = [];
+  categories: Categorie[] = [];
 
   async ngOnInit(): Promise<void> {
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -37,10 +43,17 @@ export class ProductFormComponent implements OnInit {
       categoryId: ['', Validators.required],
       colorId: ['', Validators.required],
       description: [''],
+      janId:[''],
+      costPrice:[''],
+      salePrice:['']
     });
 
     this.colorService.getColors().subscribe((list) => {
       this.colors = list.filter((x) => x.active !== false);
+    });
+
+    this.categorieService.getCategories().subscribe((list) => {
+      this.categories = list.filter((x) => x.active !== false);
     });
 
     if (this.isEdit) {
@@ -62,15 +75,24 @@ export class ProductFormComponent implements OnInit {
       );
     }
 
+    const category = this.categories.find(
+      (d) => d.id === this.form.value.categoryId
+    );
+    const color = this.colors.find((c) => c.id === this.form.value.colorId);
+
     const data: Product = {
       id: '',
       code: raw.code,
       name: this.form.value.name,
-      categoryName: this.form.value.category,
+      janId: this.form.value.janId,
+      categoryId: this.form.value.categoryId,
+      categoryName: category ? category.name : '', // ⭐ 自动补
       description: this.form.value.description || '',
       imageUrl: imageUrl,
-      categoryId: '',
       colorId: this.form.value.colorId,
+      colorName: color ? color.name : '',
+      costPrice: this.form.value.costPrice || '',
+      salePrice: this.form.value.salePrice || '',
       createdAt: new Date(),
       updatedAt: new Date(),
     };

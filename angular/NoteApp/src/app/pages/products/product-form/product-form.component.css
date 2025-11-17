@@ -23,3 +23,15 @@
   cursor: pointer;
   line-height: 18px;
 }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 两列布局 */
+  gap: 6px 14px; /* 行距6px，列距14px，视觉更松 */
+  font-size: 14px;
+}
+
+.field strong {
+  color: #374151;
+  font-weight: 600;
+}

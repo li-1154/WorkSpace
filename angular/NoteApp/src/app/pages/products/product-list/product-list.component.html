@@ -40,9 +40,14 @@
           </div>
 
           <div class="right">
-            <div class="field"><strong>名称：</strong>{{ item.name }}</div>
-            <div class="field"><strong>分类：</strong>{{ item.categoryName }}</div>
-            <div class="field"><strong>变体：</strong>{{ item.hasVariants ? '多个' : '单一' }}</div>
+            <div class="info-grid">
+              <div class="field"><strong>名称：</strong>{{ item.name }}</div>
+              <div class="field"><strong>JANID：</strong>{{ item.janId }}</div>
+              <div class="field"><strong>分类：</strong>{{ item.categoryName }}</div>
+              <div class="field"><strong>颜色：</strong>{{ item.colorName }}</div>
+              <div class="field"><strong>进货价：</strong>{{ item.costPrice }}</div>
+              <div class="field"><strong>出货价：</strong>{{ item.salePrice }}</div>
+            </div>
           </div>
 
         </div>

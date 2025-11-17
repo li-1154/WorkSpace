@@ -14,8 +14,31 @@
             <input class="form-control" formControlName="name">
         </div>
 
+
+
+        <!-- 商品Jan-->
+        <div class="mb-3">
+            <label class="form-label">商品Jan *</label>
+            <input class="form-control" formControlName="janId">
+        </div>
+
+        <!-- 商品进货价-->
+        <div class="mb-3">
+            <label class="form-label">商品进货价 *</label>
+            <input class="form-control" formControlName="costPrice">
+        </div>
+
+        <!-- 商品出货价-->
+        <div class="mb-3">
+            <label class="form-label">商品出货价 *</label>
+            <input class="form-control" formControlName="salePrice">
+        </div>
+
+
+
+
         <div class="form-group mb-3">
-            <label> 颜色</label>
+            <label> 颜色 *</label>
             <select class="form-control" formControlName="colorId">
                 <option value="">请选择颜色</option>
                 <option *ngFor="let c of colors" [value]="c.id">
@@ -23,11 +46,15 @@
                 </option>
             </select>
         </div>
-
         <!-- 分类   -->
         <div class="mb-3">
-            <label class="form-label">分类 *</label>
-            <input class="form-control" formControlName="category">
+            <label>分类 *</label>
+            <select class="form-control" formControlName="categoryId">
+                <option value="">请选择分类</option>
+                <option *ngFor="let d of categories" [value]="d.id">
+                    {{d.name}}
+                </option>
+            </select>
         </div>
 
         <!-- 上传方式：相册选择 -->
