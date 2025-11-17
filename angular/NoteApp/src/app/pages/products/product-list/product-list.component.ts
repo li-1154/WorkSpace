@@ -16,10 +16,25 @@ export class ProductListComponent implements OnInit {
   currentTab: 'products' | 'stock' | 'sales' = 'products';
 
 
-  constructor(private productService: ProductService ,private router:Router) {}
+  constructor(private productService: ProductService ,private router:Router) {
+    this.router.events.subscribe(event =>
+    {
+      if(event.constructor.name ==="NavigationEnd")
+      {
+        this.loadProducts();
+      }
+    }
+    )
+  }
 
-  ngOnInit(): void {
-    this.productService.getProducts().subscribe(res => {
+ngOnInit() {
+        this.loadProducts();
+  }
+
+
+  loadProducts() 
+  {
+     this.productService.getProducts().subscribe(res => {
       this.products = res;
       this.filteredProducts = [...res]; // 初始显示全部
     });

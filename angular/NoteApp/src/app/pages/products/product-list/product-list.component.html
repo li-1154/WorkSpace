@@ -26,62 +26,72 @@
       <!-- 🔹 商品卡片 -->
       <div class="product-card" *ngFor="let item of filteredProducts">
 
-        <!-- 🔹 编号 -->
-        <span class="code">{{ item.code }}</span>
+        <div class="row">
 
-        <!-- 🔹 主体左右布局 -->
-        <div class="main">
-
+          <!-- 左侧：图片 + 编号 -->
           <div class="left">
             <img *ngIf="item.imageUrl; else noImg" [src]="getThumbUrl(item.imageUrl)" class="thumb" />
             <ng-template #noImg>
               <div class="thumb no-img">无图</div>
             </ng-template>
+
+            <span class="code">{{ item.code }}</span>
           </div>
 
-          <div class="right">
-            <div class="info-grid">
-              <div class="field"><strong>名称：</strong>{{ item.name }}</div>
-              <div class="field"><strong>JANID：</strong>{{ item.janId }}</div>
-              <div class="field"><strong>分类：</strong>{{ item.categoryName }}</div>
-              <div class="field"><strong>颜色：</strong>{{ item.colorName }}</div>
-              <div class="field"><strong>进货价：</strong>{{ item.costPrice }}</div>
-              <div class="field"><strong>出货价：</strong>{{ item.salePrice }}</div>
+          <!-- 右侧：信息 -->
+          <div class="right-info">
+            <div class="info-row">
+              <span>名称：</span><strong>{{ item.name }}</strong>
+            </div>
+            <div class="info-row">
+              <span>JAN：</span>{{ item.janId }}
+            </div>
+            <div class="info-row">
+              <span>分类：</span>{{ item.categoryName }}
+            </div>
+            <div class="info-row">
+              <span>颜色：</span>{{ item.colorName }}
+            </div>
+            <div class="info-row">
+              <span>进货价：</span>¥{{ item.costPrice }}
+            </div>
+            <div class="info-row">
+              <span>销售价：</span><strong style="color:#2563eb">¥{{ item.salePrice }}</strong>
             </div>
           </div>
 
-        </div>
 
-        <!-- 🔹 操作按钮 -->
+        <!-- 操作按钮 -->
         <div class="actions">
           <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
           <button class="btn-delete" (click)="delete(item)">🗑 删除</button>
         </div>
-
       </div>
 
     </div>
 
   </div>
 
+</div>
 
 
 
 
 
-  <!-- 📚 在库管理 -->
-  <div *ngIf="currentTab === 'stock'">
-    <div class="container py-3">
-      <h4>📚 在库管理（开发中）</h4>
-    </div>
+
+<!-- 📚 在库管理 -->
+<div *ngIf="currentTab === 'stock'">
+  <div class="container py-3">
+    <h4>📚 在库管理（开发中）</h4>
   </div>
+</div>
 
-  <!-- 📊 贩卖数据 -->
-  <div *ngIf="currentTab === 'sales'">
-    <div class="container py-3">
-      <h4>📊 贩卖数据（开发中）</h4>
-    </div>
+<!-- 📊 贩卖数据 -->
+<div *ngIf="currentTab === 'sales'">
+  <div class="container py-3">
+    <h4>📊 贩卖数据（开发中）</h4>
   </div>
+</div>
 
 
 

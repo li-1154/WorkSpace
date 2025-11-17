@@ -12,11 +12,13 @@ export class ProductService {
   ) { }
 
   getProducts(): Observable<Product[]> {
-    return this.afs.collection<Product>('products').valueChanges({ idField: 'id' });
+    return this.afs.collection<Product>('products',
+      ref=>ref.orderBy('code','asc')
+    ).valueChanges({ idField: 'id' });
   }
 
   createProduct(product: Product) {
-    return this.afs.collection(this.collectionName).add(product);
+    return this.afs.collection(this.collectionName).doc(product.code).set(product);
   }
 
   /**

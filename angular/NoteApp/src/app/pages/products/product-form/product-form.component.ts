@@ -33,6 +33,8 @@ export class ProductFormComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
   colors: Color[] = [];
   categories: Categorie[] = [];
+  mode: 'product' | 'category' | 'color' = 'product';
+
 
   async ngOnInit(): Promise<void> {
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -149,4 +151,32 @@ export class ProductFormComponent implements OnInit {
     reader.onload = () => (this.previewUrl = reader.result);
     reader.readAsDataURL(this.selectedFile);
   }
+
+//新增颜色追加  种类追加
+newCategory:string;
+newColor:string;
+
+//种类追加
+saveCategory(){
+
+}
+//种类删除
+deleteCategory(id:string)
+{
+
+}
+//颜色追加
+saveColor()
+{
+
+}
+editColor(id:string)
+{
+
+}
+//颜色删除
+deleteColor(id:string)
+{
+
+}
 }
