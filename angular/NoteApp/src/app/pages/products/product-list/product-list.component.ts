@@ -65,4 +65,12 @@ editProduct(id: string) {
 delete(id: string)
 {}
 
+
+selectedItemId: string | null = null;
+
+toggleSelect(itemId: string) {
+  this.selectedItemId = this.selectedItemId === itemId ? null : itemId;
+}
+
+
 }

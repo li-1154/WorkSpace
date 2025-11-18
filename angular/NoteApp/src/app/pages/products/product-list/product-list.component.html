@@ -24,7 +24,7 @@
       </div>
 
       <!-- 🔹 商品卡片 -->
-      <div class="product-card" *ngFor="let item of filteredProducts">
+      <div class="product-card" *ngFor="let item of filteredProducts"  (click)="toggleSelect(item.id)">
 
         <div class="row">
 
@@ -40,58 +40,66 @@
 
           <!-- 右侧：信息 -->
           <div class="right-info">
+
             <div class="info-row">
               <span>名称：</span><strong>{{ item.name }}</strong>
             </div>
+
             <div class="info-row">
               <span>JAN：</span>{{ item.janId }}
             </div>
-            <div class="info-row">
-              <span>分类：</span>{{ item.categoryName }}
+
+            <div class="info-row double">
+              <div class="left-side">
+                <span>分类：</span>{{ item.categoryName }}
+              </div>
+              <div class="right-side">
+                <span>颜色：</span>{{ item.colorName }}
+              </div>
             </div>
-            <div class="info-row">
-              <span>颜色：</span>{{ item.colorName }}
-            </div>
+
+
             <div class="info-row">
               <span>进货价：</span>¥{{ item.costPrice }}
             </div>
+
             <div class="info-row">
-              <span>销售价：</span><strong style="color:#2563eb">¥{{ item.salePrice }}</strong>
+              <span>销售价：</span><strong class="highlight">¥{{ item.salePrice }}</strong>
             </div>
+
           </div>
 
-
-        <!-- 操作按钮 -->
-        <div class="actions">
-          <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
-          <button class="btn-delete" (click)="delete(item)">🗑 删除</button>
+          <!-- 操作按钮 -->
+          <div class="actions" *ngIf="selectedItemId === item.id">
+            <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
+            <button class="btn-delete" (click)="delete(item)">🗑 删除</button>
+          </div>
         </div>
+
       </div>
 
     </div>
 
   </div>
 
-</div>
 
 
 
 
 
-
-<!-- 📚 在库管理 -->
-<div *ngIf="currentTab === 'stock'">
-  <div class="container py-3">
-    <h4>📚 在库管理（开发中）</h4>
+  <!-- 📚 在库管理 -->
+  <div *ngIf="currentTab === 'stock'">
+    <div class="container py-3">
+      <h4>📚 在库管理（开发中）</h4>
+    </div>
   </div>
-</div>
 
-<!-- 📊 贩卖数据 -->
-<div *ngIf="currentTab === 'sales'">
-  <div class="container py-3">
-    <h4>📊 贩卖数据（开发中）</h4>
+  <!-- 📊 贩卖数据 -->
+  <div *ngIf="currentTab === 'sales'">
+    <div class="container py-3">
+      <h4>📊 贩卖数据（开发中）</h4>
+    </div>
   </div>
-</div>
 
 
 

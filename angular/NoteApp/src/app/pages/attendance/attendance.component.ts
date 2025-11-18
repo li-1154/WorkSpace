@@ -251,25 +251,7 @@ export class AttendanceComponent implements OnInit {
   // ⏱️ 计算工作时长
   // ==============================
   getWorkDuration(): string | null {
-  const record = this.todayRecord;
-  if (!record?.checkIn || !record?.checkOut) return null;
-
-  const toMs = (t: string) => {
-    const [h, m, s] = t.split(':').map(Number);
-    return h * 3600000 + m * 60000 + (s || 0) * 1000;
-  };
-
-  let totalMs = toMs(record.checkOut) - toMs(record.checkIn);
-
-  if (record.breakOut && record.breakIn) {
-    totalMs -= toMs(record.breakIn) - toMs(record.breakOut);
-  }
-
-  if (totalMs <= 0) return null;
-
-  const h = Math.floor(totalMs / 3600000);
-  const m = Math.floor((totalMs % 3600000) / 60000);
-  return `${h}小时 ${m}分`;
+    return this.attendanceService.getWorkDuration(this.todayRecord);
 }
 
   // ==============================
@@ -281,6 +263,7 @@ export class AttendanceComponent implements OnInit {
     breakOut?: string;
     breakIn?: string;
     checkOut?: string;
+    workedHours?:string;
   }[] = [];
 
   async loadGroupMembers() {

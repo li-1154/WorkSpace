@@ -61,6 +61,17 @@ export class AttendanceService {
           status: statusMap[type],
           updatedAt: now,
         });
+        if(type=='退勤')
+        {
+          const updatedRecord = (await recordRef.get().toPromise())?.data() as AttendanceRecord;
+          const workedHours = this.getWorkDuration(updatedRecord);
+
+          await recordRef.update(
+            {
+              workedHours:workedHours
+            }
+          );
+        }
       } else {
         const record: AttendanceRecord = {
           uid,
@@ -132,7 +143,8 @@ export class AttendanceService {
   checkIn?: string; 
   breakOut?: string; 
   breakIn?: string; 
-  checkOut?: string; 
+  checkOut?: string;
+  workedHours?:string
 }[]> {
   if (!group) return [];
 
@@ -146,6 +158,30 @@ export class AttendanceService {
   return snapshot?.docs.map(doc => doc.data() as any) || [];
 }
 
+
+
+
+
+  getWorkDuration(record:AttendanceRecord |null): string | null {
+  if (!record?.checkIn || !record?.checkOut) return null;
+
+  const toMs = (t: string) => {
+    const [h, m, s] = t.split(':').map(Number);
+    return h * 3600000 + m * 60000 + (s || 0) * 1000;
+  };
+
+  let totalMs = toMs(record.checkOut) - toMs(record.checkIn);
+
+  if (record.breakOut && record.breakIn) {
+    totalMs -= toMs(record.breakIn) - toMs(record.breakOut);
+  }
+
+  if (totalMs <= 0) return null;
+
+  const h = Math.floor(totalMs / 3600000);
+  const m = Math.floor((totalMs % 3600000) / 60000);
+  return `${h}小时 ${m}分`;
+}
 
 
 

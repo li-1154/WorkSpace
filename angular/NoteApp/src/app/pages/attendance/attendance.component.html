@@ -36,6 +36,7 @@
         <li *ngIf="todayRecord.breakOut">⏸ 中途退勤：<span>{{ todayRecord.breakOut }}</span></li>
         <li *ngIf="todayRecord.breakIn">▶️ 中途出勤：<span>{{ todayRecord.breakIn }}</span></li>
         <li *ngIf="todayRecord.checkOut">🏁 退勤：<span>{{ todayRecord.checkOut }}</span></li>
+        
       </ul>
     </div>
 
@@ -67,7 +68,7 @@
             <li *ngIf="m.breakOut">中途退勤：{{ m.breakOut }}</li>
             <li *ngIf="m.breakIn">中途出勤：{{ m.breakIn }}</li>
             <li *ngIf="m.checkOut">退勤：{{ m.checkOut }}</li>
-            <li *ngIf="getWorkDuration()">⏰ 今日上班总时间：{{ getWorkDuration() }}</li>
+            <li *ngIf="m.checkOut">⏰ 今日上班总时间：{{ m.workedHours }}</li>
           </ul>
         </li>
       </ul>

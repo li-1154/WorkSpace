@@ -158,17 +158,23 @@ newColor:string;
 
 //种类追加
 saveCategory(){
-
+  this.categorieService.addCategorie(this.newCategory);
+  alert('成功添加分类')
 }
 //种类删除
 deleteCategory(id:string)
 {
-
+  //confirm() 就是浏览器自带的 确认弹窗，带 “确定” 和 “取消” 两个按钮。
+  const yes = confirm("确认要删除吗?删除产品分类需要谨慎操作!!!")
+  if(!yes) return;
+  this.categorieService.deleteCategorie(id);
+  alert('已经删除此分类')
 }
 //颜色追加
 saveColor()
 {
-
+  this.colorService.addColor(this.newColor);
+  alert('成功添加颜色')
 }
 editColor(id:string)
 {
@@ -177,6 +183,10 @@ editColor(id:string)
 //颜色删除
 deleteColor(id:string)
 {
-
+  const yes = confirm("确认要删除吗?删除颜色分类需要谨慎操作!!!")
+  if(!yes)
+    return;
+  this.colorService.deleteColor(id);
+  alert("成功删除颜色!")
 }
 }
