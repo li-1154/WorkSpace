@@ -26,7 +26,7 @@ export class ProductFormComponent implements OnInit {
     private productService: ProductService,
     private colorService: ColorService,
     private categorieService: CategorieService
-  ) {}
+  ) { }
   form: FormGroup; // 用来存整个表单的数据
   productId: string | null = null;
   isEdit: boolean = false;
@@ -36,50 +36,49 @@ export class ProductFormComponent implements OnInit {
   categories: Categorie[] = [];
   mode: 'product' | 'category' | 'color' = 'product';
 
-
   async ngOnInit(): Promise<void> {
     this.productId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.productId;
-   
+
     this.form = this.fb.group({
       code: [{ value: '', disabled: true }],
-      name: ['', Validators.required],
+      name: ['', Validators.required, Validators.maxLength(50)],
       categoryId: ['', Validators.required],
-      colorId: ['', Validators.required],
+      colorId: ['',],
       description: [''],
-      janId:[''],
-      costPrice:[''],
-      salePrice:['']
+      janId: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]*$/)   // 允许 0~9 的数字
+      ]],
+      costPrice: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
+      salePrice: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]]
     });
 
     await this.loadLists();
-     if (this.isEdit) {
+    if (this.isEdit) {
+      console.log('编辑模式，加载商品数据' + this.productId);
       await this.loadProduct();
-      console.log('编辑模式，加载商品数据' + this.productId); 
     } else {
       await this.generateProductCode();
-    } 
+      console.log('新增模式，生成新商品编码');
+    }
   }
 
-
-
-
   loadLists() {
-  return new Promise<void>((resolve) => {
-    let done = 0;
-    const check = () => { if (++done === 2) resolve(); };
+    return new Promise<void>((resolve) => {
+      let done = 0;
+      const check = () => { if (++done === 2) resolve(); };
+      this.categorieService.getCategories().subscribe(list => {
+        this.categories = list.filter(x => x.active !== false);
+        check();
+      });
 
-    this.colorService.getColors().subscribe(list => {
-      this.colors = list.filter(x => x.active !== false);
-      check();
+      this.colorService.getColors().subscribe(list => {
+        this.colors = list.filter(x => x.active !== false);
+        check();
+      });
     });
-
-    this.categorieService.getCategories().subscribe(list => {
-      this.categories = list.filter(x => x.active !== false);
-      check();
-    });
-  });
-}
+  }
 
   async onSubmit() {
     if (this.form.invalid) {
@@ -136,30 +135,32 @@ export class ProductFormComponent implements OnInit {
     this.form.patchValue({ code: newCode });
   }
 
- async loadProduct() {
+  async loadProduct() {
     if (!this.productId) {
+      console.log('加载不到商品数据');
       return;
     }
-    const product = 
-     await this.productService.getProductById(this.productId).toPromise() ;
-    console.log('加载到的商品数据=', product);  
-     if (!product) {
+    const product =
+      await this.productService.getProductById(this.productId).toPromise();
+    console.log('加载到的商品数据=', product);
+    if (!product) {
       alert('找不到该商品');
-      return;  
-  }
-  this.previewUrl = product.imageUrl|| null;
+      return;
+    }
+    this.previewUrl = product.imageUrl || null;
 
-  this.form.patchValue({
-    code: product.code,
-    name: product.name,
-    categoryId: product.categoryId,
-    colorId: product.colorId,
-    description: product.description,
-    janId:product.janId,
-    costPrice:product.costPrice,
-    salePrice:product.salePrice
-  });
-}
+    this.form.patchValue({
+      code: product.code,
+      name: product.name,
+      categoryId: product.categoryId,
+      colorId: String(product.colorId),
+      description: product.description,
+      janId: product.janId,
+      costPrice: product.costPrice,
+      salePrice: product.salePrice
+    });
+    console.log('已回显颜色 =', this.form.value.colorId);
+  }
 
   // 相片上传功能
   openPicker() {
@@ -181,48 +182,42 @@ export class ProductFormComponent implements OnInit {
       return;
     }
     this.selectedFile = input.files[0];
-
     const reader = new FileReader();
     reader.onload = () => (this.previewUrl = reader.result);
     reader.readAsDataURL(this.selectedFile);
   }
 
-//新增颜色追加  种类追加
-newCategory:string;
-newColor:string;
+  //新增颜色追加  种类追加
+  newCategory: string;
+  newColor: string;
 
-//种类追加
-saveCategory(){
-  this.categorieService.addCategorie(this.newCategory);
-  alert('成功添加分类')
-}
-//种类删除
-deleteCategory(id:string)
-{
-  //confirm() 就是浏览器自带的 确认弹窗，带 “确定” 和 “取消” 两个按钮。
-  const yes = confirm("确认要删除吗?删除产品分类需要谨慎操作!!!")
-  if(!yes) return;
-  this.categorieService.deleteCategorie(id);
-  alert('已经删除此分类')
-}
-//颜色追加
-saveColor()
-{
-  this.colorService.addColor(this.newColor);
-  alert('成功添加颜色')
-}
-editColor(id:string)
-{
+  //种类追加
+  saveCategory() {
+    this.categorieService.addCategorie(this.newCategory);
+    alert('成功添加分类')
+  }
+  //种类删除
+  deleteCategory(id: string) {
+    //confirm() 就是浏览器自带的 确认弹窗，带 “确定” 和 “取消” 两个按钮。
+    const yes = confirm("确认要删除吗?删除产品分类需要谨慎操作!!!")
+    if (!yes) return;
+    this.categorieService.deleteCategorie(id);
+    alert('已经删除此分类')
+  }
+  //颜色追加
+  saveColor() {
+    this.colorService.addColor(this.newColor);
+    alert('成功添加颜色')
+  }
+  editColor(id: string) {
 
-}
-//颜色删除
-deleteColor(id:string)
-{
-  const yes = confirm("确认要删除吗?删除颜色分类需要谨慎操作!!!")
-  if(!yes)
-    return;
-  this.colorService.deleteColor(id);
-  alert("成功删除颜色!")
-}
-
+  }
+  //颜色删除
+  deleteColor(id: string) {
+    const yes = confirm("确认要删除吗?删除颜色分类需要谨慎操作!!!")
+    if (!yes)
+      return;
+    this.colorService.deleteColor(id);
+    alert("成功删除颜色!")
+  }
 }

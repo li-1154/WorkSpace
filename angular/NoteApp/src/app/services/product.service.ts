@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -31,7 +31,8 @@ export class ProductService {
       .collection<Product>(this.collectionName)
       .doc(id)
       .valueChanges()
-      .pipe(map((data) => (data ? { id, ...data } : null)));
+      .pipe(take(1), 
+        map(data => data ? { id, ...data } : null));
   }
 
   /**
