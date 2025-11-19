@@ -10,7 +10,7 @@
     <hr>
 
     <!-- ░░░░ 商品登记区域 ░░░░ -->
-    <form *ngIf="mode==='product'" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [hidden]="mode!=='product'" [formGroup]="form" (ngSubmit)="onSubmit()">
 
         <div class="form-grid">
 
@@ -85,7 +85,7 @@
 
 
     <!-- ░░░░ 分类管理区域 ░░░░ -->
-    <div *ngIf="mode==='category'" class="manage-section">
+    <div [hidden]="mode!=='category'" class="manage-section">
         <h5>🏷 分类管理</h5>
 
         <!-- 输入新增 -->
@@ -112,7 +112,7 @@
 
 
     <!-- ░░░░ 颜色管理区域 ░░░░ -->
-    <div *ngIf="mode==='color'" class="manage-section">
+    <div [hidden]="mode!=='color'" class="manage-section">
 
         <h5>🎨 颜色管理</h5>
 

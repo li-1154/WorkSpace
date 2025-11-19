@@ -9,6 +9,7 @@ import {
   CategorieService,
 } from 'src/app/services/categorie.service';
 
+
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
@@ -39,6 +40,7 @@ export class ProductFormComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.productId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.productId;
+   
     this.form = this.fb.group({
       code: [{ value: '', disabled: true }],
       name: ['', Validators.required],
@@ -50,20 +52,34 @@ export class ProductFormComponent implements OnInit {
       salePrice:['']
     });
 
-    this.colorService.getColors().subscribe((list) => {
-      this.colors = list.filter((x) => x.active !== false);
-    });
-
-    this.categorieService.getCategories().subscribe((list) => {
-      this.categories = list.filter((x) => x.active !== false);
-    });
-
-    if (this.isEdit) {
-      this.loadProduct();
+    await this.loadLists();
+     if (this.isEdit) {
+      await this.loadProduct();
+      console.log('编辑模式，加载商品数据' + this.productId); 
     } else {
       await this.generateProductCode();
-    }
+    } 
   }
+
+
+
+
+  loadLists() {
+  return new Promise<void>((resolve) => {
+    let done = 0;
+    const check = () => { if (++done === 2) resolve(); };
+
+    this.colorService.getColors().subscribe(list => {
+      this.colors = list.filter(x => x.active !== false);
+      check();
+    });
+
+    this.categorieService.getCategories().subscribe(list => {
+      this.categories = list.filter(x => x.active !== false);
+      check();
+    });
+  });
+}
 
   async onSubmit() {
     if (this.form.invalid) {
@@ -120,11 +136,30 @@ export class ProductFormComponent implements OnInit {
     this.form.patchValue({ code: newCode });
   }
 
-  loadProduct() {
+ async loadProduct() {
     if (!this.productId) {
       return;
     }
+    const product = 
+     await this.productService.getProductById(this.productId).toPromise() ;
+    console.log('加载到的商品数据=', product);  
+     if (!product) {
+      alert('找不到该商品');
+      return;  
   }
+  this.previewUrl = product.imageUrl|| null;
+
+  this.form.patchValue({
+    code: product.code,
+    name: product.name,
+    categoryId: product.categoryId,
+    colorId: product.colorId,
+    description: product.description,
+    janId:product.janId,
+    costPrice:product.costPrice,
+    salePrice:product.salePrice
+  });
+}
 
   // 相片上传功能
   openPicker() {
@@ -189,4 +224,5 @@ deleteColor(id:string)
   this.colorService.deleteColor(id);
   alert("成功删除颜色!")
 }
+
 }

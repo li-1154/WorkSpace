@@ -45,7 +45,7 @@ const routes: Routes = [
   //在库模块
   { path: 'products', component: ProductListComponent },
   { path: 'products/new', component: ProductFormComponent },
-  { path: 'products/:id', component: ProductFormComponent },
+  { path: 'products/edit/:id', component: ProductFormComponent },
   //其他模块
   { path: '**', redirectTo: '' },
 ];
