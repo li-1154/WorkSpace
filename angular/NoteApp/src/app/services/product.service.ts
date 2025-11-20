@@ -11,7 +11,7 @@ export class ProductService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage
-  ) {}
+  ) { }
 
   getProducts(): Observable<Product[]> {
     return this.afs
@@ -26,12 +26,19 @@ export class ProductService {
       .set(product);
   }
 
+  updateProduct(id: string,product: Product) {
+    return this.afs
+      .collection(this.collectionName)
+      .doc(id)
+      .update(product);
+  }
+
   getProductById(id: string) {
     return this.afs
       .collection<Product>(this.collectionName)
       .doc(id)
       .valueChanges()
-      .pipe(take(1), 
+      .pipe(take(1),
         map(data => data ? { id, ...data } : null));
   }
 

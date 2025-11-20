@@ -21,20 +21,45 @@
 
             <div>
                 <label>商品名称 *</label>
-                <input class="form-input" formControlName="name">
+                <input class="form-input" formControlName="name" 
+                    [ngClass]="{'invalid': form.get('name')?.invalid && form.get('name')?.touched}">
+
+                <!-- 错误信息 -->
+                <div class="error" *ngIf="form.get('name')?.hasError('required') && form.get('name')?.touched">
+                    商品名称不能为空
+                </div>
+
+                <div class="error" *ngIf="form.get('name')?.hasError('maxlength') && form.get('name')?.touched">
+                    商品名称不能超过15个字符
+                </div>
             </div>
 
             <div>
                 <label>JAN *</label>
-                <input class="form-input" formControlName="janId">
+                <input class="form-input" formControlName="janId"
+                    [ngClass]="{'invalid': form.get('janId')?.invalid && form.get('janId')?.touched}">
+
+                <div class="error" *ngIf="form.get('janId')?.hasError('required') && form.get('janId')?.touched">
+                    JAN 必填
+                </div>
+
+                <div class="error" *ngIf="form.get('janId')?.hasError('pattern') && form.get('janId')?.touched">
+                    只能输入数字或英文字母，且长度不能超过11位
+                </div>
             </div>
 
             <div>
                 <label>分类 *</label>
-                <select class="form-input" formControlName="categoryId">
+                <select class="form-input" formControlName="categoryId"
+                    [ngClass]="{'invalid': form.get('categoryId')?.invalid && form.get('categoryId')?.touched}">
                     <option value="">请选择</option>
-                    <option *ngFor="let d of categories" [value]="d.id">{{d.name}}</option>
+                    <option *ngFor="let c of categories" [ngValue]="c.id">{{c.name}}</option>
                 </select>
+
+                <div class="error"
+                    *ngIf="form.get('categoryId')?.hasError('required') && form.get('categoryId')?.touched">
+                    必须选择分类
+                </div>
             </div>
 
             <div>
@@ -47,12 +72,32 @@
 
             <div>
                 <label>进货价 *</label>
-                <input class="form-input" formControlName="costPrice">
+                <input class="form-input" formControlName="costPrice"
+                    [ngClass]="{'invalid': form.get('costPrice')?.invalid && form.get('costPrice')?.touched}">
+
+                <div class="error"
+                    *ngIf="form.get('costPrice')?.hasError('required') && form.get('costPrice')?.touched">
+                    必填
+                </div>
+
+                <div class="error" *ngIf="form.get('costPrice')?.hasError('pattern') && form.get('costPrice')?.touched">
+                    请输入正确的价格 (例如：120 或 120.50)
+                </div>
             </div>
 
             <div>
                 <label>销售价 *</label>
-                <input class="form-input" formControlName="salePrice">
+                <input class="form-input" formControlName="salePrice"
+                    [ngClass]="{'invalid': form.get('salePrice')?.invalid && form.get('salePrice')?.touched}">
+
+                <div class="error"
+                    *ngIf="form.get('salePrice')?.hasError('required') && form.get('salePrice')?.touched">
+                    必填
+                </div>
+
+                <div class="error" *ngIf="form.get('salePrice')?.hasError('pattern') && form.get('salePrice')?.touched">
+                    请输入正确的价格 (例如：120 或 120.50)
+                </div>
             </div>
 
         </div>
@@ -85,14 +130,14 @@
 
 
     <!-- ░░░░ 分类管理区域 ░░░░ -->
-    <div    *ngIf="mode==='category'" class="manage-section">
+    <div *ngIf="mode==='category'" class="manage-section">
         <h5>🏷 分类管理</h5>
 
         <!-- 输入新增 -->
         <div class="add-row">
             <input [(ngModel)]="newCategory" placeholder="输入分类名称" class="form-input">
             <button class="btn-primary" (click)="saveCategory()">＋ 添加</button>
-           <button class="btn-secondary" type="button" routerLink="/products">取消</button>
+            <button class="btn-secondary" type="button" routerLink="/products">取消</button>
         </div>
 
         <!-- 分类列表 -->

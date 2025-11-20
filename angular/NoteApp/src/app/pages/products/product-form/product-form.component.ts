@@ -42,17 +42,38 @@ export class ProductFormComponent implements OnInit {
 
     this.form = this.fb.group({
       code: [{ value: '', disabled: true }],
-      name: ['', Validators.required, Validators.maxLength(50)],
+
+      // 商品名称：必填 + 最多15文字
+      name: ['', [Validators.required, Validators.maxLength(15)]],
+
+      // 分类：必填
       categoryId: ['', Validators.required],
-      colorId: ['',],
+
+      // 颜色：必填
+      colorId: ['', Validators.required],
+
+      // 备注：可空
       description: [''],
+
+      // JAN：必填 + 只能数字 + 必须11位
       janId: ['', [
         Validators.required,
-        Validators.pattern(/^[0-9]*$/)   // 允许 0~9 的数字
+        Validators.pattern(/^[A-Za-z0-9]{1,11}$/)
+        // 👈 必须是11位数字
       ]],
-      costPrice: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
-      salePrice: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]]
+
+      // 价格：必填 + 只能数字 + 允许小数点后2位
+      costPrice: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)
+      ]],
+
+      salePrice: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)
+      ]]
     });
+
 
     await this.loadLists();
     if (this.isEdit) {
@@ -98,33 +119,31 @@ export class ProductFormComponent implements OnInit {
     const color = this.colors.find((c) => c.id === this.form.value.colorId);
 
     const data: Product = {
-      id: '',
+      id: this.productId || '',
       code: raw.code,
-      name: this.form.value.name,
-      janId: this.form.value.janId,
-      categoryId: this.form.value.categoryId,
+      name: raw.name,
+      janId: raw.janId,
+      categoryId: raw.categoryId,
       categoryName: category ? category.name : '', // ⭐ 自动补
-      description: this.form.value.description || '',
+      description: raw.description || '',
       imageUrl: imageUrl,
-      colorId: this.form.value.colorId,
+      colorId: raw.colorId,
       colorName: color ? color.name : '',
-      costPrice: this.form.value.costPrice || '',
-      salePrice: this.form.value.salePrice || '',
+      costPrice: raw.costPrice || '',
+      salePrice: raw.salePrice || '',
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
     if (this.isEdit) {
+      await this.productService.updateProduct(this.productId!, data);
+      alert('商品已更新');
     } else {
       this.productService.createProduct(data).then(() => {
         alert('商品已新增');
-        this.router.navigate(['/products']);
       });
     }
-
-    const formValue = this.form.getRawValue();
-    console.log('提交表单数据=', formValue);
-    alert('先确认表单能提交，后面再接 Firebase～');
+    this.router.navigate(['/products']);
   }
 
   async generateProductCode() {
