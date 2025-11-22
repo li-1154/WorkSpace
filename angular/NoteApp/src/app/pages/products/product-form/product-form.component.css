@@ -171,3 +171,71 @@ label {
   cursor: pointer;
 }
 
+.preview-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 12px;
+}
+
+.preview-img {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+/* 极简 × 按钮 */
+.remove-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);   /* 更柔和，不刺眼 */
+  color: #f5f5f5;                /* 柔白，不刺眼 */
+  font-size: 18px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.4); /* 不再强烈 */
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* hover 更轻，不是暴力放大 */
+.remove-btn:hover {
+  background: rgba(0,0,0,0.75);
+  transform: scale(1.07);
+}
+
+
+.btn-mini {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+/* 启用状态时显示“停用”按钮（灰色/警示） */
+.btn-stop {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-stop:hover {
+  background: #dcdcdc;
+}
+
+/* 停用状态时显示“启用”按钮（黑白极简） */
+.btn-start {
+  background: #000;
+  color: #fff;
+}
+
+.btn-start:hover {
+  background: #222;
+}

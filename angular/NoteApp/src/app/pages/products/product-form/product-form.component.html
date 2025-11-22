@@ -21,7 +21,7 @@
 
             <div>
                 <label>商品名称 *</label>
-                <input class="form-input" formControlName="name" 
+                <input class="form-input" formControlName="name"
                     [ngClass]="{'invalid': form.get('name')?.invalid && form.get('name')?.touched}">
 
                 <!-- 错误信息 -->
@@ -136,7 +136,7 @@
         <!-- 输入新增 -->
         <div class="add-row">
             <input [(ngModel)]="newCategory" placeholder="输入分类名称" class="form-input">
-            <button class="btn-primary" (click)="saveCategory()">＋ 添加</button>
+            <button class="btn-primary" (click)="saveCategory()">添加</button>
             <button class="btn-secondary" type="button" routerLink="/products">取消</button>
         </div>
 
@@ -144,12 +144,18 @@
         <table class="setting-table">
             <tr>
                 <th>分类名称</th>
+                <th>状态</th>
                 <th>操作</th>
             </tr>
-            <tr *ngFor="let item of categories">
+            <tr *ngFor="let item of categorieslist">
                 <td>{{ item.name }}</td>
+                <td>{{ item.active ? '启用中' : '禁用中' }}</td>
                 <td>
-                    <button class="btn-mini" (click)="deleteCategory(item.id)">🗑 删除</button>
+                    <button class="btn-mini" [ngClass]="item.active ? 'btn-stop' : 'btn-start'"
+                        (click)="toggleStatusCategory(item)">
+                        {{ item.active ? '停用' : '启用' }}
+                    </button>
+
                 </td>
             </tr>
         </table>
@@ -163,20 +169,26 @@
 
         <div class="add-row">
             <input [(ngModel)]="newColor" placeholder="输入颜色名称" class="form-input">
-            <button class="btn-primary" (click)="saveColor()">＋ 添加</button>
+            <button class="btn-primary" (click)="saveColor()">添加</button>
             <button class="btn-secondary" type="button" routerLink="/products">取消</button>
         </div>
 
         <table class="setting-table">
             <tr>
                 <th>颜色名称</th>
+                <th>状态</th>
                 <th>操作</th>
             </tr>
 
-            <tr *ngFor="let c of colors">
+            <tr *ngFor="let c of colorslist">
                 <td>{{ c.name }}</td>
+                <td>{{ c.active ? '启用中' : '禁用中' }}</td>
                 <td>
-                    <button class="btn-mini" (click)="deleteColor(c.id)">🗑 删除</button>
+                    <button class="btn-mini" [ngClass]="c.active ? 'btn-stop' : 'btn-start'"
+                        (click)="togColorgleStatus(c)">
+                        {{ c.active ? '停用' : '启用' }}
+                    </button>
+
                 </td>
             </tr>
         </table>

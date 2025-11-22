@@ -3,9 +3,9 @@ export interface Product {
     code: string;               // P00001 格式
 
     name: string;               // 商品名称
-    description?: string;  
-    
-    janId:string;
+    description?: string;
+
+    janId: string;
     // 描述（可选）
 
     // -----------------------------
@@ -18,11 +18,11 @@ export interface Product {
     // 🔥 颜色引用（多选）
     // -----------------------------
     colorId: string;         // colors 集合的 ID 列表
-    colorName?: string;  
-    
-    
-    costPrice?:number;
-    salePrice?:number;
+    colorName?: string;
+
+
+    costPrice?: number;
+    salePrice?: number;
     // 缓存展示文本（可选）
 
     // -----------------------------
@@ -35,17 +35,17 @@ export interface Product {
     // -----------------------------
     // 图片
     // -----------------------------
-    imageUrl?: string;          
-    imagePath?: string;        
+    imageUrl?: string;
+    imagePath?: string;
 
     // -----------------------------
     // 系统字段
     // -----------------------------
-    createdAt: any; 
+    createdAt: any;
     updatedAt: any;
     createdBy?: string;
     updatedBy?: string;
 
-    archived?: boolean;         // 是否隐藏商品
+    available?: boolean;         // 是否隐藏商品
     tags?: string[];            // 搜索加速标签 (可选)
 }

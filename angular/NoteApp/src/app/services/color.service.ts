@@ -38,14 +38,16 @@ export class ColorService {
     return this.collection.doc(id).update({ name });
   }
 
-  deactivateColor(id: string): Promise<void> {
-    return this.collection.doc(id).update({ active: false });
+  deactivateColor(id: string,active:boolean): Promise<void> {
+    return this.collection.doc(id).update({ active});
   }
 
   deleteColor(id: string): Promise<void> {
     return this.collection.doc(id).delete();
   }
 }
+
+
 
 export interface Color {
   id?: string;

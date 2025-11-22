@@ -24,7 +24,7 @@
       </div>
 
       <!-- 🔹 商品卡片 -->
-      <div class="product-card" *ngFor="let item of filteredProducts"  (click)="toggleSelect(item.id)">
+      <div class="product-card" *ngFor="let item of filteredProducts" (click)="toggleSelect(item.id)">
 
         <div class="row">
 
@@ -36,6 +36,8 @@
             </ng-template>
 
             <span class="code">{{ item.code }}</span>
+            <br>
+            <span class="code"> {{ item.available ? '🔄 启用': '⛔ 停用' }} </span>
           </div>
 
           <!-- 右侧：信息 -->
@@ -72,7 +74,10 @@
           <!-- 操作按钮 -->
           <div class="actions" *ngIf="selectedItemId === item.id">
             <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
-            <button class="btn-delete" (click)="delete(item)">🗑 删除</button>
+            <button class="btn-edit" (click)="toggleStatus(item)">
+              {{ item.available ? '⛔ 停用' : '🔄 启用' }} 
+            </button>
+
           </div>
         </div>
 

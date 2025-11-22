@@ -33,7 +33,9 @@ export class ProductFormComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   colors: Color[] = [];
+  colorslist: Color[] = [];
   categories: Categorie[] = [];
+  categorieslist: Categorie[] = [];
   mode: 'product' | 'category' | 'color' = 'product';
 
   async ngOnInit(): Promise<void> {
@@ -86,16 +88,19 @@ export class ProductFormComponent implements OnInit {
   }
 
   loadLists() {
-    return new Promise<void>((resolve) => {
+    return new Promise<void>(resolve => {
       let done = 0;
       const check = () => { if (++done === 2) resolve(); };
+
       this.categorieService.getCategories().subscribe(list => {
         this.categories = list.filter(x => x.active !== false);
+        this.categorieslist = list; // 全部保留
         check();
       });
 
       this.colorService.getColors().subscribe(list => {
         this.colors = list.filter(x => x.active !== false);
+        this.colorslist = list; // 全部保留
         check();
       });
     });
@@ -133,6 +138,7 @@ export class ProductFormComponent implements OnInit {
       salePrice: raw.salePrice || '',
       createdAt: new Date(),
       updatedAt: new Date(),
+      available: true // 默认启用 '
     };
 
     if (this.isEdit) {
@@ -176,7 +182,7 @@ export class ProductFormComponent implements OnInit {
       description: product.description,
       janId: product.janId,
       costPrice: product.costPrice,
-      salePrice: product.salePrice
+      salePrice: product.salePrice,
     });
     console.log('已回显颜色 =', this.form.value.colorId);
   }
@@ -215,13 +221,11 @@ export class ProductFormComponent implements OnInit {
     this.categorieService.addCategorie(this.newCategory);
     alert('成功添加分类')
   }
-  //种类删除
-  deleteCategory(id: string) {
-    //confirm() 就是浏览器自带的 确认弹窗，带 “确定” 和 “取消” 两个按钮。
-    const yes = confirm("确认要删除吗?删除产品分类需要谨慎操作!!!")
-    if (!yes) return;
-    this.categorieService.deleteCategorie(id);
-    alert('已经删除此分类')
+  //种类停用启用
+  toggleStatusCategory(item: Categorie) {
+    const updatedStatus = !item.active;
+    this.categorieService.deactivateCategorie(item.id, updatedStatus);
+    item.active = updatedStatus;
   }
   //颜色追加
   saveColor() {
@@ -231,12 +235,11 @@ export class ProductFormComponent implements OnInit {
   editColor(id: string) {
 
   }
-  //颜色删除
-  deleteColor(id: string) {
-    const yes = confirm("确认要删除吗?删除颜色分类需要谨慎操作!!!")
-    if (!yes)
-      return;
-    this.colorService.deleteColor(id);
-    alert("成功删除颜色!")
+  //颜色停用启用
+  togColorgleStatus(item: Color) {
+    const updatedStatus = !item.active;
+    this.colorService.deactivateColor(item.id, updatedStatus);
+    item.active = updatedStatus;
   }
+
 }

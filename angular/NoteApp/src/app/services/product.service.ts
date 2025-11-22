@@ -108,4 +108,13 @@ export class ProductService {
 
     return data.secure_url;
   }
+
+  updateProductStatus(id: string, available: boolean){ 
+    return this.afs
+      .collection(this.collectionName)
+      .doc(id)
+      .update({ available });
+  }
+  
 }
+

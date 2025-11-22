@@ -40,8 +40,8 @@ export class CategorieService {
       return this.collection.doc(id).update({ name });
     }
   
-    deactivateCategorie(id: string): Promise<void> {
-      return this.collection.doc(id).update({ active: false });
+    deactivateCategorie(id: string,active:boolean): Promise<void> {
+      return this.collection.doc(id).update({ active });
     }
   
     deleteCategorie(id: string): Promise<void> {

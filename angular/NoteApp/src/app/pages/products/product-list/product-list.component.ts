@@ -44,8 +44,8 @@ ngOnInit() {
     const keyword = event.target.value.toLowerCase();
     this.filteredProducts = this.products.filter(p =>
       p.name.toLowerCase().includes(keyword) ||
-      p.code.toLowerCase().includes(keyword) 
-    );
+      p.code.toLowerCase().includes(keyword) ||
+      p.janId.toLowerCase().includes(keyword));  
   }
 
 getThumbUrl(url: string): string {
@@ -62,14 +62,18 @@ editProduct(id: string) {
   this.router.navigate(['/products/edit', id]);
 
 }
-delete(id: string)
-{}
 
 
 selectedItemId: string | null = null;
 
 toggleSelect(itemId: string) {
   this.selectedItemId = this.selectedItemId === itemId ? null : itemId;
+}
+
+toggleStatus(item: Product) { 
+  const updatedStatus = !item.available;
+  this.productService.updateProductStatus(item.id, updatedStatus);
+    item.available = updatedStatus;
 }
 
 
