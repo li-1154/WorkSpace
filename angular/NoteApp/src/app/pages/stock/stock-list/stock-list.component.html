@@ -52,3 +52,5 @@
     </div>
 
 </div>
+<app-stock-adjust-modal *ngIf="showStockModal" [item]="currentItem" [type]="stockMode"
+    (submitted)="onStockSubmitted($event)" (closed)="onModalClose()"></app-stock-adjust-modal>

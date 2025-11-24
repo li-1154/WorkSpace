@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, take } from 'rxjs/operators';
+import * as firebase from 'firebase';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -11,7 +12,7 @@ export class ProductService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage
-  ) { }
+  ) {}
 
   getProducts(): Observable<Product[]> {
     return this.afs
@@ -26,11 +27,8 @@ export class ProductService {
       .set(product);
   }
 
-  updateProduct(id: string,product: Product) {
-    return this.afs
-      .collection(this.collectionName)
-      .doc(id)
-      .update(product);
+  updateProduct(id: string, product: Product) {
+    return this.afs.collection(this.collectionName).doc(id).update(product);
   }
 
   getProductById(id: string) {
@@ -38,8 +36,10 @@ export class ProductService {
       .collection<Product>(this.collectionName)
       .doc(id)
       .valueChanges()
-      .pipe(take(1),
-        map(data => data ? { id, ...data } : null));
+      .pipe(
+        take(1),
+        map((data) => (data ? { id, ...data } : null))
+      );
   }
 
   /**
@@ -109,12 +109,31 @@ export class ProductService {
     return data.secure_url;
   }
 
-  updateProductStatus(id: string, available: boolean){ 
+  updateProductStatus(id: string, available: boolean) {
     return this.afs
       .collection(this.collectionName)
       .doc(id)
       .update({ available });
   }
-  
-}
 
+  updateStock(productCode: string, qtyChange: number) {
+    return this.afs
+      .collection(this.collectionName)
+      .doc(productCode)
+      .update({
+        stock: firebase.default.firestore.FieldValue.increment(qtyChange),
+        updatedAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+      });
+  }
+
+  addStockHistory(productCode: string, data: any) {
+    return this.afs
+      .collection(this.collectionName)
+      .doc(productCode)
+      .collection('stockHistory')
+      .add({
+        ...data,
+        createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+      });
+  }
+}

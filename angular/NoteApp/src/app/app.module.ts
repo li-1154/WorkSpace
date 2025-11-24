@@ -6,7 +6,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
-
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home-component/home-component.component';
 import { LoginComponent } from './pages/login-component/login-component.component';
@@ -27,7 +26,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 import { StockModule } from './models/stock.module';
-import { StockAdjustModalComponent } from './pages/stock/stock-adjust/stock-adjust-modal/stock-adjust-modal.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +44,6 @@ import { StockAdjustModalComponent } from './pages/stock/stock-adjust/stock-adju
     TaskFormComponent,
     ProductListComponent,
     ProductFormComponent,
-    StockAdjustModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,10 +54,9 @@ import { StockAdjustModalComponent } from './pages/stock/stock-adjust/stock-adju
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    StockModule
-
+    StockModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

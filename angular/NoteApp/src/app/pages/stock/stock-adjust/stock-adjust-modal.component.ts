@@ -3,14 +3,12 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-stock-adjust-modal',
   templateUrl: './stock-adjust-modal.component.html',
-  styleUrls: ['./stock-adjust-modal.component.css']
+  styleUrls: ['./stock-adjust-modal.component.css'],
 })
 export class StockAdjustModalComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   @Input() item: any | null = null;
   @Input() type: 'in' | 'out' = 'in';
@@ -19,6 +17,8 @@ export class StockAdjustModalComponent implements OnInit {
     qty: number;
     note: string;
     type: 'in' | 'out';
+    costPrice: number | null;
+    salePrice: number | null;
   }>();
 
   @Output() closed = new EventEmitter<void>();
@@ -37,13 +37,25 @@ export class StockAdjustModalComponent implements OnInit {
     this.submitted.emit({
       qty: this.qty,
       note: this.note,
-      type: this.type
+      type: this.type,
+      costPrice: this.costPrice,
+      salePrice: this.salePrice,
     });
   }
 
-  ooclose() {
-    this.submitted.emit();
+  onClose() {
+    this.closed.emit();
+  }
+  costPrice: number | null = null;
+  salePrice: number | null = null;
+
+  ngOnChanges(): void {
+    if (this.item) {
+      if (this.type === 'in') {
+        this.costPrice = this.item.costPrice;
+      } else {
+        this.salePrice = this.item.salePrice;
+      }
+    }
   }
 }
-
-

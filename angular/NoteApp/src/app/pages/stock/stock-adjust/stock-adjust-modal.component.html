@@ -1,0 +1,47 @@
+<!-- 半透明遮罩 -->
+<div class="modal-backdrop">
+    <!-- 中间白色框 -->
+    <div class="modal-box">
+
+        <h3>{{ title }} - {{ item?.name }}</h3>
+
+        <!-- 入库 or 出库切换标签（可选） -->
+        <div class="type-label">
+            <span *ngIf="type === 'in'" class="in">📥 入库操作</span>
+            <span *ngIf="type === 'out'" class="out">📤 出库操作</span>
+        </div>
+
+        <!-- 数量 -->
+
+
+        <!-- 入库：进货价 -->
+        <div class="field" *ngIf="type === 'in'">
+            <label>进货价（¥）</label>
+            <input type="number" [(ngModel)]="costPrice" min="0">
+        </div>
+
+        <!-- 出库：出货价 -->
+        <div class="field" *ngIf="type === 'out'">
+            <label>出货价（¥）</label>
+            <input type="number" [(ngModel)]="salePrice" min="0">
+        </div>
+
+        <div class="field">
+            <label>数量 *</label>
+            <input type="number" [(ngModel)]="qty" min="1">
+        </div>
+
+        <!-- 备注 -->
+        <div class="field">
+            <label>备注（可选）</label>
+            <input type="text" [(ngModel)]="note" placeholder="例如：补货、仓库盘点、损耗调整等">
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="btn-row">
+            <button class="btn-cancel" (click)="onClose()">取消</button>
+            <button class="btn-ok" (click)="onConfirm()">确认</button>
+        </div>
+
+    </div>
+</div>
