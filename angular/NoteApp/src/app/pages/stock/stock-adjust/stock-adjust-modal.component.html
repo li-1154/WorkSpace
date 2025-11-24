@@ -26,6 +26,15 @@
             <input type="number" [(ngModel)]="salePrice" min="0">
         </div>
 
+        <!-- 出库：出货仓 -->
+        <div class="field" *ngIf="type === 'out'">
+            <label>出货仓</label>
+            <select class="form-input" formControlName="categoryId">
+                <option value="">请选择</option>
+                <option *ngFor="let d of dispatchilist" [ngValue]="d.id">{{d.name}}</option>
+            </select>
+        </div>
+
         <div class="field">
             <label>数量 *</label>
             <input type="number" [(ngModel)]="qty" min="1">

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Product } from 'src/app/models/product.model';
 
 @Component({
   selector: 'app-stock-list',
@@ -20,12 +21,22 @@ export class StockListComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data: any[]) => {
       this.products = data;
+      this.filteredProducts = [...data]; // 初始显示全部
     });
+  }
+
+  filteredProducts: Product[] = [];
+  applyFilter(event: any) {
+    const keyword = event.target.value.toLowerCase();
+    this.filteredProducts = this.products.filter(p =>
+      p.name.toLowerCase().includes(keyword) ||
+      p.code.toLowerCase().includes(keyword) ||
+      p.janId.toLowerCase().includes(keyword));
   }
 
   editStock(productId: string): void {

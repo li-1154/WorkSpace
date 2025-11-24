@@ -1,54 +1,62 @@
-<div class="product-card" *ngFor="let item of products" [ngClass]="{ 'out-of-stock': item.stock === 0 }"
-    (click)="toggleSelect(item.code)">
-
-
-    <div class="row">
-
-        <!-- 左侧图片 + 编号 -->
-        <div class="left">
-            <img *ngIf="item.imageUrl; else noImg" [src]="item.imageUrl" class="thumb" />
-            <ng-template #noImg>
-                <div class="thumb no-img">无图</div>
-            </ng-template>
-
-            <span class="code">{{ item.code }}</span>
-            <span class="stock-tag" [ngClass]="getColor(item.stock)">{{ item.stock || 0 }} 件</span>
+<div class="page-section">
+    <div class="toolbar">
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="搜索商品名称、编号..." (input)="applyFilter($event)" />
         </div>
+    </div>
 
-        <!-- 中间信息 -->
-        <div class="right-info">
+    <div class="product-card" *ngFor="let item of filteredProducts" [ngClass]="{ 'out-of-stock': item.stock === 0 }"
+        (click)="toggleSelect(item.code)">
 
-            <div class="info-row">
-                <span>名称：</span><strong>{{ item.name }}</strong>
+
+        <div class="row">
+
+            <!-- 左侧图片 + 编号 -->
+            <div class="left">
+                <img *ngIf="item.imageUrl; else noImg" [src]="item.imageUrl" class="thumb" />
+                <ng-template #noImg>
+                    <div class="thumb no-img">无图</div>
+                </ng-template>
+
+                <span class="code">{{ item.code }}</span>
+                <span class="stock-tag" [ngClass]="getColor(item.stock)">{{ item.stock || 0 }} 件</span>
             </div>
 
-            <div class="info-row">
-                <span>JAN：</span>{{ item.janId }}
+            <!-- 中间信息 -->
+            <div class="right-info">
+
+                <div class="info-row">
+                    <span>名称：</span><strong>{{ item.name }}</strong>
+                </div>
+
+                <div class="info-row">
+                    <span>JAN：</span>{{ item.janId }}
+                </div>
+
+                <!-- 分类 + 颜色 同一行 -->
+                <div class="info-row double">
+                    <div><span>分类：</span>{{ item.categoryName }}</div>
+                    <div><span>颜色：</span>{{ item.colorName }}</div>
+                </div>
+
+                <!-- 进货价 + 出货价 同行 -->
+                <div class="info-row double">
+                    <div><span>进货价：</span>¥{{ item.costPrice }}</div>
+                    <div><span>出货价：</span>¥{{ item.salePrice }}</div>
+                </div>
+
             </div>
 
-            <!-- 分类 + 颜色 同一行 -->
-            <div class="info-row double">
-                <div><span>分类：</span>{{ item.categoryName }}</div>
-                <div><span>颜色：</span>{{ item.colorName }}</div>
-            </div>
 
-            <!-- 进货价 + 出货价 同行 -->
-            <div class="info-row double">
-                <div><span>进货价：</span>¥{{ item.costPrice }}</div>
-                <div><span>出货价：</span>¥{{ item.salePrice }}</div>
+            <!-- 右侧按钮：只有选择时显示 -->
+            <div class="actions" *ngIf="selectedItemId === item.code">
+                <button class="btn-in" (click)="openStockModal(item, 'in')">➕ 入库</button>
+                <button class="btn-out" (click)="openStockModal(item, 'out')">➖ 出库</button>
+                <button class="btn-edit" (click)="editStock(item.code); $event.stopPropagation()">⚙ 调整</button>
+                <button class="btn-view" (click)="viewHistory(item.code); $event.stopPropagation()">📄 记录</button>
             </div>
 
         </div>
-
-
-        <!-- 右侧按钮：只有选择时显示 -->
-        <div class="actions" *ngIf="selectedItemId === item.code">
-            <button class="btn-in" (click)="openStockModal(item, 'in')">➕ 入库</button>
-            <button class="btn-out" (click)="openStockModal(item, 'out')">➖ 出库</button>
-            <button class="btn-edit" (click)="editStock(item.code); $event.stopPropagation()">⚙ 调整</button>
-            <button class="btn-view" (click)="viewHistory(item.code); $event.stopPropagation()">📄 记录</button>
-        </div>
-
     </div>
 
 </div>

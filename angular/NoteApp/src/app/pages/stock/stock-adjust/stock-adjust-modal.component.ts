@@ -1,14 +1,18 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-
+import { Dispatch, DispatchService } from 'src/app/services/dispatch.service';
 @Component({
   selector: 'app-stock-adjust-modal',
   templateUrl: './stock-adjust-modal.component.html',
   styleUrls: ['./stock-adjust-modal.component.css'],
 })
 export class StockAdjustModalComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
+  constructor(private dispatchService: DispatchService) { }
+  dispatchilist: Dispatch[] = [];
+  ngOnInit(): void {
+    this.dispatchService.getDispatchs().subscribe(list => {
+      this.dispatchilist = list; // 全部保留
+    });
+  }
 
   @Input() item: any | null = null;
   @Input() type: 'in' | 'out' = 'in';

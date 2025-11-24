@@ -10,6 +10,8 @@ import {
 } from 'src/app/services/categorie.service';
 
 
+import { Dispatch, DispatchService } from 'src/app/services/dispatch.service';
+
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
@@ -25,7 +27,8 @@ export class ProductFormComponent implements OnInit {
     private router: Router,
     private productService: ProductService,
     private colorService: ColorService,
-    private categorieService: CategorieService
+    private categorieService: CategorieService,
+    private dispatchService: DispatchService
   ) { }
   form: FormGroup; // 用来存整个表单的数据
   productId: string | null = null;
@@ -36,7 +39,8 @@ export class ProductFormComponent implements OnInit {
   colorslist: Color[] = [];
   categories: Categorie[] = [];
   categorieslist: Categorie[] = [];
-  mode: 'product' | 'category' | 'color' = 'product';
+  dispatchilist: Dispatch[] = [];
+  mode: 'product' | 'category' | 'color' | 'outbound' = 'product';
 
   originalImageUrl: string | null = null;
 
@@ -104,6 +108,11 @@ export class ProductFormComponent implements OnInit {
       this.colorService.getColors().subscribe(list => {
         this.colors = list.filter(x => x.active !== false);
         this.colorslist = list; // 全部保留
+        check();
+      });
+
+      this.dispatchService.getDispatchs().subscribe(list => {
+        this.dispatchilist = list; // 全部保留
         check();
       });
     });
@@ -220,6 +229,7 @@ export class ProductFormComponent implements OnInit {
   //新增颜色追加  种类追加
   newCategory: string;
   newColor: string;
+  newDispatch: string;
 
   //种类追加
   saveCategory() {
@@ -246,5 +256,18 @@ export class ProductFormComponent implements OnInit {
     this.colorService.deactivateColor(item.id, updatedStatus);
     item.active = updatedStatus;
   }
+
+
+  saveDispatch() {
+    this.dispatchService.addDispatch(this.newDispatch);
+    alert('成功添加出库仓')
+  }
+
+  togdispatchleStatus(item: Dispatch) {
+    const updatedStatus = !item.active;
+    this.dispatchService.deactivateDispatch(item.id, updatedStatus);
+    item.active = updatedStatus;
+  }
+
 
 }

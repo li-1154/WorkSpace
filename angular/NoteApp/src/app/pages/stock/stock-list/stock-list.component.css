@@ -139,3 +139,39 @@
     background: #10b981;
     color: white;
 }
+
+
+.page-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    /* 控制 toolbar 和列表之间的自然间距 */
+    /* 自然往下，不需要负 margin */
+}
+
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    /* 可以保留 */
+}
+
+
+.search-wrapper {
+    flex: 1;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: .25s;
+}
+
+.search-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+}

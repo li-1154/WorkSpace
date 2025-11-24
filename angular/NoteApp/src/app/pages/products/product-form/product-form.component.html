@@ -5,6 +5,7 @@
         <button [class.active]="mode==='product'" (click)="mode='product'">📦 商品登记</button>
         <button [class.active]="mode==='category'" (click)="mode='category'">🏷 分类管理</button>
         <button [class.active]="mode==='color'" (click)="mode='color'">🎨 颜色管理</button>
+        <button [class.active]="mode==='outbound'" (click)="mode='outbound'">🚚 出库仓管理 </button>
     </div>
 
     <hr>
@@ -187,6 +188,40 @@
                     <button class="btn-mini" [ngClass]="c.active ? 'btn-stop' : 'btn-start'"
                         (click)="togColorgleStatus(c)">
                         {{ c.active ? '停用' : '启用' }}
+                    </button>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <!-- ░░░░ 出库对象 ░░░░ -->
+    <div *ngIf="mode==='outbound'" class="manage-section">
+
+        <h5>🚚出库仓管理</h5>
+
+        <div class="add-row">
+            <input [(ngModel)]="newDispatch" placeholder="输入仓库名称" class="form-input">
+            <button class="btn-primary" (click)="saveDispatch()">添加</button>
+            <button class="btn-secondary" type="button" routerLink="/products">取消</button>
+        </div>
+
+        <table class="setting-table">
+            <tr>
+                <th>出库仓</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+
+            <tr *ngFor="let d of dispatchilist">
+                <td>{{ d.name }}</td>
+                <td>{{ d.active ? '启用中' : '禁用中' }}</td>
+                <td>
+                    <button class="btn-mini" [ngClass]="d.active ? 'btn-stop' : 'btn-start'"
+                        (click)="togdispatchleStatus(d)">
+                        {{ d.active ? '停用' : '启用' }}
                     </button>
 
                 </td>
