@@ -38,6 +38,9 @@ export class ProductFormComponent implements OnInit {
   categorieslist: Categorie[] = [];
   mode: 'product' | 'category' | 'color' = 'product';
 
+  originalImageUrl: string | null = null;
+
+
   async ngOnInit(): Promise<void> {
     this.productId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.productId;
@@ -111,7 +114,7 @@ export class ProductFormComponent implements OnInit {
       return;
     }
     const raw = this.form.getRawValue();
-    let imageUrl = raw.imageUrl || null;
+    let imageUrl = this.originalImageUrl || '';
     if (this.selectedFile) {
       imageUrl = await this.productService.uploadProductImage(
         this.selectedFile
@@ -173,6 +176,7 @@ export class ProductFormComponent implements OnInit {
       return;
     }
     this.previewUrl = product.imageUrl || null;
+    this.originalImageUrl = product.imageUrl || null;
 
     this.form.patchValue({
       code: product.code,
@@ -183,6 +187,7 @@ export class ProductFormComponent implements OnInit {
       janId: product.janId,
       costPrice: product.costPrice,
       salePrice: product.salePrice,
+
     });
     console.log('已回显颜色 =', this.form.value.colorId);
   }

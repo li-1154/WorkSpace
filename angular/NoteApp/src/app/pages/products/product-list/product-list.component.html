@@ -75,7 +75,7 @@
           <div class="actions" *ngIf="selectedItemId === item.id">
             <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
             <button class="btn-edit" (click)="toggleStatus(item)">
-              {{ item.available ? '⛔ 停用' : '🔄 启用' }} 
+              {{ item.available ? '⛔ 停用' : '🔄 启用' }}
             </button>
 
           </div>
@@ -95,14 +95,14 @@
   <!-- 📚 在库管理 -->
   <div *ngIf="currentTab === 'stock'">
     <div class="container py-3">
-      <h4>📚 在库管理（开发中）</h4>
+      <app-stock-list></app-stock-list>
     </div>
   </div>
 
   <!-- 📊 贩卖数据 -->
   <div *ngIf="currentTab === 'sales'">
     <div class="container py-3">
-      <h4>📊 贩卖数据（开发中）</h4>
+      <h4>📚 在库管理（开发中）</h4>
     </div>
   </div>
 

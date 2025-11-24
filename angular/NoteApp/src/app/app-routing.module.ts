@@ -46,8 +46,12 @@ const routes: Routes = [
   { path: 'products', component: ProductListComponent },
   { path: 'products/new', component: ProductFormComponent },
   { path: 'products/edit/:id', component: ProductFormComponent },
-  //其他模块
+
+  //库存模块的路由将由 StockModule 处理
+  { path: 'stock', loadChildren: () => import('./models/stock.module').then(m => m.StockModule) },
+  //其他模块的路由可以在这里继续添加
   { path: '**', redirectTo: '' },
+
 ];
 @NgModule({
   declarations: [],

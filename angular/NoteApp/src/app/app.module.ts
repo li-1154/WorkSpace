@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule,FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -26,6 +26,8 @@ import { TaskFormComponent } from './pages/task/task-form/task-form.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
+import { StockModule } from './models/stock.module';
+import { StockAdjustModalComponent } from './pages/stock/stock-adjust/stock-adjust-modal/stock-adjust-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ProductFormComponent } from './pages/products/product-form/product-form
     TaskListComponent,
     TaskFormComponent,
     ProductListComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    StockAdjustModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,8 @@ import { ProductFormComponent } from './pages/products/product-form/product-form
     AngularFireAuthModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StockModule
 
   ],
   providers: [],

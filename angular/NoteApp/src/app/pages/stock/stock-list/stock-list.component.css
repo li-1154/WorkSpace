@@ -1,0 +1,141 @@
+/* ===== 统一布局 ===== */
+.product-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.product-card.out-of-stock {
+    background: #ffe5e5;
+    /* 淡红色提醒 */
+    border-color: #ff6b6b;
+    transition: 0.3s;
+}
+
+
+.row {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.left {
+    width: 90px;
+    text-align: center;
+}
+
+.thumb,
+.no-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+.no-img {
+    background: #f3f4f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #9ca3af;
+}
+
+.code {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #6b7280;
+    display: block;
+}
+
+
+/* 让库存跟 code 一样位置 */
+.stock-tag {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* 双列布局 */
+.info-row.double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+
+.right-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* 按钮与产品信息方式一样：右边、横向吸边 */
+.actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    min-width: 150px;
+}
+
+/* ➕ 入库 : 柔和绿色 */
+.btn-in {
+    background: #22c55e;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+}
+
+/* ➖ 出库 : 平静蓝色（不是警告色） */
+.btn-out {
+    background: #3b82f6;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+}
+
+/* ⚙ 编辑 : 主按钮 蓝色(保留) */
+.btn-edit {
+    background: #2563eb;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+}
+
+/* 📄 查看记录：中性淡色 */
+.btn-view {
+    background: #0d9488;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+}
+
+
+/* === 库存颜色 === */
+.red {
+    background: #ef4444;
+    color: white;
+}
+
+.orange {
+    background: #f59e0b;
+    color: white;
+}
+
+.green {
+    background: #10b981;
+    color: white;
+}
