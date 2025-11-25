@@ -21,7 +21,7 @@ export class StockListComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data: any[]) => {
@@ -33,10 +33,12 @@ export class StockListComponent implements OnInit {
   filteredProducts: Product[] = [];
   applyFilter(event: any) {
     const keyword = event.target.value.toLowerCase();
-    this.filteredProducts = this.products.filter(p =>
-      p.name.toLowerCase().includes(keyword) ||
-      p.code.toLowerCase().includes(keyword) ||
-      p.janId.toLowerCase().includes(keyword));
+    this.filteredProducts = this.products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(keyword) ||
+        p.code.toLowerCase().includes(keyword) ||
+        p.janId.toLowerCase().includes(keyword)
+    );
   }
 
   editStock(productId: string): void {
@@ -70,6 +72,7 @@ export class StockListComponent implements OnInit {
       costPrice: item.costPrice,
       salePrice: item.salePrice,
     };
+
     this.stockMode = type;
     this.showStockModal = true;
   }
@@ -82,9 +85,10 @@ export class StockListComponent implements OnInit {
   async onStockSubmitted(event: {
     qty: number;
     note: string;
-    type: 'in' | 'out';
+    type: 'in' | 'adjust-in' | 'out' | 'adjust-out';
     costPrice: number;
     salePrice: number;
+    dispatchId: string;
   }) {
     if (!this.currentItem) return;
 
@@ -100,9 +104,9 @@ export class StockListComponent implements OnInit {
       operatorName = userDoc?.data()?.['name'] || user.email || '未知用户';
     }
 
-    const { qty, note, type, costPrice, salePrice } = event;
+    const { qty, note, type, costPrice, salePrice, dispatchId } = event;
 
-    const qtyChange = type === 'in' ? qty : -qty;
+    const qtyChange = type === 'in' || type === 'adjust-in' ? qty : -qty;
 
     const code = this.currentItem.code;
 
@@ -115,10 +119,11 @@ export class StockListComponent implements OnInit {
 
       await this.productService.addStockHistory(code, {
         qty: qtyChange,
+        dispatchId: dispatchId,
         note,
         type,
-        costPrice: type === 'in' ? costPrice : null,
-        salePrice: type === 'out' ? salePrice : null,
+        costPrice: type === 'in' || type === 'adjust-in' ? costPrice : null,
+        salePrice: type === 'out' || type === 'adjust-out' ? salePrice : null,
         operator: operatorName, // 以后可以替换成登录账号
         beforeStock: before,
         afterStock: after,

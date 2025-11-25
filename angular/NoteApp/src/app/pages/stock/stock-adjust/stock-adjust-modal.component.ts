@@ -6,11 +6,12 @@ import { Dispatch, DispatchService } from 'src/app/services/dispatch.service';
   styleUrls: ['./stock-adjust-modal.component.css'],
 })
 export class StockAdjustModalComponent implements OnInit {
-  constructor(private dispatchService: DispatchService) { }
+  constructor(private dispatchService: DispatchService) {}
   dispatchilist: Dispatch[] = [];
   ngOnInit(): void {
-    this.dispatchService.getDispatchs().subscribe(list => {
-      this.dispatchilist = list; // 全部保留
+    this.dispatchService.getDispatchs().subscribe((list) => {
+      this.dispatchilist = list;
+      console.log('list', list); // 全部保留
     });
   }
 
@@ -20,6 +21,7 @@ export class StockAdjustModalComponent implements OnInit {
   @Output() submitted = new EventEmitter<{
     qty: number;
     note: string;
+    dispatchId: string;
     type: 'in' | 'out';
     costPrice: number | null;
     salePrice: number | null;
@@ -33,6 +35,9 @@ export class StockAdjustModalComponent implements OnInit {
   qty: number = 0;
   note: string = '';
 
+  actionType: string = ''; // 最终类型写入: in/out/adjust-in/adjust-out
+  dispatchId: string = ''; // 出库仓
+
   onConfirm() {
     if (this.qty <= 0) {
       alert('数量必须大于0');
@@ -41,6 +46,7 @@ export class StockAdjustModalComponent implements OnInit {
     this.submitted.emit({
       qty: this.qty,
       note: this.note,
+      dispatchId: this.dispatchId,
       type: this.type,
       costPrice: this.costPrice,
       salePrice: this.salePrice,

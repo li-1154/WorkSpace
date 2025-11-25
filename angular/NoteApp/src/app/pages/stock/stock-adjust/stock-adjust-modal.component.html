@@ -5,13 +5,39 @@
 
         <h3>{{ title }} - {{ item?.name }}</h3>
 
-        <!-- 入库 or 出库切换标签（可选） -->
+        <!-- 入库 or 出库切换标签（显示模式） -->
         <div class="type-label">
             <span *ngIf="type === 'in'" class="in">📥 入库操作</span>
             <span *ngIf="type === 'out'" class="out">📤 出库操作</span>
         </div>
 
-        <!-- 数量 -->
+
+        <!-- ⭐ 入库/出库模式细分（四种操作类型） -->
+        <div class="field">
+            <label>操作类型 *</label>
+
+            <div class="radio-group">
+
+                <!-- 入库 -->
+                <label *ngIf="type === 'in'" class="radio-item">
+                    <input type="radio" name="operation" [(ngModel)]="actionType" value="in"> 正常入库
+                </label>
+
+                <label *ngIf="type === 'in'" class="radio-item">
+                    <input type="radio" name="operation" [(ngModel)]="actionType" value="adjust-in"> 调整入库（盘点）
+                </label>
+
+                <!-- 出库 -->
+                <label *ngIf="type === 'out'" class="radio-item">
+                    <input type="radio" name="operation" [(ngModel)]="actionType" value="out"> 正常出库
+                </label>
+
+                <label *ngIf="type === 'out'" class="radio-item">
+                    <input type="radio" name="operation" [(ngModel)]="actionType" value="adjust-out"> 调整出库（盘点）
+                </label>
+
+            </div>
+        </div>
 
 
         <!-- 入库：进货价 -->
@@ -27,14 +53,15 @@
         </div>
 
         <!-- 出库：出货仓 -->
-        <div class="field" *ngIf="type === 'out'">
+        <div class="field" *ngIf="actionType === 'out' || actionType === 'adjust-out'">
             <label>出货仓</label>
-            <select class="form-input" formControlName="categoryId">
+            <select class="form-input" [(ngModel)]="dispatchId">
                 <option value="">请选择</option>
-                <option *ngFor="let d of dispatchilist" [ngValue]="d.id">{{d.name}}</option>
+                <option *ngFor="let d of dispatchilist" [value]="d.id">{{d.name}}</option>
             </select>
         </div>
 
+        <!-- 数量 -->
         <div class="field">
             <label>数量 *</label>
             <input type="number" [(ngModel)]="qty" min="1">
@@ -43,7 +70,7 @@
         <!-- 备注 -->
         <div class="field">
             <label>备注（可选）</label>
-            <input type="text" [(ngModel)]="note" placeholder="例如：补货、仓库盘点、损耗调整等">
+            <input type="text" [(ngModel)]="note" placeholder="例如：补货、调拨、仓库盘点、损耗调整等">
         </div>
 
         <!-- 操作按钮 -->

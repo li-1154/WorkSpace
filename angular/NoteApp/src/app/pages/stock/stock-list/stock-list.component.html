@@ -52,7 +52,6 @@
             <div class="actions" *ngIf="selectedItemId === item.code">
                 <button class="btn-in" (click)="openStockModal(item, 'in')">➕ 入库</button>
                 <button class="btn-out" (click)="openStockModal(item, 'out')">➖ 出库</button>
-                <button class="btn-edit" (click)="editStock(item.code); $event.stopPropagation()">⚙ 调整</button>
                 <button class="btn-view" (click)="viewHistory(item.code); $event.stopPropagation()">📄 记录</button>
             </div>
 
