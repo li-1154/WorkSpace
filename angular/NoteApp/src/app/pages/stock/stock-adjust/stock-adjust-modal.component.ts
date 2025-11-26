@@ -6,36 +6,46 @@ import { Dispatch, DispatchService } from 'src/app/services/dispatch.service';
   styleUrls: ['./stock-adjust-modal.component.css'],
 })
 export class StockAdjustModalComponent implements OnInit {
-  constructor(private dispatchService: DispatchService) {}
+  constructor(private dispatchService: DispatchService) { }
   dispatchilist: Dispatch[] = [];
   ngOnInit(): void {
     this.dispatchService.getDispatchs().subscribe((list) => {
-      this.dispatchilist = list;
+      this.dispatchilist = list.filter((d) => d.active !== false);
       console.log('list', list); // 全部保留
     });
   }
 
   @Input() item: any | null = null;
-  @Input() type: 'in' | 'out' = 'in';
+  @Input() actionType: 'in' | 'adjust-in' | 'out' | 'adjust-out' = 'in';
+
 
   @Output() submitted = new EventEmitter<{
     qty: number;
     note: string;
     dispatchId: string;
-    type: 'in' | 'out';
+    actionType: 'in' | 'adjust-in' | 'out' | 'adjust-out';
     costPrice: number | null;
     salePrice: number | null;
   }>();
 
   @Output() closed = new EventEmitter<void>();
   get title() {
-    return this.type === 'in' ? '入库调整' : '出库调整';
+    if (this.actionType === 'adjust-in') {
+      return '入库调整';
+    }
+    if (this.actionType === 'adjust-out') {
+      return '出库调整';
+    }
+    if (this.actionType === 'in') {
+      return '入库';
+    }
+    if (this.actionType === 'out') {
+      return '出库';
+    }
   }
 
   qty: number = 0;
   note: string = '';
-
-  actionType: string = ''; // 最终类型写入: in/out/adjust-in/adjust-out
   dispatchId: string = ''; // 出库仓
 
   onConfirm() {
@@ -47,7 +57,7 @@ export class StockAdjustModalComponent implements OnInit {
       qty: this.qty,
       note: this.note,
       dispatchId: this.dispatchId,
-      type: this.type,
+      actionType: this.actionType,
       costPrice: this.costPrice,
       salePrice: this.salePrice,
     });
@@ -61,7 +71,7 @@ export class StockAdjustModalComponent implements OnInit {
 
   ngOnChanges(): void {
     if (this.item) {
-      if (this.type === 'in') {
+      if (this.actionType === 'in') {
         this.costPrice = this.item.costPrice;
       } else {
         this.salePrice = this.item.salePrice;

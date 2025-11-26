@@ -36,7 +36,6 @@
             </ng-template>
 
             <span class="code">{{ item.code }}</span>
-            <br>
             <span class="code"> {{ item.available ? '🔄 启用': '⛔ 停用' }} </span>
           </div>
 
@@ -47,9 +46,15 @@
               <span>名称：</span><strong>{{ item.name }}</strong>
             </div>
 
-            <div class="info-row">
-              <span>JAN：</span>{{ item.janId }}
+            <div class="info-row double">
+              <div class="left-side">
+                <span>JAN：</span>{{ item.janId }}
+              </div>
+              <div class="right-side">
+                <span>型号:</span>{{ item.modleName }}
+              </div>
             </div>
+
 
             <div class="info-row double">
               <div class="left-side">
@@ -59,15 +64,15 @@
                 <span>颜色：</span>{{ item.colorName }}
               </div>
             </div>
-
-
-            <div class="info-row">
-              <span>进货价：</span>¥{{ item.costPrice }}
+            <div class="info-row double">
+              <div class="left-side">
+                <span>进货价：</span>¥{{ item.costPrice }}
+              </div>
+              <div class="right-side">
+                <span>销售价：</span><strong class="highlight">¥{{ item.salePrice }}</strong>
+              </div>
             </div>
 
-            <div class="info-row">
-              <span>销售价：</span><strong class="highlight">¥{{ item.salePrice }}</strong>
-            </div>
 
           </div>
 

@@ -38,6 +38,10 @@ export interface Product {
     imageUrl?: string;
     imagePath?: string;
 
+    //型号
+    modleId?: string;
+    modleName?: string;
+
     // -----------------------------
     // 系统字段
     // -----------------------------

@@ -3,9 +3,10 @@
     <!-- 🔹 顶部切换模式 -->
     <div class="mode-switch">
         <button [class.active]="mode==='product'" (click)="mode='product'">📦 商品登记</button>
-        <button [class.active]="mode==='category'" (click)="mode='category'">🏷 分类管理</button>
-        <button [class.active]="mode==='color'" (click)="mode='color'">🎨 颜色管理</button>
-        <button [class.active]="mode==='outbound'" (click)="mode='outbound'">🚚 出库仓管理 </button>
+        <button [class.active]="mode==='category'" (click)="mode='category'">🏷 分类</button>
+        <button [class.active]="mode==='color'" (click)="mode='color'">🎨 颜色</button>
+        <button [class.active]="mode==='outbound'" (click)="mode='outbound'">🚚 出库仓 </button>
+        <button [class.active]="mode==='modle'" (click)="mode='modle'">🧩 型号 </button>
     </div>
 
     <hr>
@@ -68,6 +69,13 @@
                 <select class="form-input" formControlName="colorId">
                     <option value="">请选择</option>
                     <option *ngFor="let c of colors" [value]="c.id">{{c.name}}</option>
+                </select>
+            </div>
+            <div>
+                <label>型号</label>
+                <select class="form-input" formControlName="modleId">
+                    <option value="">请选择</option>
+                    <option *ngFor="let m of modles" [value]="m.id">{{m.name}}</option>
                 </select>
             </div>
 
@@ -229,5 +237,42 @@
         </table>
 
     </div>
+
+
+    <!-- ░░░░ 型号对象 ░░░░ -->
+    <div *ngIf="mode==='modle'" class="manage-section">
+
+        <h5>🧩型号管理</h5>
+
+        <div class="add-row">
+            <input [(ngModel)]="newModle" placeholder="输入型号名称" class="form-input">
+            <button class="btn-primary" (click)="saveModle()">添加</button>
+            <button class="btn-secondary" type="button" routerLink="/products">取消</button>
+        </div>
+
+        <table class="setting-table">
+            <tr>
+                <th>型号</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+
+            <tr *ngFor="let m of modlelist">
+                <td>{{ m.name }}</td>
+                <td>{{ m.active ? '启用中' : '禁用中' }}</td>
+                <td>
+                    <button class="btn-mini" [ngClass]="m.active ? 'btn-stop' : 'btn-start'"
+                        (click)="togModleStatus(m)">
+                        {{ m.active ? '停用' : '启用' }}
+                    </button>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+
 
 </div>

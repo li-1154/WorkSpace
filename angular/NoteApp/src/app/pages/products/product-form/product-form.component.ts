@@ -11,7 +11,7 @@ import {
 
 
 import { Dispatch, DispatchService } from 'src/app/services/dispatch.service';
-
+import { Modle, ModleService } from 'src/app/services/modle.service';
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
@@ -28,7 +28,8 @@ export class ProductFormComponent implements OnInit {
     private productService: ProductService,
     private colorService: ColorService,
     private categorieService: CategorieService,
-    private dispatchService: DispatchService
+    private dispatchService: DispatchService,
+    private modleService: ModleService
   ) { }
   form: FormGroup; // 用来存整个表单的数据
   productId: string | null = null;
@@ -40,7 +41,9 @@ export class ProductFormComponent implements OnInit {
   categories: Categorie[] = [];
   categorieslist: Categorie[] = [];
   dispatchilist: Dispatch[] = [];
-  mode: 'product' | 'category' | 'color' | 'outbound' = 'product';
+  modlelist: Modle[] = [];
+  modles: Modle[] = [];
+  mode: 'product' | 'category' | 'color' | 'outbound' | 'modle' = 'product';
 
   originalImageUrl: string | null = null;
 
@@ -60,6 +63,9 @@ export class ProductFormComponent implements OnInit {
 
       // 颜色：必填
       colorId: ['', Validators.required],
+
+      //型号对象：必填
+      modleId: ['',],
 
       // 备注：可空
       description: [''],
@@ -115,6 +121,14 @@ export class ProductFormComponent implements OnInit {
         this.dispatchilist = list; // 全部保留
         check();
       });
+
+      this.modleService.getModles().subscribe(list => {
+        this.modles = list.filter(x => x.active !== false);
+        this.modlelist = list; // 全部保留
+        check();
+      });
+
+
     });
   }
 
@@ -150,7 +164,9 @@ export class ProductFormComponent implements OnInit {
       salePrice: raw.salePrice || '',
       createdAt: new Date(),
       updatedAt: new Date(),
-      available: true // 默认启用 '
+      available: true, // 默认启用 '
+      modleId: raw.modleId || '',
+      modleName: this.modles.find(m => m.id === raw.modleId)?.name || '',
     };
 
     if (this.isEdit) {
@@ -230,6 +246,7 @@ export class ProductFormComponent implements OnInit {
   newCategory: string;
   newColor: string;
   newDispatch: string;
+  newModle: string;
 
   //种类追加
   saveCategory() {
@@ -257,15 +274,28 @@ export class ProductFormComponent implements OnInit {
     item.active = updatedStatus;
   }
 
-
+  //出库仓追加
   saveDispatch() {
     this.dispatchService.addDispatch(this.newDispatch);
     alert('成功添加出库仓')
   }
-
+  //出库仓停用启用
   togdispatchleStatus(item: Dispatch) {
     const updatedStatus = !item.active;
     this.dispatchService.deactivateDispatch(item.id, updatedStatus);
+    item.active = updatedStatus;
+  }
+
+  //型号追加
+  saveModle() {
+    this.modleService.addModle(this.newModle);
+    alert('成功添加型号')
+  }
+
+  //型号停用启用
+  togModleStatus(item: Modle) {
+    const updatedStatus = !item.active;
+    this.modleService.deactivateModle(item.id, updatedStatus);
     item.active = updatedStatus;
   }
 

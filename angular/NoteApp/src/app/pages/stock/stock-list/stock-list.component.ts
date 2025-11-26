@@ -21,12 +21,12 @@ export class StockListComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data: any[]) => {
       this.products = data;
-      this.filteredProducts = [...data]; // 初始显示全部
+      this.filteredProducts = [...data].filter(p => p.available !== false);
     });
   }
 
@@ -64,7 +64,7 @@ export class StockListComponent implements OnInit {
       return 'red';
     }
   }
-
+  actionType: 'in' | 'adjust-in' | 'out' | 'adjust-out' = 'in';
   openStockModal(item: any, type: 'in' | 'out'): void {
     // 在这里打开入库/出库模态框的逻辑
     this.currentItem = {
@@ -74,6 +74,7 @@ export class StockListComponent implements OnInit {
     };
 
     this.stockMode = type;
+    this.actionType = type === 'in' ? 'in' : 'out';
     this.showStockModal = true;
   }
 
@@ -85,7 +86,7 @@ export class StockListComponent implements OnInit {
   async onStockSubmitted(event: {
     qty: number;
     note: string;
-    type: 'in' | 'adjust-in' | 'out' | 'adjust-out';
+    actionType: 'in' | 'adjust-in' | 'out' | 'adjust-out';
     costPrice: number;
     salePrice: number;
     dispatchId: string;
@@ -104,9 +105,9 @@ export class StockListComponent implements OnInit {
       operatorName = userDoc?.data()?.['name'] || user.email || '未知用户';
     }
 
-    const { qty, note, type, costPrice, salePrice, dispatchId } = event;
+    const { qty, note, actionType, costPrice, salePrice, dispatchId } = event;
 
-    const qtyChange = type === 'in' || type === 'adjust-in' ? qty : -qty;
+    const qtyChange = actionType === 'in' || actionType === 'adjust-in' ? qty : -qty;
 
     const code = this.currentItem.code;
 
@@ -121,9 +122,9 @@ export class StockListComponent implements OnInit {
         qty: qtyChange,
         dispatchId: dispatchId,
         note,
-        type,
-        costPrice: type === 'in' || type === 'adjust-in' ? costPrice : null,
-        salePrice: type === 'out' || type === 'adjust-out' ? salePrice : null,
+        actionType,
+        costPrice: actionType === 'in' || actionType === 'adjust-in' ? costPrice : null,
+        salePrice: actionType === 'out' || actionType === 'adjust-out' ? salePrice : null,
         operator: operatorName, // 以后可以替换成登录账号
         beforeStock: before,
         afterStock: after,

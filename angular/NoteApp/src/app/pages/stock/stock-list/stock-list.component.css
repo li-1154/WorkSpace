@@ -144,7 +144,7 @@
 .page-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 1px;
     /* 控制 toolbar 和列表之间的自然间距 */
     /* 自然往下，不需要负 margin */
 }

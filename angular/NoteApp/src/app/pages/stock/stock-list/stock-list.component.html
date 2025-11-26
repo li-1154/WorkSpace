@@ -29,9 +29,12 @@
                     <span>名称：</span><strong>{{ item.name }}</strong>
                 </div>
 
-                <div class="info-row">
-                    <span>JAN：</span>{{ item.janId }}
+                <!-- JAN + 型号 同一行 -->
+                <div class="info-row double">
+                    <div><span>JAN：</span>{{ item.janId }}</div>
+                    <div><span>型号：</span>{{ item.modleName }}</div>
                 </div>
+
 
                 <!-- 分类 + 颜色 同一行 -->
                 <div class="info-row double">
@@ -59,5 +62,5 @@
     </div>
 
 </div>
-<app-stock-adjust-modal *ngIf="showStockModal" [item]="currentItem" [type]="stockMode"
+<app-stock-adjust-modal *ngIf="showStockModal" [item]="currentItem" [actionType]="actionType"
     (submitted)="onStockSubmitted($event)" (closed)="onModalClose()"></app-stock-adjust-modal>

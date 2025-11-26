@@ -68,3 +68,28 @@ h3 {
 .btn-cancel:hover {
     opacity: .9;
 }
+
+.radio-group {
+    display: flex;
+    gap: 30px;
+    /* 按钮之间间距 */
+    align-items: center;
+    margin: 6px 0 12px;
+}
+
+.radio-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    /* ❗保证文字不会换行 */
+}
+
+.radio-line input {
+    width: 16px;
+    height: 16px;
+    accent-color: #22c55e;
+    /* 把选中颜色改成绿色 */
+}
