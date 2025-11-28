@@ -1,0 +1,53 @@
+.history-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.type-filter {
+    padding: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.history-table th {
+    background: #f8fafc;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    color: #374151;
+}
+
+.history-table td {
+    padding: 10px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.plus {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.minus {
+    color: #ef4444;
+    font-weight: bold;
+}

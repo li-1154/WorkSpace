@@ -40,11 +40,6 @@ export class StockListComponent implements OnInit {
         p.janId.toLowerCase().includes(keyword)
     );
   }
-
-  editStock(productId: string): void {
-    this.router.navigate(['/stock/edit', productId]);
-  }
-
   viewHistory(productId: string): void {
     this.router.navigate(['/stock/history', productId]);
   }

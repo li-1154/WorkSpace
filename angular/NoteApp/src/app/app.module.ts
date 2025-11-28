@@ -26,6 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 import { StockModule } from './models/stock.module';
+import { HistoryComponent } from './pages/stock/history/history.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { StockModule } from './models/stock.module';
     TaskFormComponent,
     ProductListComponent,
     ProductFormComponent,
+    HistoryComponent,
   ],
   imports: [
     BrowserModule,
