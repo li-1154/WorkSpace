@@ -1,11 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home-component/home-component.component';
 import { LoginComponent } from './pages/login-component/login-component.component';
@@ -16,7 +14,6 @@ import { FooterComponent } from './components/footer-component/footer-component.
 import { NoteItemComponent } from './components/note-item-component/note-item-component.component';
 import { NoteFormComponent } from './pages/note-form/note-form.component';
 import { AppRoutingModule } from './app-routing.module';
-
 import { environment } from '../environments/environment';
 import { AboutComponent } from './pages/about/about.component';
 import { AttendanceComponent } from './pages/attendance/attendance.component';
@@ -26,8 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 import { StockModule } from './models/stock.module';
-import { HistoryComponent } from './pages/stock/history/history.component';
-
+import { SalesModule } from './models/sales.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +41,6 @@ import { HistoryComponent } from './pages/stock/history/history.component';
     TaskFormComponent,
     ProductListComponent,
     ProductFormComponent,
-    HistoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,8 +52,9 @@ import { HistoryComponent } from './pages/stock/history/history.component';
     ReactiveFormsModule,
     HttpClientModule,
     StockModule,
+    SalesModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

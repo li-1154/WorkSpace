@@ -1,0 +1,30 @@
+<div class="export-panel">
+
+    <h3>📄 账票处理</h3>
+
+    <!-- 在库出力（独立一行） -->
+    <div class="export-buttons">
+        <button (click)="export('stock')">在库出力</button>
+        <button (click)="export('info')">商品信息</button>
+    </div>
+
+    <hr />
+
+    <!-- 日期区间 -->
+    <div class="date-row">
+        <label>期间：</label>
+        <div class="date-range">
+            <input type="date" [(ngModel)]="startDate" />
+            <span>～</span>
+            <input type="date" [(ngModel)]="endDate" />
+        </div>
+    </div>
+
+
+    <!-- 出/入库按钮 -->
+    <div class="export-buttons">
+        <button (click)="export('outbound')">出库出力</button>
+        <button (click)="export('inbound')">入库出力</button>
+    </div>
+
+</div>

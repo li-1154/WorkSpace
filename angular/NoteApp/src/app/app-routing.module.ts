@@ -49,8 +49,12 @@ const routes: Routes = [
 
   //库存模块的路由将由 StockModule 处理
   { path: 'stock', loadChildren: () => import('./models/stock.module').then(m => m.StockModule) },
+  //贩卖分析模块
+  { path: 'sales', loadChildren: () => import('./models/sales.module').then(a => a.SalesModule) },
+
   //其他模块的路由可以在这里继续添加
   { path: '**', redirectTo: '' },
+
 
 ];
 @NgModule({

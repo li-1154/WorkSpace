@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, take } from 'rxjs/operators';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -12,7 +12,7 @@ export class ProductService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage
-  ) {}
+  ) { }
 
   getProducts(): Observable<Product[]> {
     return this.afs
@@ -121,8 +121,8 @@ export class ProductService {
       .collection(this.collectionName)
       .doc(productCode)
       .update({
-        stock: firebase.default.firestore.FieldValue.increment(qtyChange),
-        updatedAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+        stock: firebase.firestore.FieldValue.increment(qtyChange),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
   }
 
@@ -133,7 +133,7 @@ export class ProductService {
       .collection('stockHistory')
       .add({
         ...data,
-        createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
   }
 }
