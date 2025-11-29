@@ -3,6 +3,15 @@
         <div class="search-wrapper">
             <input type="text" class="search-input" placeholder="搜索商品名称、编号..." (input)="applyFilter($event)" />
         </div>
+        <select class="sort-select" [(ngModel)]="sortKey" (change)="applySort()">
+            <option value="">排序方式</option>
+            <option value="name-asc">编号 ↑</option>
+            <option value="name-desc">编号 ↓</option>
+            <option value="stock-asc">库存 ↑</option>
+            <option value="stock-desc">库存 ↓</option>
+            <option value="price-asc">卖价 ↑</option>
+            <option value="price-desc">卖价 ↓</option>
+        </select>
     </div>
 
     <div class="product-card" *ngFor="let item of filteredProducts" [ngClass]="{ 'out-of-stock': item.stock === 0 }"

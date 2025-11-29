@@ -39,6 +39,7 @@ export class StockListComponent implements OnInit {
         p.code.toLowerCase().includes(keyword) ||
         p.janId.toLowerCase().includes(keyword)
     );
+    this.applySort();
   }
   viewHistory(productId: string): void {
     this.router.navigate(['/stock/history', productId]);
@@ -131,4 +132,35 @@ export class StockListComponent implements OnInit {
     this.showStockModal = false;
     this.currentItem = null;
   }
+
+  sortKey: string = '';
+
+  applySort() {
+    switch (this.sortKey) {
+      case "name-asc":
+        this.filteredProducts.sort((a, b) => a.code.localeCompare(b.code));
+        break;
+
+      case "name-desc":
+        this.filteredProducts.sort((a, b) => b.code.localeCompare(a.code));
+        break;
+
+      case "stock-asc":
+        this.filteredProducts.sort((a, b) => (a.stock || 0) - (b.stock || 0));
+        break;
+
+      case "stock-desc":
+        this.filteredProducts.sort((a, b) => (b.stock || 0) - (a.stock || 0));
+        break;
+
+      case "price-asc":
+        this.filteredProducts.sort((a, b) => (a.salePrice || 0) - (b.salePrice || 0));
+        break;
+
+      case "price-desc":
+        this.filteredProducts.sort((a, b) => (b.salePrice || 0) - (a.salePrice || 0));
+        break;
+    }
+  }
+
 }

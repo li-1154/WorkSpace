@@ -1,45 +1,71 @@
-<div class="history-toolbar">
-    <input class="search-input" placeholder="搜索类型、操作人、备注..." [(ngModel)]="keyword" (input)="applyFilter()">
-    <button class="clear-btn" *ngIf="keyword" (click)="keyword=''; applyFilter()">✕</button>
+<div class="history-container">
 
-    <select class="type-filter" [(ngModel)]="filterType" (change)="applyFilter()">
-        <option value="">全部类型</option>
-        <option value="in">入库</option>
-        <option value="out">出库</option>
-        <option value="adjust-in">库存调整（+）</option>
-        <option value="adjust-out">库存调整（-）</option>
-    </select>
+    <div class="history-toolbar">
+
+        <!-- 搜索框 -->
+        <input class="search-input" placeholder="搜索类型、操作人、备注..." [(ngModel)]="keyword" (input)="applyFilter()">
+        <button class="clear-btn" *ngIf="keyword" (click)="keyword=''; applyFilter()">✕</button>
+        <div class="divider"></div>
+
+        <!-- 类型筛选 -->
+        <select class="type-filter" [(ngModel)]="filterType" (change)="applyFilter()">
+            <option value="">全部类型</option>
+            <option value="in">入库</option>
+            <option value="out">出库</option>
+            <option value="adjust-in">库存调整（+）</option>
+            <option value="adjust-out">库存调整（-）</option>
+        </select>
+        <div class="divider"></div>
+        <!-- 产品编号输入 + 联想结果 -->
+        <div class="code-wrapper">
+            <input class="code-input" placeholder="编号 (例: P00001)" [(ngModel)]="jumpCode" (input)="filterSuggestions()"
+                (keyup.enter)="goToCode()" />
+
+            <!-- 建议列表 -->
+            <ul class="suggestions" *ngIf="filteredSuggestions.length > 0">
+                <li *ngFor="let item of filteredSuggestions" (click)="selectSuggestion(item.code)">
+                    {{ item.code }} — {{ item.name }}
+                </li>
+            </ul>
+        </div>
+        <div class="divider"></div>
+
+        <button class="jump-btn" (click)="goToCode()">跳转</button>
+        <button class="jump-btn" routerLink="/products">返回</button>
+
+    </div>
+
+
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>时间</th>
+                <th>类型</th>
+                <th>数量变化</th>
+                <th>调整前库存</th>
+                <th>调整后库存</th>
+                <th>进货价</th>
+                <th>出货价</th>
+                <th>出货仓</th>
+                <th>操作人</th>
+                <th>备注</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let h of filtered">
+                <td>{{ h.createdAt?.toDate() | date: 'yyyy/MM/dd HH:mm' }}</td>
+                <td>{{ getActionLabel(h.actionType) }}</td>
+                <td [class.plus]="h.qty > 0" [class.minus]="h.qty < 0">
+                    {{ h.qty > 0 ? '+' + h.qty : h.qty }}
+                </td>
+                <td>{{ h.beforeStock }}</td>
+                <td>{{ h.afterStock }}</td>
+                <td>{{ h.costPrice|| '—' }}</td>
+                <td>{{ h.salePrice || '—' }}</td>
+                <td>{{ dispatchMap[h.dispatchId] || '—' }}</td>
+                <td>{{ h.operator }}</td>
+                <td>{{ h.note || '—' }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-
-
-<table class="history-table">
-    <thead>
-        <tr>
-            <th>时间</th>
-            <th>类型</th>
-            <th>数量变化</th>
-            <th>库存</th>
-            <th>进货价</th>
-            <th>出货价</th>
-            <th>出货仓</th>
-            <th>操作人</th>
-            <th>备注</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr *ngFor="let h of filtered">
-            <td>{{ h.createdAt?.toDate() | date: 'yyyy/MM/dd HH:mm' }}</td>
-            <td>{{ getActionLabel(h.actionType) }}</td>
-            <td [class.plus]="h.qty > 0" [class.minus]="h.qty < 0">
-                {{ h.qty > 0 ? '+' + h.qty : h.qty }}
-            </td>
-            <td>{{ h.beforeStock }} → {{ h.afterStock }}</td>
-            <td>{{ h.costPrice|| '—' }}</td>
-            <td>{{ h.salePrice || '—' }}</td>
-            <td>{{ dispatchMap[h.dispatchId] || '无仓库信息' }}</td>
-            <td>{{ h.operator }}</td>
-            <td>{{ h.note || '—' }}</td>
-        </tr>
-    </tbody>
-</table>
