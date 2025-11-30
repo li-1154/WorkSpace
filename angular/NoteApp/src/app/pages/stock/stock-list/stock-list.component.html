@@ -1,7 +1,8 @@
 <div class="page-section">
     <div class="toolbar">
         <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="搜索商品名称、编号..." (input)="applyFilter($event)" />
+            <input type="text" class="search-input" placeholder="搜索商品名称、编号..." [(ngModel)]="keyword"
+                (input)="applyFilter()" />
         </div>
         <select class="sort-select" [(ngModel)]="sortKey" (change)="applySort()">
             <option value="">排序方式</option>
@@ -11,6 +12,11 @@
             <option value="stock-desc">库存 ↓</option>
             <option value="price-asc">卖价 ↑</option>
             <option value="price-desc">卖价 ↓</option>
+        </select>
+        <!-- 颜色筛选 -->
+        <select class="filter-select" [(ngModel)]="selectedColor" (change)="applyFilter()">
+            <option value="">全部颜色</option>
+            <option *ngFor="let c of colorList" [value]="c.id">{{ c.name }}</option>
         </select>
     </div>
 

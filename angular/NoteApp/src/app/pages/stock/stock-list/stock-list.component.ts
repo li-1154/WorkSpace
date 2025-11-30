@@ -15,30 +15,53 @@ export class StockListComponent implements OnInit {
   stockMode: 'in' | 'out' = 'in';
   showStockModal = false;
   products: any[];
+  keyword: string = '';
+
+  colorList: any[] = [];
+  selectedColor: string = '';
 
   constructor(
     private productService: ProductService,
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data: any[]) => {
       this.products = data;
-      this.filteredProducts = [...data].filter(p => p.available !== false);
+      this.filteredProducts = [...data].filter((p) => p.available !== false);
+      // ⭐如果用户之前有关键字 → 自动刷新过滤
+      if (this.keyword?.trim() || this.selectedColor) {
+        this.applyFilter();
+      }
     });
+
+    this.firestore
+      .collection('colors')
+      .get()
+      .toPromise()
+      .then((res) => {
+        this.colorList = res?.docs.map((d) => ({
+          id: d.id,
+          ...(d.data() as any),
+        }));
+      });
   }
 
   filteredProducts: Product[] = [];
-  applyFilter(event: any) {
-    const keyword = event.target.value.toLowerCase();
-    this.filteredProducts = this.products.filter(
-      (p) =>
+  applyFilter() {
+    const keyword = this.keyword.toLowerCase();
+    this.filteredProducts = this.products.filter((p) => {
+      const matchKeyword =
+        !keyword ||
         p.name.toLowerCase().includes(keyword) ||
         p.code.toLowerCase().includes(keyword) ||
-        p.janId.toLowerCase().includes(keyword)
-    );
+        p.janId.toLowerCase().includes(keyword);
+      const matchColor =
+        !this.selectedColor || p.colorId === this.selectedColor;
+      return matchKeyword && matchColor;
+    });
     this.applySort();
   }
   viewHistory(productId: string): void {
@@ -102,9 +125,11 @@ export class StockListComponent implements OnInit {
       operatorName = userDoc?.data()?.['name'] || user.email || '未知用户';
     }
 
-    const { qty, note, actionType, costPrice, salePrice, dispatchId, date } = event;
+    const { qty, note, actionType, costPrice, salePrice, dispatchId, date } =
+      event;
 
-    const qtyChange = actionType === 'in' || actionType === 'adjust-in' ? qty : -qty;
+    const qtyChange =
+      actionType === 'in' || actionType === 'adjust-in' ? qty : -qty;
 
     const code = this.currentItem.code;
 
@@ -120,12 +145,16 @@ export class StockListComponent implements OnInit {
         dispatchId: dispatchId,
         note,
         actionType,
-        costPrice: actionType === 'in' || actionType === 'adjust-in' ? costPrice : null,
-        salePrice: actionType === 'out' || actionType === 'adjust-out' ? salePrice : null,
+        costPrice:
+          actionType === 'in' || actionType === 'adjust-in' ? costPrice : null,
+        salePrice:
+          actionType === 'out' || actionType === 'adjust-out'
+            ? salePrice
+            : null,
         operator: operatorName, // 以后可以替换成登录账号
         beforeStock: before,
         afterStock: after,
-        date: date
+        date: date,
       });
     } catch (error) {
       alert('库存更新失败，请稍后重试');
@@ -139,30 +168,33 @@ export class StockListComponent implements OnInit {
 
   applySort() {
     switch (this.sortKey) {
-      case "name-asc":
+      case 'name-asc':
         this.filteredProducts.sort((a, b) => a.code.localeCompare(b.code));
         break;
 
-      case "name-desc":
+      case 'name-desc':
         this.filteredProducts.sort((a, b) => b.code.localeCompare(a.code));
         break;
 
-      case "stock-asc":
+      case 'stock-asc':
         this.filteredProducts.sort((a, b) => (a.stock || 0) - (b.stock || 0));
         break;
 
-      case "stock-desc":
+      case 'stock-desc':
         this.filteredProducts.sort((a, b) => (b.stock || 0) - (a.stock || 0));
         break;
 
-      case "price-asc":
-        this.filteredProducts.sort((a, b) => (a.salePrice || 0) - (b.salePrice || 0));
+      case 'price-asc':
+        this.filteredProducts.sort(
+          (a, b) => (a.salePrice || 0) - (b.salePrice || 0)
+        );
         break;
 
-      case "price-desc":
-        this.filteredProducts.sort((a, b) => (b.salePrice || 0) - (a.salePrice || 0));
+      case 'price-desc':
+        this.filteredProducts.sort(
+          (a, b) => (b.salePrice || 0) - (a.salePrice || 0)
+        );
         break;
     }
   }
-
 }
