@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { SalesRoutingModule } from './sales-routing.module';
 import { SalesComponent } from '../pages/sales/sales.component';
 import { ExportPanelComponent } from '../pages/sales-analysis/export-panel/export-panel.component';
-
+import { PieChartComponent } from '../pages/sales-analysis/pie-chart/pie-chart.component'
 @NgModule({
-  declarations: [SalesComponent, ExportPanelComponent],
+  declarations: [SalesComponent, ExportPanelComponent, PieChartComponent],
   imports: [CommonModule, FormsModule, SalesRoutingModule],
   exports: [SalesComponent],
 })

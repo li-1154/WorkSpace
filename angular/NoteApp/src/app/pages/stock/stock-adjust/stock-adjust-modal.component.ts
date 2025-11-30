@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { constants } from 'buffer';
 import { Dispatch, DispatchService } from 'src/app/services/dispatch.service';
 @Component({
   selector: 'app-stock-adjust-modal',
@@ -26,6 +27,7 @@ export class StockAdjustModalComponent implements OnInit {
     actionType: 'in' | 'adjust-in' | 'out' | 'adjust-out';
     costPrice: number | null;
     salePrice: number | null;
+    date: Date;
   }>();
 
   @Output() closed = new EventEmitter<void>();
@@ -47,12 +49,23 @@ export class StockAdjustModalComponent implements OnInit {
   qty: number = 0;
   note: string = '';
   dispatchId: string = ''; // 出库仓
+  date: string = (() => {
+    const d = new Date();
+    d.setDate(d.getDate());    // ⭐ 加一天
+
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  })();
+
 
   onConfirm() {
     if (this.qty <= 0) {
       alert('数量必须大于0');
       return;
     }
+
     this.submitted.emit({
       qty: this.qty,
       note: this.note,
@@ -60,6 +73,7 @@ export class StockAdjustModalComponent implements OnInit {
       actionType: this.actionType,
       costPrice: this.costPrice,
       salePrice: this.salePrice,
+      date: new Date(this.date)
     });
   }
 

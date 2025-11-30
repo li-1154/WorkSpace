@@ -1,4 +1,4 @@
-<!-- 半透明遮罩 -->
+n'm'jhiu'iy<!-- 半透明遮罩 -->
 <div class="modal-backdrop">
     <!-- 中间白色框 -->
     <div class="modal-box">
@@ -45,12 +45,18 @@
 
         </div>
 
+        <!-- 日期 -->
+        <div class="field">
+            <label>日期 *</label>
+            <input type="date" [(ngModel)]="date">
+        </div>
 
         <!-- 入库：进货价 -->
         <div class="field" *ngIf="actionType === 'in'">
             <label>进货价（¥）</label>
             <input type="number" [(ngModel)]="costPrice" min="0">
         </div>
+
 
         <!-- 出库：出货价 -->
         <div class="field" *ngIf="actionType === 'out'">

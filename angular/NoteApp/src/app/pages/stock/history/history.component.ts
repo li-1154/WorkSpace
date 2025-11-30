@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { DispatchService } from 'src/app/services/dispatch.service';
 import { ProductService } from 'src/app/services/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history',
@@ -15,7 +16,8 @@ export class HistoryComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private firestore: AngularFirestore,
     private dispatchService: DispatchService,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router
   ) { }
 
 
@@ -26,6 +28,9 @@ export class HistoryComponent implements OnInit {
   jumpCode = '';
   products: any[] = []; // 已有产品列表
   filteredSuggestions: any[] = [];
+  productCode: string;
+  productName = '';
+  janId = '';
 
 
   dispatchMap: { [key: string]: string } = {};
@@ -36,10 +41,21 @@ export class HistoryComponent implements OnInit {
       this.products = data;
     });
 
-    const productCode =
-      this.route.snapshot.paramMap.get('productId');
 
-    this.firestore.collection(`products/${productCode}/stockHistory`, ref =>
+
+    this.productCode =
+      this.route.snapshot.paramMap.get('productId');
+    // ⭐ 获取当前商品信息
+    this.firestore.doc(`products/${this.productCode}`).valueChanges().subscribe((product: any) => {
+      if (product) {
+        this.productName = product.name || '';
+        this.janId = product.janId || '';
+      }
+    });
+
+
+    // 库存历史
+    this.firestore.collection(`products/${this.productCode}/stockHistory`, ref =>
       ref.orderBy('createdAt', 'desc')
     )
       .valueChanges({ idField: 'id' })
@@ -131,7 +147,11 @@ export class HistoryComponent implements OnInit {
     const exists = this.products.some(product => product.code.toUpperCase() === code);
     if (exists) {
       // 跳转到对应产品的库存历史页面
-      window.location.href = `/stock/history/${code}`;
+      this.router.navigate(['/stock/history/', code]).then(() => {
+        this.ngOnInit();
+      }
+      );
+
     } else {
       alert('未找到对应的产品编码。');
     }

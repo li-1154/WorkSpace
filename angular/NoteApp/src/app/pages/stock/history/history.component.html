@@ -35,6 +35,12 @@
 
     </div>
 
+    <!-- 产品信息展示行 -->
+    <div class="product-header">
+        <span class="name">{{ productName }}</span>
+        <span class="code">编号：{{ productCode }}</span>
+        <span class="jan">JAN：{{ janId }}</span>
+    </div>
 
     <table class="history-table">
         <thead>
@@ -53,7 +59,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let h of filtered">
-                <td>{{ h.createdAt?.toDate() | date: 'yyyy/MM/dd HH:mm' }}</td>
+                <td>{{ h.date?.toDate() | date: 'yyyy/MM/dd' }}</td>
                 <td>{{ getActionLabel(h.actionType) }}</td>
                 <td [class.plus]="h.qty > 0" [class.minus]="h.qty < 0">
                     {{ h.qty > 0 ? '+' + h.qty : h.qty }}

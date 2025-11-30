@@ -86,6 +86,7 @@ export class StockListComponent implements OnInit {
     costPrice: number;
     salePrice: number;
     dispatchId: string;
+    date: Date;
   }) {
     if (!this.currentItem) return;
 
@@ -101,7 +102,7 @@ export class StockListComponent implements OnInit {
       operatorName = userDoc?.data()?.['name'] || user.email || '未知用户';
     }
 
-    const { qty, note, actionType, costPrice, salePrice, dispatchId } = event;
+    const { qty, note, actionType, costPrice, salePrice, dispatchId, date } = event;
 
     const qtyChange = actionType === 'in' || actionType === 'adjust-in' ? qty : -qty;
 
@@ -124,6 +125,7 @@ export class StockListComponent implements OnInit {
         operator: operatorName, // 以后可以替换成登录账号
         beforeStock: before,
         afterStock: after,
+        date: date
       });
     } catch (error) {
       alert('库存更新失败，请稍后重试');
