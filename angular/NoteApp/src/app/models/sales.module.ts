@@ -5,8 +5,9 @@ import { SalesRoutingModule } from './sales-routing.module';
 import { SalesComponent } from '../pages/sales/sales.component';
 import { ExportPanelComponent } from '../pages/sales-analysis/export-panel/export-panel.component';
 import { PieChartComponent } from '../pages/sales-analysis/pie-chart/pie-chart.component'
+import { ProductSalesChartComponent } from '../pages/sales-analysis/product-sales-chart/product-sales-chart.component';
 @NgModule({
-  declarations: [SalesComponent, ExportPanelComponent, PieChartComponent],
+  declarations: [SalesComponent, ExportPanelComponent, PieChartComponent, ProductSalesChartComponent],
   imports: [CommonModule, FormsModule, SalesRoutingModule],
   exports: [SalesComponent],
 })

@@ -20,14 +20,22 @@ export class PieChartComponent implements OnInit {
   productMap: Record<string, any> = {};
   dispatchMap: Record<string, string> = {}; // ⭐ 仓库 ID → 名称映射
 
-  constructor(private afs: AngularFirestore) {}
+  constructor(private afs: AngularFirestore) { }
 
   async ngOnInit() {
     await this.loadCategories();
     await this.loadProductMap();
     await this.loadDispatchMap();
     // ⭐ 默认日期设为今天
-    const today = new Date().toISOString().slice(0, 10);
+    const today = (() => {
+      const d = new Date();
+      d.setDate(d.getDate());
+
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    })();;
     this.startDate = today;
     this.endDate = today;
 
@@ -154,9 +162,8 @@ export class PieChartComponent implements OnInit {
               const total = values.reduce((a, b) => a + b, 0);
               const percent = ((value / total) * 100).toFixed(1);
 
-              return ` ${
-                chartData.labels![tooltipItem.index]
-              } — ${value} 件 (${percent}%)`;
+              return ` ${chartData.labels![tooltipItem.index]
+                } — ${value} 件 (${percent}%)`;
             },
           },
         },
