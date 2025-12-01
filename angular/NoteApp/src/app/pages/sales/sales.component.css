@@ -1,6 +1,22 @@
+/* --- 默认：手机 / 平板竖排 --- */
 .dashboard {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 10px;
+}
+
+/* --- PC：两列布局 --- */
+@media (min-width: 900px) {
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 20px;
+    }
+}
+
+/* --- 每个模块统一基础风格（可选） --- */
+.panel {
+    width: 100%;
+    box-sizing: border-box;
 }

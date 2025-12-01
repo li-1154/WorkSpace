@@ -1,0 +1,35 @@
+/* --- 统一标题样式（不改文字布局，只优化间距） --- */
+.weekly-title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    /* 比 18px 更紧凑，保持 UI 一致 */
+    font-weight: 600;
+    color: #333;
+    margin: 10px 0 8px 0;
+    /* 缩小上下间距 */
+}
+
+.weekly-title::before {
+    content: "📌";
+    margin-right: 6px;
+    opacity: 0.85;
+}
+
+/* --- 图表卡片样式（保持 UI 一致、不压缩内容） --- */
+.weekly-chart-box {
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    /* ← 原来 18px太大，现在更符合 ERP 紧凑结构 */
+    margin-top: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Canvas 保持比例，不强制高度、不变形 --- */
+.weekly-chart-box canvas {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+}

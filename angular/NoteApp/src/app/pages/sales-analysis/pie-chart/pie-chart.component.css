@@ -1,25 +1,36 @@
+/* ★ 让三个筛选项保持一行、均匀分布 ★ */
 .filter-row {
   display: flex;
-  gap: 16px;
-  align-items: center;
-  padding: 10px 0;
+  justify-content: space-between;
+  /* 均分布局 */
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: nowrap;
+  /* 不允许换行 */
 }
 
+/* ★ 控件统一宽度，不拉伸布局 ★ */
 .filter-item {
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  min-width: 140px;
 }
 
+/* Label 和输入框风格保持原样 */
 .filter-item label {
-  font-size: 12px;
-  color: #555;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
   margin-bottom: 4px;
 }
 
-.filter-item input,
+.filter-item input[type="date"],
 .filter-item select {
+  width: 100%;
   padding: 6px 10px;
+  height: 32px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  min-width: 130px;
+  font-size: 14px;
+  box-sizing: border-box;
 }

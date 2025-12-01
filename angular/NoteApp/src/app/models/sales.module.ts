@@ -6,8 +6,9 @@ import { SalesComponent } from '../pages/sales/sales.component';
 import { ExportPanelComponent } from '../pages/sales-analysis/export-panel/export-panel.component';
 import { PieChartComponent } from '../pages/sales-analysis/pie-chart/pie-chart.component'
 import { ProductSalesChartComponent } from '../pages/sales-analysis/product-sales-chart/product-sales-chart.component';
+import { LoadWeeklySalesChartComponent } from '../pages/sales-analysis/load-weekly-sales-chart/load-weekly-sales-chart.component';
 @NgModule({
-  declarations: [SalesComponent, ExportPanelComponent, PieChartComponent, ProductSalesChartComponent],
+  declarations: [SalesComponent, ExportPanelComponent, PieChartComponent, ProductSalesChartComponent, LoadWeeklySalesChartComponent],
   imports: [CommonModule, FormsModule, SalesRoutingModule],
   exports: [SalesComponent],
 })

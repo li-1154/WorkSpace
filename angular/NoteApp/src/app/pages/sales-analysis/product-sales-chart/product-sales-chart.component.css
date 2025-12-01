@@ -1,0 +1,50 @@
+/* ==== 筛选栏布局（不再强制宽度） ==== */
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+}
+
+/* ==== Label 统一风格 ==== */
+.filters label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+    white-space: nowrap;
+}
+
+/* ==== 下拉框统一风格（取消 min-width） ==== */
+.filters select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+    transition: 0.2s;
+    width: auto;
+    max-width: 140px;
+}
+
+/* Focus 样式保留 */
+.filters select:focus {
+    border-color: #2F80ED;
+    outline: none;
+}
+
+/* ==== 图表外框（依然保留卡片风格，但不强制高度） ==== */
+.chart-container {
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ==== Chart 保持原比例，不强制拉伸 ==== */
+.chart-container canvas {
+    width: 100%;
+    height: auto !important;
+}

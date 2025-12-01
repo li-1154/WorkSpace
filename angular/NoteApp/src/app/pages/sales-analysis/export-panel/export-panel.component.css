@@ -1,110 +1,101 @@
-/* === Panel 容器 === */
+/* ================= 账票处理模块整体 ================= */
 .export-panel {
+    width: 340px;
+    padding: 14px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
     background: #fff;
-    padding: 20px;
-    border-radius: 14px;
-    border: 1px solid #ddd;
-    max-width: 600px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
-/* === 标题 === */
+/* ================= 标题 ================= */
 .export-panel h3 {
-    margin-bottom: 16px;
-    font-size: 18px;
+    font-size: 16px;
+    /* ↓从18px改紧凑 */
+    margin: 0 0 10px 0;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 6px;
+    color: #333;
 }
 
-/* === 第一行按钮（在库 & 商品信息） === */
-.single-action {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
+.export-panel h3::before {
+    content: "📌";
+    margin-right: 6px;
+    opacity: 0.8;
 }
 
-.single-action button {
-    flex: 1;
-    padding: 10px 16px;
-    background: #1976d2;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.single-action button:hover {
-    background: #145ea4;
-}
-
-/* 分割线 */
-hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 18px 0;
-}
-
-/* === 日期行 === */
-.date-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding-left: 2px;
-}
-
-.date-row label {
-    font-weight: 500;
-    width: 48px;
-    text-align: right;
-
-    /* ⭐ 防止 “期↵间” 换行 */
-    white-space: nowrap;
-    line-height: 36px;
-    /* 与 input 高度一致 */
-}
-
-/* 输入框整体 */
-.date-range {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* 日期选择框样式 */
-.date-range input[type="date"] {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-/* === 出库/入库按钮行 === */
+/* ================= 上方按钮排版 ================= */
 .export-buttons {
     display: flex;
     gap: 10px;
+    margin-bottom: 12px;
 }
 
 .export-buttons button {
     flex: 1;
-    padding: 10px 16px;
-    background: #2196f3;
-    color: #fff;
-    border-radius: 8px;
+    padding: 8px 0;
     border: none;
+    border-radius: 6px;
+    background: #2F80ED;
+    color: white;
+    font-size: 14px;
     cursor: pointer;
     transition: 0.2s;
 }
 
 .export-buttons button:hover {
-    background: #1976d2;
+    background: #1a63c9;
 }
 
-.export-buttons button:disabled {
-    background: #bfbfbf;
-    cursor: not-allowed;
+.export-buttons button:active {
+    transform: scale(0.97);
+}
+
+/* ================= 分隔线 ================= */
+.export-panel hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+/* ================= 日期筛选行 ================= */
+.date-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+}
+
+.date-range {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.date-range input[type="date"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 125px;
+    /* ↓稍微减宽让布局更紧凑 */
+    transition: border 0.2s;
+}
+
+/* Focus 样式一致 */
+.date-range input[type="date"]:focus {
+    border-color: #2F80ED;
+    outline: none;
+}
+
+/* Label文字统一 */
+.export-panel label {
+    font-weight: 500;
+    font-size: 14px;
+    min-width: 42px;
+    color: #444;
 }
