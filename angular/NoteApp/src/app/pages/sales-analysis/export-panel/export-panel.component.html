@@ -4,7 +4,7 @@
 
     <!-- 在库出力（独立一行） -->
     <div class="export-buttons">
-        <button (click)="export('stock')">在库出力</button>
+        <button (click)="export('stock')">在库信息</button>
         <button (click)="export('info')">商品信息</button>
     </div>
 
@@ -25,6 +25,18 @@
     <div class="export-buttons">
         <button (click)="export('outbound')">出库出力</button>
         <button (click)="export('inbound')">入库出力</button>
+    </div>
+
+
+    <!-- 订货推荐按钮 -->
+    <div class="date-row">
+        <label>预定库存天数：</label>
+        <div class="date-range">
+            <input type="number" min="1" [(ngModel)]="targetDays" />
+        </div>
+    </div>
+    <div class="export-buttons">
+        <button (click)="export('recommend')">订货推荐</button>
     </div>
 
 </div>

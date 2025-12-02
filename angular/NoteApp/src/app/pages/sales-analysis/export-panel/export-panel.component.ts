@@ -26,6 +26,9 @@ export class ExportPanelComponent implements OnInit {
     else if (type === 'inbound') {
       await this.exportinbound();
     }
+    else if (type === 'recommend') {
+      await this.exportOrderRecommend();
+    }
 
     else {
       alert(type + '');
@@ -46,9 +49,14 @@ export class ExportPanelComponent implements OnInit {
           {
             商品编号: data.code || '',
             商品名称: data.name || '',
+            JAN: data.janId || '',
             分类: data.categoryName || '',
             颜色: data.colorName || '',
+            型号: data.modleName || '',
+            成本价: data.costPrice || '',
+            售价: data.salePrice || '',
             库存数量: data.stock ?? 0,
+            状态: data.available ? "启用" : "禁用"
           }
         );
       });
@@ -139,6 +147,9 @@ export class ExportPanelComponent implements OnInit {
           {
             商品编号: product.code || '',
             商品名称: product.name || '',
+            JAN: product.janId || '',
+            分类: product.categoryName || '',
+            颜色: product.colorName || '',
             数量: Math.abs(data.qty),
             出库价: data.salePrice || '',
             出库仓: this.dispatchMap[data.dispatchId] || '',
@@ -204,6 +215,9 @@ export class ExportPanelComponent implements OnInit {
           {
             商品编号: product.code || '',
             商品名称: product.name || '',
+            JAN: product.janId || '',
+            分类: product.categoryName || '',
+            颜色: product.colorName || '',
             数量: Math.abs(data.qty),
             进货价: data.costPrice || '',
             操作人: data.operator || '',
@@ -225,6 +239,85 @@ export class ExportPanelComponent implements OnInit {
     catch (error) {
       console.error('❌ 出力失败:', error);
       alert('出力失败，请检查数据或网络连接')
+    }
+    this.loading = false;
+  }
+
+  targetDays: number;
+  async exportOrderRecommend() {
+    if (!this.targetDays || this.targetDays <= 0) {
+      alert("请输入预定库存天数!");
+      return;
+    }
+    this.loading = true;
+    try {
+      const end = new Date();
+      const start = new Date();
+      start.setDate(end.getDate() - 30);
+
+      const productSnap = await this.afs.collection('products').get().toPromise();
+      const productMap: Record<string, any> = {};
+
+      productSnap?.forEach(doc => productMap[doc.id] = doc.data());
+
+      //查询近30天销量记录
+      const historySnap = await this.afs.collectionGroup('stockHistory', ref =>
+        ref.where('actionType', 'in', ['in', 'adjust-in'])
+          .where('date', '>=', start)
+          .where('date', '<=', end)
+          .orderBy('date')
+      ).get().toPromise();
+
+      const salesMap: Record<string, any> = {};
+
+      historySnap?.forEach(doc => {
+        const data: any = doc.data();
+        const productId = doc.ref.parent.parent?.id;
+        if (!productId) return;
+        if (!salesMap[productId]) salesMap[productId] = 0;
+
+        salesMap[productId] += Math.abs(data.qty);
+
+      }
+      );
+
+      const rows: any[] = [];
+      const days = 30;
+      for (const productId of Object.keys(productMap)) {
+        const p = productMap[productId];
+        // 🔥 跳过禁用商品
+        if (!p.available) continue;
+        const totalSales = salesMap[productId] || 0;
+        const dailyAvg = totalSales / days;
+
+        const recommended = Math.ceil(dailyAvg * this.targetDays - (p.stock ?? 0))
+        if (recommended <= 0) continue;
+
+        rows.push(
+          {
+            商品编号: p.code || '',
+            商品名称: p.name || '',
+            JAN: p.janId || '',
+            分类: p.categoryName || '',
+            颜色: p.colorName || '',
+            型号: p.modleName || '',
+            成本价: p.costPrice || '',
+            售价: p.salePrice || '',
+            当前库存: p.stock ?? 0,
+            近30天销量: totalSales,
+            近30天日均销量: dailyAvg.toFixed(2),
+            预定库存天数: this.targetDays,
+            推荐订货量: recommended
+
+          }
+        );
+      }
+      this.downloadCSV(rows, `订货推荐_${this.formatDate()}`);
+      alert('订货推荐文件已生成');
+
+    } catch (error) {
+      console.error('❌ 出力失败', error);
+      alert('出力失败，请检查网络或数据');
     }
     this.loading = false;
   }
