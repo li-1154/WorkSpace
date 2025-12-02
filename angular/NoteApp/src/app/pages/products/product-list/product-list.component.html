@@ -24,7 +24,7 @@
       </div>
 
       <!-- 🔹 商品卡片 -->
-      <div class="product-card" *ngFor="let item of filteredProducts" (click)="toggleSelect(item.id)">
+      <div class="product-card" *ngFor="let item of paginatedProducts" (click)="toggleSelect(item.id)">
 
         <div class="row">
 
@@ -87,6 +87,19 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <div class="pagination" *ngIf="currentTab === 'products'">
+    <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
+      ⬅ 上一页
+    </button>
+
+    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+
+    <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
+      下一页 ➡
+    </button>
   </div>
 
 

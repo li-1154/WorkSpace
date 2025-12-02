@@ -37,17 +37,8 @@
             </div>
 
             <div>
-                <label>JAN *</label>
-                <input class="form-input" formControlName="janId"
-                    [ngClass]="{'invalid': form.get('janId')?.invalid && form.get('janId')?.touched}">
-
-                <div class="error" *ngIf="form.get('janId')?.hasError('required') && form.get('janId')?.touched">
-                    JAN 必填
-                </div>
-
-                <div class="error" *ngIf="form.get('janId')?.hasError('pattern') && form.get('janId')?.touched">
-                    只能输入数字或英文字母，且长度不能超过11位
-                </div>
+                <label>JAN</label>
+                <input class="form-input" formControlName="janId">
             </div>
 
             <div>

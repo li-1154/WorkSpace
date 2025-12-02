@@ -20,7 +20,7 @@
         </select>
     </div>
 
-    <div class="product-card" *ngFor="let item of filteredProducts" [ngClass]="{ 'out-of-stock': item.stock === 0 }"
+    <div class="product-card" *ngFor="let item of paginatedProducts" [ngClass]="{ 'out-of-stock': item.stock === 0 }"
         (click)="toggleSelect(item.code)">
 
 
@@ -75,6 +75,18 @@
 
         </div>
     </div>
+    <div class="pagination">
+        <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
+            ⬅ 上一页
+        </button>
+
+        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+
+        <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
+            下一页 ➡
+        </button>
+    </div>
+
 
 </div>
 <app-stock-adjust-modal *ngIf="showStockModal" [item]="currentItem" [actionType]="actionType"

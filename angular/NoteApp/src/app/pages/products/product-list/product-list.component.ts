@@ -17,12 +17,6 @@ export class ProductListComponent implements OnInit {
 
 
   constructor(private productService: ProductService, private router: Router) {
-    this.router.events.subscribe(event => {
-      if (event.constructor.name === "NavigationEnd") {
-        this.loadProducts();
-      }
-    }
-    )
   }
 
   ngOnInit() {
@@ -37,12 +31,26 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  pageSize = 20;
+  currentPage = 1;
+
+  get paginatedProducts() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredProducts.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredProducts.length / this.pageSize);
+  }
+
   applyFilter(event: any) {
     const keyword = event.target.value.toLowerCase();
-    this.filteredProducts = this.products.filter(p =>
-      p.name.toLowerCase().includes(keyword) ||
-      p.code.toLowerCase().includes(keyword) ||
-      p.janId.toLowerCase().includes(keyword));
+    this.filteredProducts = this.products.filter(
+      item =>
+        item.name.toLowerCase().includes(keyword) ||
+        item.code.toLowerCase().includes(keyword)
+    );
+    this.currentPage = 1;
   }
 
   getThumbUrl(url: string): string {

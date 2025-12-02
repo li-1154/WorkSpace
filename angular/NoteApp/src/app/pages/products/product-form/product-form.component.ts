@@ -70,12 +70,8 @@ export class ProductFormComponent implements OnInit {
       // 备注：可空
       description: [''],
 
-      // JAN：必填 + 只能数字 + 必须11位
-      janId: ['', [
-        Validators.required,
-        Validators.pattern(/^[A-Za-z0-9]{1,11}$/)
-        // 👈 必须是11位数字
-      ]],
+      // JAN
+      janId: ['',],
 
       // 价格：必填 + 只能数字 + 允许小数点后2位
       costPrice: ['', [

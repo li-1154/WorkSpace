@@ -25,7 +25,7 @@ export class StockListComponent implements OnInit {
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data: any[]) => {
@@ -38,7 +38,7 @@ export class StockListComponent implements OnInit {
     });
 
     this.firestore
-      .collection('colors')
+      .collection('colors', ref => ref.where('active', '==', true))
       .get()
       .toPromise()
       .then((res) => {
@@ -63,6 +63,7 @@ export class StockListComponent implements OnInit {
       return matchKeyword && matchColor;
     });
     this.applySort();
+    this.currentPage = 1;
   }
   viewHistory(productId: string): void {
     this.router.navigate(['/stock/history', productId]);
@@ -196,5 +197,17 @@ export class StockListComponent implements OnInit {
         );
         break;
     }
+  }
+
+  pageSize = 20;
+  currentPage = 1;
+
+  get paginatedProducts() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.filteredProducts.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredProducts.length / this.pageSize);
   }
 }
