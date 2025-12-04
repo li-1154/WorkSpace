@@ -5,331 +5,240 @@ import { DispatchService } from 'src/app/services/dispatch.service';
 @Component({
   selector: 'app-export-panel',
   templateUrl: './export-panel.component.html',
-  styleUrls: ['./export-panel.component.css']
+  styleUrls: ['./export-panel.component.css'],
 })
 export class ExportPanelComponent implements OnInit {
-
   loading = false;
+
+  productMap: Record<string, any> = {};
+  dispatchMap: Record<string, string> = {};
+  cachedHistory: any[] | null = null; // ⭐ 缓存全部 stockHistory
+
+  startDate = '';
+  endDate = '';
+  targetDays: number;
 
   constructor(private afs: AngularFirestore, private dispatchService: DispatchService) { }
 
+  async ngOnInit() {
+    await this.loadProducts();
+    await this.loadDispatch();
+    await this.loadAllStockHistory();  // ⭐ 全量读取一次 stockHistory
+
+    const today = this.formatToday();
+    this.startDate = today;
+    this.endDate = today;
+  }
+
+  // =============================
+  //   一次性读取产品
+  // =============================
+  private async loadProducts() {
+    const snap = await this.afs.collection('products').get().toPromise();
+    snap?.forEach(doc => this.productMap[doc.id] = doc.data());
+  }
+
+  // =============================
+  //   一次性读取仓库
+  // =============================
+  private async loadDispatch() {
+    const snap = await this.afs.collection('dispatch').get().toPromise();
+    snap?.forEach(doc => {
+      const d: any = doc.data();
+      this.dispatchMap[doc.id] = d.name || doc.id;
+    });
+  }
+
+  // =============================
+  //   一次性读取 stockHistory（全量缓存）
+  // =============================
+  private async loadAllStockHistory() {
+    const snap = await this.afs.collectionGroup('stockHistory').get().toPromise();
+    this.cachedHistory = snap?.docs || [];
+  }
+
+  // =============================
+  //         导出入口
+  // =============================
   async export(type: string) {
-    if (type === 'stock') {
-      await this.exportStock();
-    }
-    else if (type === 'info') {
-      await this.exportProductInfo();
-    }
-    else if (type === 'outbound') {
-      await this.exportOutbound();
-    }
-    else if (type === 'inbound') {
-      await this.exportinbound();
-    }
-    else if (type === 'recommend') {
-      await this.exportOrderRecommend();
+    if (!this.cachedHistory) {
+      alert('初始化中，请稍候...');
+      return;
     }
 
-    else {
-      alert(type + '');
+    switch (type) {
+      case 'stock': return this.exportStock();
+      case 'info': return this.exportProductInfo();
+      case 'outbound': return this.exportOutbound('out');
+      case 'inbound': return this.exportOutbound('in');
+      case 'adjustment_Out': return this.exportOutbound('adjust-out');
+      case 'adjustment_In': return this.exportOutbound('adjust-in');
+      case 'recommend': return this.exportOrderRecommend();
+      default: alert('未知出力类型');
     }
   }
 
-
+  // =============================
+  //    在库 CSV
+  // =============================
   private async exportStock() {
-    this.loading = true;
+    const rows = Object.values(this.productMap).map(p => ({
+      商品编号: p.code,
+      商品名称: p.name,
+      JAN: p.janId,
+      分类: p.categoryName,
+      颜色: p.colorName,
+      型号: p.modleName,
+      成本价: p.costPrice,
+      售价: p.salePrice,
+      库存数量: p.stock ?? 0,
+      状态: p.available ? '启用' : '禁用',
+    }));
 
-    try {
-      const snapshot = await this.afs.collection('products').get().toPromise();
-      const rows: any[] = [];
-
-      snapshot?.forEach(doc => {
-        const data: any = doc.data();
-        rows.push(
-          {
-            商品编号: data.code || '',
-            商品名称: data.name || '',
-            JAN: data.janId || '',
-            分类: data.categoryName || '',
-            颜色: data.colorName || '',
-            型号: data.modleName || '',
-            成本价: data.costPrice || '',
-            售价: data.salePrice || '',
-            库存数量: data.stock ?? 0,
-            状态: data.available ? "启用" : "禁用"
-          }
-        );
-      });
-
-      this.downloadCSV(rows, `总在库信息_${this.formatDate()}`);
-      alert('总在库信息文件生成完成');
-    }
-    catch (error) {
-      console.error('❌ 出力失败:', error);
-      alert('出力失败，请检查数据或网络连接')
-    }
-    this.loading = false;
+    this.downloadCSV(rows, `总在库信息_${this.formatDate()}`);
   }
 
-  //产品信息
+  // =============================
+  //    产品信息 CSV
+  // =============================
   private async exportProductInfo() {
-    this.loading = true;
+    const rows = Object.values(this.productMap).map(p => ({
+      商品编号: p.code,
+      商品名称: p.name,
+      JAN: p.janId,
+      分类: p.categoryName,
+      颜色: p.colorName,
+      型号: p.modleName,
+      成本价: p.costPrice,
+      售价: p.salePrice,
+      状态: p.available ? '启用' : '禁用',
+    }));
 
-    try {
-      const snapshot = await this.afs.collection('products').get().toPromise();
-      const rows: any[] = [];
-
-      snapshot?.forEach(doc => {
-        const data: any = doc.data();
-        rows.push(
-          {
-            商品编号: data.code || '',
-            商品名称: data.name || '',
-            JAN: data.janId || '',
-            分类: data.categoryName || '',
-            颜色: data.colorName || '',
-            型号: data.modleName || '',
-            成本价: data.costPrice || '',
-            售价: data.salePrice || '',
-            状态: data.available ? "启用" : "禁用"
-          }
-        );
-      });
-
-      this.downloadCSV(rows, `商品信息_${this.formatDate()}`);
-      alert('商品信息文件生成完成');
-    }
-    catch (error) {
-      console.error('❌ 出力失败:', error);
-      alert('出力失败，请检查数据或网络连接')
-    }
-    this.loading = false;
+    this.downloadCSV(rows, `商品信息_${this.formatDate()}`);
   }
 
+  // =============================
+  //   出库/入库/调整 CSV（统一逻辑）
+  // =============================
+  private async exportOutbound(actionType: string) {
+    if (!this.validateDate()) return;
 
+    const { start, end } = this.getDateRange();
 
+    const rows: any[] = [];
 
-  private async exportOutbound() {
+    this.cachedHistory!.forEach(doc => {
+      const data: any = doc.data();
+      const saleDate = data.date?.toDate();
+      if (!saleDate) return;
 
-    if (!this.startDate || !this.endDate) {
-      alert("时间区间未选择");
-      return;
-    }
+      if (data.actionType !== actionType) return;
+      if (saleDate < start || saleDate > end) return;
 
+      const productId = doc.ref.path.split('/')[1];
+      const p = this.productMap[productId] || {};
 
-    this.loading = true;
-
-    try {
-
-      const start = new Date(this.startDate);
-      const end = new Date(this.endDate);
-      end.setHours(23, 59, 59);
-
-      const fileDate: any[] = [];
-      const productMap: Record<string, any> = {};
-      const productSnap = await this.afs.collection('products').get().toPromise();
-      productSnap?.forEach(doc => productMap[doc.id] = doc.data());
-
-
-      const historySnap = await this.afs.collectionGroup('stockHistory', ref =>
-        ref.where('actionType', 'in', ['out', 'adjust-out'])
-          .where('date', '>=', start)
-          .where('date', '<=', end)
-          .orderBy('date')
-      ).get().toPromise();
-
-      console.log('historySnap', historySnap)
-      historySnap?.forEach(doc => {
-        const data: any = doc.data();
-        const productId = doc.ref.parent.parent?.id;
-        const product = productMap[productId] || {};
-        fileDate.push(
-          {
-            商品编号: product.code || '',
-            商品名称: product.name || '',
-            JAN: product.janId || '',
-            分类: product.categoryName || '',
-            颜色: product.colorName || '',
-            数量: Math.abs(data.qty),
-            出库价: data.salePrice || '',
-            出库仓: this.dispatchMap[data.dispatchId] || '',
-            操作人: data.operator || '',
-            操作日期: data.date?.toDate().toLocaleDateString('ja-JP') || ''
-          });
+      rows.push({
+        商品编号: p.code,
+        商品名称: p.name,
+        JAN: p.janId,
+        分类: p.categoryName,
+        颜色: p.colorName,
+        型号: p.modleName,
+        数量: Math.abs(data.qty),
+        仓库: this.dispatchMap[data.dispatchId] || '',
+        操作人: data.operator,
+        操作日期: saleDate.toLocaleDateString('ja-JP'),
       });
-      console.log('fileDate', fileDate)
+    });
 
+    if (rows.length === 0) return alert('没有记录');
 
+    const nameMap = {
+      'out': '出库',
+      'in': '入库',
+      'adjust-out': '调整出库',
+      'adjust-in': '调整入库',
+    };
 
-      if (fileDate.length === 0) {
-        alert("该期间没有出库的记录");
-      }
-      else {
-        this.downloadCSV(fileDate, `出库_${this.startDate}_${this.endDate}`);
-        alert('出库的记录生成完成');
-      }
-    }
-    catch (error) {
-      console.error('❌ 出力失败:', error);
-      alert('出力失败，请检查数据或网络连接')
-    }
-    this.loading = false;
+    this.downloadCSV(rows, `${nameMap[actionType]}_${this.startDate}_${this.endDate}`);
   }
 
-
-  private async exportinbound() {
-
-    if (!this.startDate || !this.endDate) {
-      alert("时间区间未选择");
-      return;
-    }
-
-
-    this.loading = true;
-
-    try {
-
-      const start = new Date(this.startDate);
-      const end = new Date(this.endDate);
-      end.setHours(23, 59, 59);
-
-      const fileDate: any[] = [];
-      const productMap: Record<string, any> = {};
-      const productSnap = await this.afs.collection('products').get().toPromise();
-      productSnap?.forEach(doc => productMap[doc.id] = doc.data());
-
-
-      const historySnap = await this.afs.collectionGroup('stockHistory', ref =>
-        ref.where('actionType', 'in', ['in', 'adjust-in'])
-          .where('date', '>=', start)
-          .where('date', '<=', end)
-          .orderBy('date')
-      ).get().toPromise();
-
-      console.log('historySnap', historySnap)
-      historySnap?.forEach(doc => {
-        const data: any = doc.data();
-        const productId = doc.ref.parent.parent?.id;
-        const product = productMap[productId] || {};
-        fileDate.push(
-          {
-            商品编号: product.code || '',
-            商品名称: product.name || '',
-            JAN: product.janId || '',
-            分类: product.categoryName || '',
-            颜色: product.colorName || '',
-            数量: Math.abs(data.qty),
-            进货价: data.costPrice || '',
-            操作人: data.operator || '',
-            操作日期: data.date?.toDate().toLocaleDateString('ja-JP') || ''
-          });
-      });
-      console.log('fileDate', fileDate)
-
-
-
-      if (fileDate.length === 0) {
-        alert("该期间没有入库的记录");
-      }
-      else {
-        this.downloadCSV(fileDate, `入库_${this.startDate}_${this.endDate}`);
-        alert('入库的记录生成完成');
-      }
-    }
-    catch (error) {
-      console.error('❌ 出力失败:', error);
-      alert('出力失败，请检查数据或网络连接')
-    }
-    this.loading = false;
-  }
-
-  targetDays: number;
-  async exportOrderRecommend() {
+  // =============================
+  //     推荐订货
+  // =============================
+  private async exportOrderRecommend() {
     if (!this.targetDays || this.targetDays <= 0) {
-      alert("请输入预定库存天数!");
+      alert('请输入预定库存天数');
       return;
     }
-    this.loading = true;
-    try {
-      const end = new Date();
-      const start = new Date();
-      start.setDate(end.getDate() - 30);
 
-      const productSnap = await this.afs.collection('products').get().toPromise();
-      const productMap: Record<string, any> = {};
+    const end = new Date();
+    const start = new Date();
+    start.setDate(end.getDate() - 30);
 
-      productSnap?.forEach(doc => productMap[doc.id] = doc.data());
+    const salesMap: Record<string, number> = {};
 
-      //查询近30天销量记录
-      const historySnap = await this.afs.collectionGroup('stockHistory', ref =>
-        ref.where('actionType', 'in', ['in', 'adjust-in'])
-          .where('date', '>=', start)
-          .where('date', '<=', end)
-          .orderBy('date')
-      ).get().toPromise();
+    this.cachedHistory!.forEach(doc => {
+      const data: any = doc.data();
+      const saleDate = data.date?.toDate();
+      if (!saleDate) return;
+      if (data.actionType !== 'out') return;
+      if (saleDate < start || saleDate > end) return;
 
-      const salesMap: Record<string, any> = {};
+      const productId = doc.ref.path.split('/')[1];
+      if (!salesMap[productId]) salesMap[productId] = 0;
 
-      historySnap?.forEach(doc => {
-        const data: any = doc.data();
-        const productId = doc.ref.parent.parent?.id;
-        if (!productId) return;
-        if (!salesMap[productId]) salesMap[productId] = 0;
+      salesMap[productId] += Math.abs(data.qty);
+    });
 
-        salesMap[productId] += Math.abs(data.qty);
+    const rows: any[] = [];
+    const days = 30;
 
-      }
-      );
+    Object.keys(this.productMap).forEach(pid => {
+      const p = this.productMap[pid];
+      if (!p.available) return;
 
-      const rows: any[] = [];
-      const days = 30;
-      for (const productId of Object.keys(productMap)) {
-        const p = productMap[productId];
-        // 🔥 跳过禁用商品
-        if (!p.available) continue;
-        const totalSales = salesMap[productId] || 0;
-        const dailyAvg = totalSales / days;
+      const totalSales = salesMap[pid] || 0;
+      const dailyAvg = totalSales / days;
 
-        const recommended = Math.ceil(dailyAvg * this.targetDays - (p.stock ?? 0))
-        if (recommended <= 0) continue;
+      const recommended = Math.ceil(dailyAvg * this.targetDays - (p.stock ?? 0));
+      if (recommended <= 0) return;
 
-        rows.push(
-          {
-            商品编号: p.code || '',
-            商品名称: p.name || '',
-            JAN: p.janId || '',
-            分类: p.categoryName || '',
-            颜色: p.colorName || '',
-            型号: p.modleName || '',
-            成本价: p.costPrice || '',
-            售价: p.salePrice || '',
-            当前库存: p.stock ?? 0,
-            近30天销量: totalSales,
-            近30天日均销量: dailyAvg.toFixed(2),
-            预定库存天数: this.targetDays,
-            推荐订货量: recommended
+      rows.push({
+        商品编号: p.code,
+        商品名称: p.name,
+        当前库存: p.stock,
+        近30天销量: totalSales,
+        日均销量: dailyAvg.toFixed(2),
+        推荐订货量: recommended,
+      });
+    });
 
-          }
-        );
-      }
-      this.downloadCSV(rows, `订货推荐_${this.formatDate()}`);
-      alert('订货推荐文件已生成');
-
-    } catch (error) {
-      console.error('❌ 出力失败', error);
-      alert('出力失败，请检查网络或数据');
-    }
-    this.loading = false;
+    this.downloadCSV(rows, `订货推荐_${this.formatDate()}`);
   }
 
-
-
-  //共通下载
-  private downloadCSV(data: any[], filename: string) {
-    if (!data.length) {
-      alert('没有出力的数据!');
-      return;
+  //=====================
+  // 工具函数
+  //=====================
+  private validateDate() {
+    if (!this.startDate || !this.endDate) {
+      alert('请选择时间区间');
+      return false;
     }
+    return true;
+  }
+
+  private getDateRange() {
+    const start = new Date(this.startDate);
+    const end = new Date(this.endDate);
+    end.setHours(23, 59, 59);
+    return { start, end };
+  }
+
+  private downloadCSV(data: any[], filename: string) {
+    if (!data.length) return alert('没有数据');
+
     const headers = Object.keys(data[0]).join(',');
     const body = data.map(row => Object.values(row).join(',')).join('\n');
 
@@ -340,27 +249,15 @@ export class ExportPanelComponent implements OnInit {
     link.href = URL.createObjectURL(blob);
     link.download = filename + '.csv';
     link.click();
-
   }
 
-  //共通格式
+  private formatToday() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
   private formatDate() {
     const d = new Date();
-    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`
+    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
   }
-
-
-  dispatchMap: { [key: string]: string } = {};
-  ngOnInit(): void {
-    this.dispatchService.getDispatchs().subscribe(list => {
-      list.forEach(d => {
-        this.dispatchMap[d.id] = d.name;
-      });
-    });
-  }
-
-  startDate: string = '';
-  endDate: string = '';
-
 }
-

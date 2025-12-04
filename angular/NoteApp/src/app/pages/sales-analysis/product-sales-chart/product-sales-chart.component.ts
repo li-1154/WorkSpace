@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import Chart from 'chart.js';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
@@ -9,121 +8,85 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class ProductSalesChartComponent implements OnInit {
 
-  dateFilter = 'month';
-  displayLimit: number | 'all' = 10;
-  chart: any = null;
-  monthTotal = 0;       // 全部销量（本月/本周/今天/全部）
-  displayTotal = 0;     // 当前榜单显示的合计
+  startDate: string;
+  endDate: string;
+  salesResult: any[] = [];
 
   constructor(private afs: AngularFirestore) { }
 
   ngOnInit() {
+    const today = (() => {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    })();
+
+    this.startDate = today;
+    this.endDate = today;
+
     this.loadSales();
   }
 
   async loadSales() {
+    if (!this.startDate || !this.endDate) return;
 
-    const now = new Date();
-    let startDate: Date | null = null;
+    const start = new Date(this.startDate);
+    const end = new Date(this.endDate);
+    end.setHours(23, 59, 59, 999);
 
-    if (this.dateFilter === 'today') {
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    } else if (this.dateFilter === 'week') {
-      const firstDay = now.getDate() - now.getDay();
-      startDate = new Date(now.getFullYear(), now.getMonth(), firstDay);
-    } else if (this.dateFilter === 'month') {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    }
-
-    const productsSnap = await this.afs.collection('products').get().toPromise();
-    const result: any[] = [];
-
-    for (const doc of productsSnap.docs) {
-      const productId = doc.id;
-      const productName = (doc.data() as any).name;
-
-
-      let query = this.afs.collection(`products/${productId}/stockHistory`, ref =>
-        ref.where('actionType', '==', 'out')
-      );
-
-      if (startDate) {
-        query = this.afs.collection(`products/${productId}/stockHistory`, ref =>
-          ref.where('actionType', '==', 'out').where('date', '>=', startDate)
-        );
-      }
-
-      const snap = await query.get().toPromise();
-      const totalSales = snap.docs.reduce((sum, d) => {
-        return sum + Math.abs((d.data() as any).qty || 0);
-      }, 0);
-
-      result.push({ name: productName, totalSales });
-    }
-
-    // 排序
-    result.sort((a, b) => b.totalSales - a.totalSales);
-
-    // TOP 限制
-    let displayData = result;
-    if (this.displayLimit !== 'all') {
-      displayData = result.slice(0, this.displayLimit);
-    }
-
-    // 排序
-    result.sort((a, b) => b.totalSales - a.totalSales);
-
-    // ⭐ 全部销量总数（用于顶部展示）
-    this.monthTotal = result.reduce((sum, item) => sum + item.totalSales, 0);
-
-    // TOP 限制
-
-    if (this.displayLimit !== 'all') {
-      displayData = result.slice(0, this.displayLimit);
-    }
-
-    // ⭐ 当前显示数据的合计
-    this.displayTotal = displayData.reduce((sum, item) => sum + item.totalSales, 0);
-
-    // 渲染图表
-    this.renderChart(displayData);
-
-
-    this.renderChart(displayData);
-  }
-
-
-
-  renderChart(data: any[]) {
-    const labels = data.map(d => d.name);
-    const values = data.map(d => d.totalSales);
-
-    if (this.chart) this.chart.destroy();
-
-    const ctx: any = document.getElementById('productSalesChart');
-
-    this.chart = new Chart(ctx, {
-      type: 'horizontalBar',  // Chart.js v2 必须用 horizontalBar
-      data: {
-        labels: labels,
-        datasets: [{
-          label: '销量（件）',
-          data: values,
-          backgroundColor: '#42A5F5'
-        }]
-      },
-      options: {
-        responsive: true,
-        legend: { display: false },
-        scales: {
-          xAxes: [{
-            ticks: { beginAtZero: true }
-          }],
-          yAxes: [{
-            ticks: { autoSkip: false }
-          }]
-        }
-      }
+    // 先一次性读取所有商品（只查一次）
+    const productSnap = await this.afs.collection('products').get().toPromise();
+    const productMap: Record<string, string> = {};
+    productSnap.docs.forEach(doc => {
+      productMap[doc.id] = (doc.data() as any).name;
     });
+
+    /*******************************************
+     * 关键优化：一次 collectionGroup 查询所有出库记录
+     *******************************************/
+    const salesSnap = await this.afs.collectionGroup('stockHistory', ref =>
+      ref
+        .where('actionType', '==', 'out')
+        .where('date', '>=', start)
+        .where('date', '<=', end)
+    ).get().toPromise();
+
+    // 确保以 { productId: totalSales } 聚合
+    const salesMap: Record<string, number> = {};
+
+    salesSnap.docs.forEach(doc => {
+      const data: any = doc.data();
+      const qty = Math.abs(data.qty || 0);
+
+      // 从 collectionGroup 路径中提取 productId
+      // 路径格式: products/{productId}/stockHistory/{docId}
+      const segments = doc.ref.path.split('/');
+      const productId = segments[1];
+
+      if (!salesMap[productId]) salesMap[productId] = 0;
+      salesMap[productId] += qty;
+    });
+
+    // 转换成输出格式
+    const result: any[] = [];
+    Object.keys(salesMap).forEach(productId => {
+      if (!productMap[productId]) return; // 避免不存在的产品
+      result.push({
+        name: productMap[productId],
+        totalSales: salesMap[productId]
+      });
+    });
+
+    // 数量排序
+    this.salesResult = result.sort((a, b) => b.totalSales - a.totalSales);
+
+    console.log(this.salesResult);
   }
+
+  onDateChanged() {
+    this.loadSales();
+  }
+
 }

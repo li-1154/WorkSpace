@@ -26,8 +26,12 @@
         <button (click)="export('outbound')">出库出力</button>
         <button (click)="export('inbound')">入库出力</button>
     </div>
+    <div class="export-buttons">
+        <button (click)="export('adjustment_Out')">调整出库</button>
+        <button (click)="export('adjustment_In')">调整入库</button>
+    </div>
 
-
+    <hr />
     <!-- 订货推荐按钮 -->
     <div class="date-row">
         <label>预定库存天数：</label>

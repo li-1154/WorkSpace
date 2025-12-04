@@ -1,20 +1,32 @@
-<div class="filters">
-    <label>时间区间：</label>
-    <select [(ngModel)]="dateFilter" (change)="loadSales()">
-        <option value="today">今天</option>
-        <option value="week">本周</option>
-        <option value="month" selected>本月</option>
-        <option value="all">全部</option>
-    </select>
+<div class="filter-row">
 
-    <label>显示数量：</label>
-    <select [(ngModel)]="displayLimit" (change)="loadSales()">
-        <option value="10">TOP 10</option>
-        <option value="20">TOP 20</option>
-        <option value="all">全部</option>
-    </select>
+    <!-- 开始日期 -->
+    <div class="filter-item">
+        <label>开始日期</label>
+        <input type="date" [(ngModel)]="startDate" (change)="onDateChanged()" />
+    </div>
+
+    <!-- 结束日期 -->
+    <div class="filter-item">
+        <label>结束日期</label>
+        <input type="date" [(ngModel)]="endDate" (change)="onDateChanged()" />
+    </div>
+
 </div>
 
-<div class="chart-container">
-    <canvas id="productSalesChart"></canvas>
+<div class="sales-list">
+    <table>
+        <thead>
+            <tr>
+                <th>商品名称</th>
+                <th>销售数量</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of salesResult">
+                <td>{{ item.name }}</td>
+                <td>{{ item.totalSales }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>

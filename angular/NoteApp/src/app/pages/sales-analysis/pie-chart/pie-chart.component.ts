@@ -91,7 +91,7 @@ export class PieChartComponent implements OnInit {
     const snap = await this.afs
       .collectionGroup('stockHistory', (ref) =>
         ref
-          .where('actionType', 'in', ['out', 'adjust-out'])
+          .where('actionType', '==', 'out')
           .where('date', '>=', start)
           .where('date', '<=', end)
       )
