@@ -1,22 +1,29 @@
-/* --- 默认：手机 / 平板竖排 --- */
 .dashboard {
     display: grid;
     grid-template-columns: 1fr;
+    /* ✅ 永远只有一列 */
     gap: 16px;
-    padding: 10px;
+    padding: 16px;
 }
 
-/* --- PC：两列布局 --- */
-@media (min-width: 900px) {
-    .dashboard {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        padding: 20px;
-    }
-}
-
-/* --- 每个模块统一基础风格（可选） --- */
 .panel {
     width: 100%;
     box-sizing: border-box;
+}
+
+/* 模块之间的分割线 */
+.panel+.panel {
+    position: relative;
+    padding-top: 16px;
+    /* 给分割线留空间 */
+}
+
+.panel+.panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid #e5e7eb;
+    /* 分割线颜色 */
 }

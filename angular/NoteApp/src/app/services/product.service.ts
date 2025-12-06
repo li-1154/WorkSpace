@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, take } from 'rxjs/operators';
@@ -16,9 +16,18 @@ export class ProductService {
 
   getProducts(): Observable<Product[]> {
     return this.afs
-      .collection<Product>('products', (ref) => ref.orderBy('code', 'asc'))
-      .valueChanges({ idField: 'id' });
+      .collection<Product>('products', ref => ref.orderBy('code', 'asc'))
+      .get()
+      .pipe(
+        map(snapshot =>
+          snapshot.docs.map(doc => ({
+            ...(doc.data() as any),  // 先展开 data
+            id: doc.id               // ⭐ 最后再写 id，保证不会被覆盖
+          }))
+        )
+      );
   }
+
 
   createProduct(product: Product) {
     return this.afs
@@ -136,4 +145,34 @@ export class ProductService {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
   }
+
+
+  async updateMonthlySalesStat(qty: number, date: Date) {
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const monthId = `${year}-${String(month).padStart(2, '0')}`;
+
+    const day = date.getDate();
+    let week = 4;
+    if (day <= 7)
+      week = 1;
+    else if (day <= 14)
+      week = 2;
+    else if (day <= 21)
+      week = 3;
+
+    const ref = this.afs.collection('monthly_sales').doc(monthId);
+    await ref.set(
+      {
+        year,
+        month,
+        [`week${week}`]: firebase.firestore.FieldValue.increment(qty),
+        total: firebase.firestore.FieldValue.increment(qty),
+        updateAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, {
+      merge: true
+    });
+  }
+
 }

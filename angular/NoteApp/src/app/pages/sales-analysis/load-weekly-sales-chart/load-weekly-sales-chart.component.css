@@ -1,13 +1,24 @@
+/* ================= 通用卡片样式（和 export-panel 一致） ================= */
+.weekly-panel {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    box-sizing: border-box;
+}
+
+
 /* --- 统一标题样式（不改文字布局，只优化间距） --- */
 .weekly-title {
     display: flex;
     align-items: center;
     font-size: 16px;
-    /* 比 18px 更紧凑，保持 UI 一致 */
     font-weight: 600;
     color: #333;
     margin: 10px 0 8px 0;
-    /* 缩小上下间距 */
 }
 
 .weekly-title::before {
@@ -16,18 +27,21 @@
     opacity: 0.85;
 }
 
-/* --- 图表卡片样式（保持 UI 一致、不压缩内容） --- */
+/* --- 图表卡片样式（区域内滚动） --- */
 .weekly-chart-box {
     border: 1px solid #e5e5e5;
     background: #fff;
     border-radius: 10px;
     padding: 12px;
-    /* ← 原来 18px太大，现在更符合 ERP 紧凑结构 */
     margin-top: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    /* ✅ 核心：限定高度 + 内部滚动 */
+    max-height: 360px;
+    /* 你也可以改成 320 / 400 */
 }
 
-/* --- Canvas 保持比例，不强制高度、不变形 --- */
+/* --- Canvas 自适应宽度，不被撑变形 --- */
 .weekly-chart-box canvas {
     width: 100% !important;
     height: auto !important;

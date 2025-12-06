@@ -1,13 +1,90 @@
+/* =================================================
+   通用卡片（Sales Panel）
+   ================================================= */
+.sales-panel {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 标题 */
+.sales-panel h3 {
+    font-size: 16px;
+    margin: 0 0 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.sales-panel h3::before {
+    content: "📌";
+    margin-right: 6px;
+    opacity: 0.8;
+}
+
+
+/* =================================================
+   筛选行
+   ================================================= */
+.filter-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 140px;
+}
+
+.filter-item label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+}
+
+.filter-item input[type="date"],
+.filter-item select {
+    width: 100%;
+    height: 32px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.filter-item input:focus,
+.filter-item select:focus {
+    border-color: #2F80ED;
+    outline: none;
+}
+
+
+/* =================================================
+   表格
+   ================================================= */
+.sales-list {
+    margin-top: 12px;
+}
+
 .sales-list table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 15px;
     font-size: 14px;
-    border-radius: 8px;
-    overflow: hidden;
-    /* 让圆角生效 */
     border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    background: #fff;
 }
 
 /* 表头 */
@@ -20,64 +97,64 @@
     border-bottom: 1px solid #e5e5e5;
 }
 
-/* 单元格 */
+/* 表体 */
 .sales-list td {
     padding: 10px 12px;
     border-bottom: 1px solid #f0f0f0;
     color: #333;
 }
 
-/* 最后一行去掉底线 */
-.sales-list tr:last-child td {
-    border-bottom: none;
-}
-
-/* hover 行高亮 */
-.sales-list tr:hover td {
+/* hover 高亮 */
+.sales-list tbody tr:hover td {
     background: #fafafa;
 }
 
-/* 让表格更紧凑一点 */
-.sales-list tbody tr td:first-child {
-    width: 70%;
+/* 最后一行去掉底线 */
+.sales-list tbody tr:last-child td {
+    border-bottom: none;
 }
 
-/* ★ 日期筛选行（与你之前提供的一致） */
-.filter-row {
+
+/* =================================================
+   分页
+   ================================================= */
+.pagination {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    justify-content: center;
+    align-items: center;
     gap: 12px;
-    margin-bottom: 12px;
-    flex-wrap: nowrap;
-}
-
-.filter-item {
-    flex: 1;
-    min-width: 140px;
-}
-
-.filter-item label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #444;
-    margin-bottom: 4px;
-    display: block;
-}
-
-/* ★ 日期输入框 */
-.filter-item input[type="date"],
-.filter-item select {
-    width: 100%;
-    padding: 6px 10px;
-    height: 32px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    margin-top: 16px;
     font-size: 14px;
-    box-sizing: border-box;
 }
 
-/* ★ 为了对齐美观，可以加一点 */
-.filter-item input[type="date"] {
-    background-color: #fff;
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: #f5f5f5;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    color: #555;
+}
+
+
+/* =================================================
+   空数据占位（可选）
+   ================================================= */
+.sales-empty {
+    padding: 40px 0;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
 }

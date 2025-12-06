@@ -12,4 +12,7 @@ export class SalesComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  currentPanel: 'export' | 'pie' | 'sales' | 'ranking' = 'sales';
+
+
 }

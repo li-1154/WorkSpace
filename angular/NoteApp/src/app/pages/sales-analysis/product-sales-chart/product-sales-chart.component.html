@@ -1,32 +1,58 @@
-<div class="filter-row">
+<div class="sales-panel">
+    <h3>销量单品分析</h3>
+    <div class="filter-row">
 
-    <!-- 开始日期 -->
-    <div class="filter-item">
-        <label>开始日期</label>
-        <input type="date" [(ngModel)]="startDate" (change)="onDateChanged()" />
+        <!-- 开始日期 -->
+        <div class="filter-item">
+            <label>开始日期</label>
+            <input type="date" [(ngModel)]="startDate" (change)="onDateChanged()" />
+        </div>
+
+        <!-- 结束日期 -->
+        <div class="filter-item">
+            <label>结束日期</label>
+            <input type="date" [(ngModel)]="endDate" (change)="onDateChanged()" />
+        </div>
+
     </div>
 
-    <!-- 结束日期 -->
-    <div class="filter-item">
-        <label>结束日期</label>
-        <input type="date" [(ngModel)]="endDate" (change)="onDateChanged()" />
+    <div class="sales-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>商品编号</th>
+                    <th>商品名称</th>
+                    <th>商品JAN</th>
+                    <th>型号</th>
+                    <th>颜色</th>
+                    <th>销售数量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of pagedSales">
+                    <td>{{ item['商品编号'] }}</td>
+                    <td>{{ item['商品名称'] }}</td>
+                    <td>{{ item['商品JAN'] }}</td>
+                    <td>{{ item['型号'] }}</td>
+                    <td>{{ item['颜色'] }}</td>
+                    <td>{{ item['销售数量'] }}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">
+            上一页
+        </button>
+
+        <span>
+            第 {{ currentPage }} / {{ totalPages }} 页
+        </span>
+
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+            下一页
+        </button>
     </div>
 
-</div>
-
-<div class="sales-list">
-    <table>
-        <thead>
-            <tr>
-                <th>商品名称</th>
-                <th>销售数量</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of salesResult">
-                <td>{{ item.name }}</td>
-                <td>{{ item.totalSales }}</td>
-            </tr>
-        </tbody>
-    </table>
 </div>

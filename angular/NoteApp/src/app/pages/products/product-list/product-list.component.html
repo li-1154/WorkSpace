@@ -1,122 +1,88 @@
-<div class="inventory-page">
+<!-- 🔹 Content Area -->
+<div class="content-area">
 
-  <!-- 🔹 Tabs -->
-  <div class="inventory-tabs">
-    <div class="tab" [class.active]="currentTab === 'products'" (click)="currentTab = 'products'">📦 商品信息</div>
-    <div class="tab" [class.active]="currentTab === 'stock'" (click)="currentTab = 'stock'">📚 在库信息</div>
-    <div class="tab" [class.active]="currentTab === 'sales'" (click)="currentTab = 'sales'">📊 贩卖分析</div>
+  <!-- 🔍 搜索 + 新建 -->
+  <div class="toolbar">
+    <div class="search-wrapper">
+      <input type="text" class="search-input" placeholder="搜索商品名称、编号..." (input)="applyFilter($event)" />
+    </div>
+
+    <button class="add-btn" (click)="addProduct()">＋</button>
   </div>
 
+  <!-- 🔹 商品卡片 -->
+  <div class="product-card" *ngFor="let item of paginatedProducts" (click)="toggleSelect(item.id)">
 
-  <div *ngIf="currentTab === 'products'">
+    <div class="row">
 
+      <!-- 左侧：图片 + 编号 -->
+      <div class="left">
+        <img *ngIf="item.imageUrl; else noImg" [src]="getThumbUrl(item.imageUrl)" class="thumb" />
+        <ng-template #noImg>
+          <div class="thumb no-img">无图</div>
+        </ng-template>
 
-    <!-- 🔹 Content Area -->
-    <div class="content-area">
-
-      <!-- 🔍 搜索 + 新建 -->
-      <div class="toolbar">
-        <div class="search-wrapper">
-          <input type="text" class="search-input" placeholder="搜索商品名称、编号..." (input)="applyFilter($event)" />
-        </div>
-
-        <button class="add-btn" (click)="addProduct()">＋</button>
+        <span class="code">{{ item.code }}</span>
+        <span class="code"> {{ item.available ? '🔄 启用': '⛔ 停用' }} </span>
       </div>
 
-      <!-- 🔹 商品卡片 -->
-      <div class="product-card" *ngFor="let item of paginatedProducts" (click)="toggleSelect(item.id)">
+      <!-- 右侧：信息 -->
+      <div class="right-info">
 
-        <div class="row">
+        <div class="info-row">
+          <span>名称：</span><strong>{{ item.name }}</strong>
+        </div>
 
-          <!-- 左侧：图片 + 编号 -->
-          <div class="left">
-            <img *ngIf="item.imageUrl; else noImg" [src]="getThumbUrl(item.imageUrl)" class="thumb" />
-            <ng-template #noImg>
-              <div class="thumb no-img">无图</div>
-            </ng-template>
-
-            <span class="code">{{ item.code }}</span>
-            <span class="code"> {{ item.available ? '🔄 启用': '⛔ 停用' }} </span>
+        <div class="info-row double">
+          <div class="left-side">
+            <span>JAN：</span>{{ item.janId }}
           </div>
-
-          <!-- 右侧：信息 -->
-          <div class="right-info">
-
-            <div class="info-row">
-              <span>名称：</span><strong>{{ item.name }}</strong>
-            </div>
-
-            <div class="info-row double">
-              <div class="left-side">
-                <span>JAN：</span>{{ item.janId }}
-              </div>
-              <div class="right-side">
-                <span>型号:</span>{{ item.modleName }}
-              </div>
-            </div>
-
-
-            <div class="info-row double">
-              <div class="left-side">
-                <span>分类：</span>{{ item.categoryName }}
-              </div>
-              <div class="right-side">
-                <span>颜色：</span>{{ item.colorName }}
-              </div>
-            </div>
-            <div class="info-row double">
-              <div class="left-side">
-                <span>进货价：</span>¥{{ item.costPrice }}
-              </div>
-              <div class="right-side">
-                <span>销售价：</span><strong class="highlight">¥{{ item.salePrice }}</strong>
-              </div>
-            </div>
-
-
-          </div>
-
-          <!-- 操作按钮 -->
-          <div class="actions" *ngIf="selectedItemId === item.id">
-            <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
-            <button class="btn-edit" (click)="toggleStatus(item)">
-              {{ item.available ? '⛔ 停用' : '🔄 启用' }}
-            </button>
-
+          <div class="right-side">
+            <span>型号:</span>{{ item.modleName }}
           </div>
         </div>
+
+
+        <div class="info-row double">
+          <div class="left-side">
+            <span>分类：</span>{{ item.categoryName }}
+          </div>
+          <div class="right-side">
+            <span>颜色：</span>{{ item.colorName }}
+          </div>
+        </div>
+        <div class="info-row double">
+          <div class="left-side">
+            <span>进货价：</span>¥{{ item.costPrice }}
+          </div>
+          <div class="right-side">
+            <span>销售价：</span><strong class="highlight">¥{{ item.salePrice }}</strong>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- 操作按钮 -->
+      <div class="actions" *ngIf="selectedItemId === item.id">
+        <button class="btn-edit" (click)="editProduct(item.id)">✏ 编辑</button>
+        <button class="btn-edit" (click)="toggleStatus(item)">
+          {{ item.available ? '⛔ 停用' : '🔄 启用' }}
+        </button>
+
       </div>
     </div>
   </div>
+</div>
 
+<div class="pagination">
+  <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
+    ⬅ 上一页
+  </button>
 
-  <div class="pagination" *ngIf="currentTab === 'products'">
-    <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
-      ⬅ 上一页
-    </button>
+  <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
 
-    <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-
-    <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
-      下一页 ➡
-    </button>
-  </div>
-
-
-  <!-- 📚 在库管理 -->
-  <div *ngIf="currentTab === 'stock'">
-    <div class="container py-3">
-      <app-stock-list></app-stock-list>
-    </div>
-  </div>
-
-  <!-- 📊 贩卖数据 -->
-  <div *ngIf="currentTab === 'sales'">
-    <div class="container py-3">
-      <app-sales></app-sales>
-    </div>
-  </div>
-
-
-
+  <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
+    下一页 ➡
+  </button>
 </div>

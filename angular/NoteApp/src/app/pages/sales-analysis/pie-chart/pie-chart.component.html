@@ -1,26 +1,29 @@
-<div class="filter-row">
-    <!-- 日期区间 -->
-    <div class="filter-item">
-        <label>开始日期</label>
-        <input type="date" [(ngModel)]="startDate" (change)="updateChart()">
+<div class="pie-panel">
+    <h3>出库仓分析</h3>
+    <div class="filter-row">
+        <!-- 日期区间 -->
+        <div class="filter-item">
+            <label>开始日期</label>
+            <input type="date" [(ngModel)]="startDate" (change)="updateChart()">
+        </div>
+
+        <div class="filter-item">
+            <label>结束日期</label>
+            <input type="date" [(ngModel)]="endDate" (change)="updateChart()">
+        </div>
+
+        <!-- 分类选择 -->
+        <div class="filter-item">
+            <label>分类</label>
+            <select [(ngModel)]="selectedCategory" (change)="updateChart()">
+                <option value="">全部分类</option>
+                <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            </select>
+        </div>
+
     </div>
 
-    <div class="filter-item">
-        <label>结束日期</label>
-        <input type="date" [(ngModel)]="endDate" (change)="updateChart()">
+    <div class="chart-wrapper">
+        <canvas #outboundCanvas></canvas>
     </div>
-
-    <!-- 分类选择 -->
-    <div class="filter-item">
-        <label>分类</label>
-        <select [(ngModel)]="selectedCategory" (change)="updateChart()">
-            <option value="">全部分类</option>
-            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
-        </select>
-    </div>
-
-</div>
-
-<div class="chart-wrapper">
-    <canvas #outboundCanvas></canvas>
 </div>

@@ -1,3 +1,33 @@
+/* ================= 通用卡片样式（和 export-panel 一致） ================= */
+.pie-panel {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  box-sizing: border-box;
+}
+
+
+/* ================= 标题 ================= */
+.pie-panel h3 {
+  font-size: 16px;
+  /* ↓从18px改紧凑 */
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: #333;
+}
+
+.pie-panel h3::before {
+  content: "📌";
+  margin-right: 6px;
+  opacity: 0.8;
+}
+
 /* ★ 让三个筛选项保持一行、均匀分布 ★ */
 .filter-row {
   display: flex;

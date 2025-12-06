@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product.model';
 import { ProductService } from 'src/app/services/product.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -13,13 +13,14 @@ export class ProductListComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
 
-  currentTab: 'products' | 'stock' | 'sales' = 'products';
-
 
   constructor(private productService: ProductService, private router: Router) {
   }
 
+
+
   ngOnInit() {
+    console.log("ProductListComponent 初始化！");
     this.loadProducts();
   }
 

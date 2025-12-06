@@ -157,6 +157,12 @@ export class StockListComponent implements OnInit {
         afterStock: after,
         date: date,
       });
+      if (actionType === 'out') {
+        await this.productService.updateMonthlySalesStat(
+          Math.abs(qtyChange),
+          date
+        );
+      }
     } catch (error) {
       alert('库存更新失败，请稍后重试');
       return;

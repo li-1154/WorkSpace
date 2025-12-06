@@ -1,0 +1,32 @@
+<div class="inventory-page">
+
+    <!-- 🔹 Tabs -->
+    <div class="inventory-tabs">
+        <div class="tab" [class.active]="currentTab === 'products'" (click)="currentTab = 'products'">📦 商品信息</div>
+        <div class="tab" [class.active]="currentTab === 'stock'" (click)="currentTab = 'stock'">📚 在库信息</div>
+        <div class="tab" [class.active]="currentTab === 'sales'" (click)="currentTab = 'sales'">📊 贩卖分析</div>
+    </div>
+
+
+    <!-- 📚 在库管理 -->
+    <div *ngIf="currentTab === 'products'">
+        <div class="container py-3">
+            <app-product-list></app-product-list>
+        </div>
+    </div>
+
+    <!-- 📚 在库管理 -->
+    <div *ngIf="currentTab === 'stock'">
+        <div class="container py-3">
+            <app-stock-list></app-stock-list>
+        </div>
+    </div>
+
+    <!-- 📊 贩卖数据 -->
+    <div *ngIf="currentTab === 'sales'">
+        <div class="container py-3">
+            <app-sales></app-sales>
+        </div>
+    </div>
+
+</div>

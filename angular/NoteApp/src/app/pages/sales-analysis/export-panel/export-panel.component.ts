@@ -23,7 +23,6 @@ export class ExportPanelComponent implements OnInit {
   async ngOnInit() {
     await this.loadProducts();
     await this.loadDispatch();
-    await this.loadAllStockHistory();  // ⭐ 全量读取一次 stockHistory
 
     const today = this.formatToday();
     this.startDate = today;
@@ -50,21 +49,37 @@ export class ExportPanelComponent implements OnInit {
   }
 
   // =============================
-  //   一次性读取 stockHistory（全量缓存）
+  //   按需读取 stockHistory（新）
   // =============================
-  private async loadAllStockHistory() {
-    const snap = await this.afs.collectionGroup('stockHistory').get().toPromise();
+  private cachedKey = '';
+
+  private async loadStockHistoryIfNeeded() {
+    const key = `${this.startDate}_${this.endDate}`;
+
+    if (this.cachedHistory && this.cachedKey === key) {
+      return;
+    }
+
+    console.log('⏳ 加载 stockHistory:', key);
+
+    const snap = await this.afs.collectionGroup('stockHistory', ref =>
+      ref.where('date', '>=', new Date(this.startDate))
+        .where('date', '<=', new Date(this.endDate))
+    ).get().toPromise();
+
     this.cachedHistory = snap?.docs || [];
+    this.cachedKey = key;
+
+    console.log('✔ 加载完成:', this.cachedHistory.length);
   }
 
   // =============================
   //         导出入口
   // =============================
   async export(type: string) {
-    if (!this.cachedHistory) {
-      alert('初始化中，请稍候...');
-      return;
-    }
+
+    // ⭐ 在这里按需加载（最关键的改动）
+    await this.loadStockHistoryIfNeeded();
 
     switch (type) {
       case 'stock': return this.exportStock();

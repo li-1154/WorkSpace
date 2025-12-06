@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ProductService } from 'src/app/services/product.service';
 import Chart from 'chart.js';
 
 @Component({
@@ -8,64 +9,65 @@ import Chart from 'chart.js';
   styleUrls: ['./load-weekly-sales-chart.component.css']
 })
 export class LoadWeeklySalesChartComponent implements OnInit {
+
   chart: any = null;
 
-  constructor(private afs: AngularFirestore) { }
+  monthSummary = {
+    thisMonth: 0,
+    lastMonth: 0
+  };
 
-  ngOnInit() {
-    this.loadWeeklySalesChart();
+  constructor(private afs: AngularFirestore,
+    private productService: ProductService) { }
+
+  async ngOnInit() {
+    await this.loadWeeklySalesChart();
   }
 
+  // ✅ 只读 monthly_sales（2 次 read）
   async loadWeeklySalesChart() {
     const now = new Date();
 
-    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const thisMonthId = this.formatMonthId(now);
+    const lastMonthId = this.formatMonthId(
+      new Date(now.getFullYear(), now.getMonth() - 1, 1)
+    );
 
-    const weeklyThisMonth = [0, 0, 0, 0];
-    const weeklyLastMonth = [0, 0, 0, 0];
+    // ✅ 本月
+    const thisSnap = await this.afs
+      .collection('monthly_sales')
+      .doc(thisMonthId)
+      .get()
+      .toPromise();
 
-    /*******************************************
-     *  ⬇ ⬇ ⬇ 关键优化：只查询一次 stockHistory ⬇⬇⬇
-     *******************************************/
-    const salesSnap = await this.afs.collectionGroup('stockHistory', ref =>
-      ref
-        .where('actionType', '==', 'out')
-        .where('date', '>=', lastMonthStart)
-        .where('date', '<', nextMonthStart)
-    ).get().toPromise();
-    /*******************************************
-     *  ⬆ ⬆ ⬆ 优化结束 — 上面一步就够了   ⬆⬆⬆
-     *******************************************/
+    // ✅ 上月
+    const lastSnap = await this.afs
+      .collection('monthly_sales')
+      .doc(lastMonthId)
+      .get()
+      .toPromise();
 
-    salesSnap.docs.forEach(doc => {
-      const data: any = doc.data();
-      const qty = Math.abs(data.qty || 0);
-      const saleDate = data.date?.toDate();
-      if (!saleDate) return;
+    const weeklyThisMonth = [
+      thisSnap?.get('week1') || 0,
+      thisSnap?.get('week2') || 0,
+      thisSnap?.get('week3') || 0,
+      thisSnap?.get('week4') || 0,
+    ];
 
-      const weekIndex = this.getWeekIndex(saleDate);
+    const weeklyLastMonth = [
+      lastSnap?.get('week1') || 0,
+      lastSnap?.get('week2') || 0,
+      lastSnap?.get('week3') || 0,
+      lastSnap?.get('week4') || 0,
+    ];
 
-      if (saleDate >= currentMonthStart) {
-        weeklyThisMonth[weekIndex] += qty;
-      } else {
-        weeklyLastMonth[weekIndex] += qty;
-      }
-    });
+    this.monthSummary = {
+      thisMonth: weeklyThisMonth.reduce((a, b) => a + b, 0),
+      lastMonth: weeklyLastMonth.reduce((a, b) => a + b, 0),
+    };
 
     this.renderChart(weeklyThisMonth, weeklyLastMonth);
   }
-
-  getWeekIndex(date: Date): number {
-    const day = date.getDate();
-    if (day <= 7) return 0;
-    if (day <= 14) return 1;
-    if (day <= 21) return 2;
-    return 3;
-  }
-
-  monthSummary = { thisMonth: 0, lastMonth: 0 };
 
   renderChart(weeklyThisMonth: number[], weeklyLastMonth: number[]) {
     setTimeout(() => {
@@ -74,25 +76,35 @@ export class LoadWeeklySalesChartComponent implements OnInit {
 
       if (this.chart) this.chart.destroy();
 
-      const totalThisMonth = weeklyThisMonth.reduce((a, b) => a + b, 0);
-      const totalLastMonth = weeklyLastMonth.reduce((a, b) => a + b, 0);
-
-      this.monthSummary = { thisMonth: totalThisMonth, lastMonth: totalLastMonth };
-
       this.chart = new Chart(canvas, {
         type: 'bar',
         data: {
           labels: ['第1周', '第2周', '第3周', '第4周'],
           datasets: [
-            { label: `本月（合计:${totalThisMonth} 件）`, data: weeklyThisMonth, backgroundColor: '#42A5F5' },
-            { label: `上月（合计:${totalLastMonth} 件）`, data: weeklyLastMonth, backgroundColor: '#FFC107' }
+            {
+              label: `本月（合计:${this.monthSummary.thisMonth} 件）`,
+              data: weeklyThisMonth,
+              backgroundColor: '#42A5F5'
+            },
+            {
+              label: `上月（合计:${this.monthSummary.lastMonth} 件）`,
+              data: weeklyLastMonth,
+              backgroundColor: '#FFC107'
+            }
           ]
         },
         options: {
           responsive: true,
-          scales: { yAxes: [{ ticks: { beginAtZero: true } }] }
+          scales: {
+            yAxes: [{ ticks: { beginAtZero: true } }]
+          }
         }
       });
     }, 100);
+  }
+
+  // yyyy-MM
+  private formatMonthId(date: Date): string {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
   }
 }

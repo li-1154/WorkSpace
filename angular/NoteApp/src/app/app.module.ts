@@ -24,6 +24,7 @@ import { ProductListComponent } from './pages/products/product-list/product-list
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 import { StockModule } from './models/stock.module';
 import { SalesModule } from './models/sales.module';
+import { InventoryComponentComponent } from './pages/inventory-component/inventory-component.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +42,7 @@ import { SalesModule } from './models/sales.module';
     TaskFormComponent,
     ProductListComponent,
     ProductFormComponent,
+    InventoryComponentComponent,
   ],
   imports: [
     BrowserModule,

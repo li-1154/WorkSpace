@@ -12,6 +12,7 @@ import { AttendanceComponent } from './pages/attendance/attendance.component';
 import { TaskListComponent } from './pages/task/task-list/task-list.component';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
+import { InventoryComponentComponent } from './pages/inventory-component/inventory-component.component';
 
 const routes: Routes = [
   //登陆模块
@@ -42,6 +43,8 @@ const routes: Routes = [
     component: TaskListComponent,
     canActivate: [AuthGuard],
   },
+  //在库导航
+  { path: 'inventory', component: InventoryComponentComponent },
   //在库模块
   { path: 'products', component: ProductListComponent },
   { path: 'products/new', component: ProductFormComponent },
@@ -59,7 +62,8 @@ const routes: Routes = [
 ];
 @NgModule({
   declarations: [],
-  imports: [CommonModule, RouterModule.forRoot(routes)],
+  imports: [CommonModule, RouterModule.forRoot(routes
+  )],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }

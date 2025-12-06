@@ -18,67 +18,62 @@ export class PieChartComponent implements OnInit {
 
   categories: any[] = [];
   productMap: Record<string, any> = {};
-  dispatchMap: Record<string, string> = {}; // ⭐ 仓库 ID → 名称映射
+  dispatchMap: Record<string, string> = {}; // 仓库 ID → 名称
 
   constructor(private afs: AngularFirestore) { }
 
+  /* =============================
+   * 初始化
+   * ============================= */
   async ngOnInit() {
     await this.loadCategories();
     await this.loadProductMap();
     await this.loadDispatchMap();
-    // ⭐ 默认日期设为今天
-    const today = (() => {
-      const d = new Date();
-      d.setDate(d.getDate());
 
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${y}-${m}-${day}`;
-    })();;
+    // 默认日期：今天
+    const today = this.formatToday();
     this.startDate = today;
     this.endDate = today;
 
-    // ⭐ 自动绘制图表
     this.updateChart();
   }
 
-  /** -------------------------------
-   *  加载分类下拉
-   -------------------------------- */
+  /* =============================
+   * 加载分类
+   * ============================= */
   async loadCategories() {
     const snap = await this.afs.collection('categories').get().toPromise();
     this.categories =
-      snap?.docs.map((d) => ({
+      snap?.docs.map(d => ({
         id: d.id,
-        ...(d.data() as Record<string, any>),
+        ...(d.data() as any),
       })) || [];
   }
 
-  /** -------------------------------
-   *  加载产品映射（用于分类筛选）
-   -------------------------------- */
+  /* =============================
+   * 加载产品映射
+   * ============================= */
   async loadProductMap() {
     const snap = await this.afs.collection('products').get().toPromise();
-    snap?.forEach((doc) => {
+    snap?.forEach(doc => {
       this.productMap[doc.id] = doc.data();
     });
   }
 
-  /** -------------------------------
-   *  加载仓库名称映射（dispatch）
-   -------------------------------- */
+  /* =============================
+   * 加载仓库映射
+   * ============================= */
   async loadDispatchMap() {
     const snap = await this.afs.collection('dispatch').get().toPromise();
-    snap?.forEach((doc) => {
+    snap?.forEach(doc => {
       const data: any = doc.data();
       this.dispatchMap[doc.id] = data.name || doc.id;
     });
   }
 
-  /** -------------------------------
-   *  更新图表
-   -------------------------------- */
+  /* =============================
+   * 更新图表（核心）
+   * ============================= */
   async updateChart() {
     if (!this.startDate || !this.endDate) return;
 
@@ -86,10 +81,20 @@ export class PieChartComponent implements OnInit {
     const end = new Date(this.endDate);
     end.setHours(23, 59, 59);
 
+    // ✅⭐ 关键优化：最多允许 7 天 ⭐✅
+    const diffMs = end.getTime() - start.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+
+    if (diffDays > 7) {
+      alert(`查询区间请控制在 7 天以内（当前 ${diffDays} 天）`);
+      return;
+    }
+
     const warehouseCount: Record<string, number> = {};
 
+    // ✅ 按需查询（不会全量）
     const snap = await this.afs
-      .collectionGroup('stockHistory', (ref) =>
+      .collectionGroup('stockHistory', ref =>
         ref
           .where('actionType', '==', 'out')
           .where('date', '>=', start)
@@ -98,31 +103,32 @@ export class PieChartComponent implements OnInit {
       .get()
       .toPromise();
 
-    snap?.forEach((doc) => {
+    snap?.forEach(doc => {
       const data: any = doc.data();
+      const saleQty = Math.abs(data.qty || 0);
+
       const productId = doc.ref.parent.parent?.id;
       const product = this.productMap[productId];
 
-      // 分类筛选（非必选）
-      if (this.selectedCategory && product.categoryId !== this.selectedCategory)
+      // 分类过滤（可选）
+      if (this.selectedCategory && product?.categoryId !== this.selectedCategory) {
         return;
+      }
 
       const warehouseId = data.dispatchId || 'unknown';
-      const qty = Math.abs(data.qty || 0);
-
-      warehouseCount[warehouseId] = (warehouseCount[warehouseId] || 0) + qty;
+      warehouseCount[warehouseId] =
+        (warehouseCount[warehouseId] || 0) + saleQty;
     });
 
     this.renderChart(warehouseCount);
   }
 
-  /** -------------------------------
-   *  绘制饼状图（甜甜圈）
-   -------------------------------- */
+  /* =============================
+   * 绘制饼图
+   * ============================= */
   renderChart(data: Record<string, number>) {
     const rawLabels = Object.keys(data);
-    const labels = rawLabels.map((id) => this.dispatchMap[id] || id); // ⭐ 转成仓库名称
-
+    const labels = rawLabels.map(id => this.dispatchMap[id] || id);
     const values = Object.values(data);
 
     if (this.chart) this.chart.destroy();
@@ -152,22 +158,31 @@ export class PieChartComponent implements OnInit {
       options: {
         responsive: true,
         legend: { position: 'bottom' },
-        title: { display: true, text: '📦 出库占比分析（按仓库）' },
+        title: {
+          display: true,
+          text: '📦 出库占比分析（按仓库）',
+        },
         tooltips: {
           callbacks: {
             label: (tooltipItem, chartData) => {
-              const value = chartData.datasets![0].data![
-                tooltipItem.index
-              ] as number;
+              const value = chartData.datasets![0].data![tooltipItem.index] as number;
               const total = values.reduce((a, b) => a + b, 0);
               const percent = ((value / total) * 100).toFixed(1);
-
-              return ` ${chartData.labels![tooltipItem.index]
-                } — ${value} 件 (${percent}%)`;
+              return `${chartData.labels![tooltipItem.index]}：${value} 件 (${percent}%)`;
             },
           },
         },
       },
     });
+  }
+
+  /* =============================
+   * 工具函数
+   * ============================= */
+  private formatToday(): string {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate()
+    ).padStart(2, '0')}`;
   }
 }
