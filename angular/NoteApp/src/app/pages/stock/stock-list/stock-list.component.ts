@@ -4,6 +4,8 @@ import { ProductService } from 'src/app/services/product.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Product } from 'src/app/models/product.model';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-stock-list',
@@ -65,9 +67,15 @@ export class StockListComponent implements OnInit {
     this.applySort();
     this.currentPage = 1;
   }
+
   viewHistory(productId: string): void {
-    this.router.navigate(['/stock/history', productId]);
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/stock/history', productId])
+    );
+
+    window.open(url, '_blank');
   }
+
 
   selectedItemId: string | null = null;
 
@@ -207,6 +215,8 @@ export class StockListComponent implements OnInit {
 
   pageSize = 20;
   currentPage = 1;
+  // 跳转输入框绑定的值
+  jumpPage: number = 1;
 
   get paginatedProducts() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
@@ -215,5 +225,40 @@ export class StockListComponent implements OnInit {
 
   get totalPages() {
     return Math.ceil(this.filteredProducts.length / this.pageSize);
+  }
+
+  /** 中间显示的页码数量 */
+  private windowSize = 3;
+
+  /** 生成：1 2 3 ... */
+  get paginationItems(): Array<number | '...'> {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const items: Array<number | '...'> = [];
+    items.push(1);
+
+    if (current > 3) items.push('...');
+
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+
+    for (let i = start; i <= end; i++) {
+      items.push(i);
+    }
+
+    if (current < total - 2) items.push('...');
+
+    items.push(total);
+    return items;
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
   }
 }

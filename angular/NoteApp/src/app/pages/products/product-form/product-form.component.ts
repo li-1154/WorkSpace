@@ -151,7 +151,7 @@ export class ProductFormComponent implements OnInit {
       name: raw.name,
       janId: raw.janId,
       categoryId: raw.categoryId,
-      categoryName: category ? category.name : '', // ⭐ 自动补
+      categoryName: category ? category.name : '', // ⭐ 自动补全分类名称
       description: raw.description || '',
       imageUrl: imageUrl,
       colorId: raw.colorId,
@@ -208,7 +208,7 @@ export class ProductFormComponent implements OnInit {
       janId: product.janId,
       costPrice: product.costPrice,
       salePrice: product.salePrice,
-
+      modleId: product.modleId,
     });
     console.log('已回显颜色 =', this.form.value.colorId);
   }

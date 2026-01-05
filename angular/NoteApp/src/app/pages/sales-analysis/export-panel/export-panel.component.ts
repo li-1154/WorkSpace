@@ -216,12 +216,16 @@ export class ExportPanelComponent implements OnInit {
 
       const totalSales = salesMap[pid] || 0;
       const dailyAvg = totalSales / days;
-
+      //  计算推荐订货量
+      // 目标库存 = 日均销量 × 预定天数
       const recommended = Math.ceil(dailyAvg * this.targetDays - (p.stock ?? 0));
       if (recommended <= 0) return;
 
       rows.push({
         商品编号: p.code,
+        商品颜色: p.colorName,
+        商品型号: p.modleName,
+        商品JAN: p.janId,
         商品名称: p.name,
         当前库存: p.stock,
         近30天销量: totalSales,

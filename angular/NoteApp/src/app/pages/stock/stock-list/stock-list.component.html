@@ -75,16 +75,37 @@
 
         </div>
     </div>
-    <div class="pagination">
+    <div class="stock-pagination">
         <button (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
-            ⬅ 上一页
+            « 上一页
         </button>
 
-        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+        <ng-container *ngFor="let item of paginationItems">
+            <button *ngIf="item !== '...'" class="page-btn" [class.active]="item === currentPage"
+                (click)="goToPage(item)">
+                {{ item }}
+            </button>
+
+            <span *ngIf="item === '...'" class="dots">…</span>
+        </ng-container>
+
 
         <button (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">
-            下一页 ➡
+            下一页 »
         </button>
+
+        <!-- 页数信息 -->
+        <span class="page-info">
+            共 {{ totalPages }} 页
+        </span>
+
+        <!-- 跳转 -->
+        <span class="jump">
+            到第
+            <input type="number" min="1" [max]="totalPages" [(ngModel)]="jumpPage">
+            页
+            <button (click)="goToPage(jumpPage)">确定</button>
+        </span>
     </div>
 
 

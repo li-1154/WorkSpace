@@ -191,29 +191,68 @@
   box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
 }
 
-.pagination {
+
+
+.stock-pagination {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin: 20px 0;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
-.pagination button {
-  padding: 6px 14px;
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 6px;
+.stock-pagination button {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #dcdcdc;
+  background: #ffffff;
+  color: #333;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  line-height: 30px;
 }
 
-.pagination button:disabled {
-  opacity: 0.4;
+.stock-pagination .page-btn.active {
+  background: #409eff;
+  border-color: #409eff;
+  color: #fff;
+  font-weight: 700;
+}
+
+.stock-pagination button:disabled {
+  background: #f5f5f5;
+  color: #aaa;
   cursor: not-allowed;
 }
 
-.page-info {
-  font-weight: bold;
+.stock-pagination .dots {
+  display: inline-block;
+  min-width: 32px;
+  text-align: center;
+  color: #999;
   font-size: 14px;
+}
+
+.stock-pagination .page-info,
+.stock-pagination .jump {
+  margin-left: 10px;
+}
+
+.stock-pagination .jump {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stock-pagination .jump input {
+  width: 48px;
+  height: 32px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  text-align: center;
+  outline: none;
 }

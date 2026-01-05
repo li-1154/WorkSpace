@@ -34,6 +34,8 @@ export class ProductListComponent implements OnInit {
 
   pageSize = 20;
   currentPage = 1;
+  // 跳转输入框绑定的值
+  jumpPage: number = 1;
 
   get paginatedProducts() {
     const startIndex = (this.currentPage - 1) * this.pageSize;
@@ -44,15 +46,70 @@ export class ProductListComponent implements OnInit {
     return Math.ceil(this.filteredProducts.length / this.pageSize);
   }
 
-  applyFilter(event: any) {
-    const keyword = event.target.value.toLowerCase();
-    this.filteredProducts = this.products.filter(
-      item =>
-        item.name.toLowerCase().includes(keyword) ||
-        item.code.toLowerCase().includes(keyword)
-    );
-    this.currentPage = 1;
+  /** 中间显示的页码数量 */
+  private windowSize = 3;
+
+  /** 生成：1 2 3 ... */
+  get paginationItems(): Array<number | '...'> {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const items: Array<number | '...'> = [];
+    items.push(1);
+
+    if (current > 3) items.push('...');
+
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+
+    for (let i = start; i <= end; i++) {
+      items.push(i);
+    }
+
+    if (current < total - 2) items.push('...');
+
+    items.push(total);
+    return items;
   }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
+
+
+  searchKeyword = '';
+  availabilityFilter: 'all' | 'available' | 'unavailable' = 'all';
+
+  applyFilter() {
+    const keyword = this.searchKeyword.toLowerCase();
+
+    this.filteredProducts = this.products.filter(item => {
+      // 1️⃣ 关键词匹配
+      const matchKeyword =
+        item.name.toLowerCase().includes(keyword) ||
+        item.code.toLowerCase().includes(keyword);
+
+      // 2️⃣ available 筛选
+      let matchAvailability = true;
+      if (this.availabilityFilter === 'available') {
+        matchAvailability = item.available === true;
+      } else if (this.availabilityFilter === 'unavailable') {
+        matchAvailability = item.available === false;
+      }
+
+      return matchKeyword && matchAvailability;
+    });
+
+    // 筛选后重置分页
+    this.currentPage = 1;
+    this.jumpPage = 1;
+  }
+
 
   getThumbUrl(url: string): string {
     if (!url) return '';
